@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "description": "Lightweight library allows you to create \"pie\" and \"donut\" charts easily",
+  "keywords": [
+    "arc",
+    "arc-chart",
+    "area-chart",
+    "chart",
+    "charting",
+    "charts",
+    "component",
+    "data visualization",
+    "donut-chart",
+    "pie",
+    "pie-chart",
+    "radial",
+    "react",
+    "react-component",
+    "reactjs",
+    "svg",
+    "typescript",
+    "visualization"
+  ],
+  "homepage": "https://github.com/garvae/react-pie-donut-chart",
+  "funding": {
+    "url": "https://ko-fi.com/garvae"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/garvae/react-pie-donut-chart"
+  },
+  "bugs": {
+    "url": "https://github.com/garvae/react-pie-donut-chart/issues"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "umd:main": "index.js",
+  "module": "react-pie-chart.esm.js",
+  "typings": "index.d.ts",
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "name": "@garvae/react-pie-donut-chart",
+  "author": "Garvae",
+  "publishConfig": {
+    "access": "public"
+  }
+}

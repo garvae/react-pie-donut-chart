@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "tslib": ["node_modules/tslib/tslib.d.ts"],
+      "__TESTS__/*": ["./__TESTS__/*"],
+      "components/*": ["./components/*"],
+      "hooks/*": ["./hooks/*"],
+      "tests/*": ["./tests/*"],
+      "types/*": ["./types/*"],
+      "utils/*": ["./utils/*"],
+      "variables/*": ["./variables/*"]
+    },
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "target": "es6",
+    "typeRoots": ["node_modules/@types", "src/types"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["_other", "build", "cache", "coverage", "nginx", "node_modules", "temp", "test-environment"]
+}

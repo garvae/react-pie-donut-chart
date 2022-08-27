@@ -1,0 +1,11 @@
+.github
+.idea
+dist
+node_modules
+public
+temp
+test-environment
+yarn.lock
+
+
+
