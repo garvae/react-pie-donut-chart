@@ -1,0 +1,40 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# cache
+/cache
+
+# log
+*.log
+
+# misc
+.DS_Store
+.env.development.local
+.env.local
+.env.production.local
+.env.test.local
+.eslintrc
+.husky
+.idea
+.local.eslintrc.js
+.yalc
+eslintrc.local.js
+package-lock.json
+yalc.lock
+
+# lib
+test-environment
+example
+
+# production
+/build
+
+# temp
+temp
