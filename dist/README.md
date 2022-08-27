@@ -16,7 +16,13 @@ Moreover, this component is accessible.
 - ✔️ability to show some text in the center of the chart
 - ✔️ready for TypeScript
 - ✔️detailed documentation
-- ✔️100% Tests-covered
+- ✔️100% Tests-covered 
+
+---
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/garvae/react-pie-donut-chart/master/doc/assets/img/cover.svg" alt="cover" width="100%" height="auto">
+</p> 
 
 ---
 
@@ -25,6 +31,11 @@ Moreover, this component is accessible.
 <p align="center">
     <video src="https://user-images.githubusercontent.com/57904389/187030090-12e0d8cd-d497-459f-b322-ffa020171015.mp4" alt="react-pie-donut-chart variants" width="100%" height="auto">
 </p>  
+
+
+<br/>
+
+> ⚠️ If the video is not loading, try going to the [GitHub repo](https://github.com/garvae/react-pie-donut-chart) or using the [direct link](https://user-images.githubusercontent.com/57904389/187030090-12e0d8cd-d497-459f-b322-ffa020171015.mp4)
 
 > 🌐 Demo page coming soon
 
@@ -258,5 +269,9 @@ Give a  ⭐ if this project helped you!
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://www.github.com/garvae/react-pie-donut-chart/issues). You can also take a look at the [contributing guide](https://wwwhub.com/garvae/react-pie-donut-chart/raw/master/CONTRIBUTING.md).
+
+<br/>
+
+<hr/>
 
 ## 📄 [License - MIT](https://github.com/garvae/react-pie-donut-chart/blob/master/LICENSE)

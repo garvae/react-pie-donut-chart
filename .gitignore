@@ -30,7 +30,7 @@ package-lock.json
 yalc.lock
 
 # lib
-test-environment
+/test-environment
 example
 
 # production
