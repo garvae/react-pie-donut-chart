@@ -190,64 +190,78 @@ yarn add @garvae/react-pie-donut-chart
 ## 🚀️ Example
 
 ```typescript jsx
-import { PieDonutChart, TDataItem } from '@garvae/react-pie-donut-chart';
+import PieDonutChart, { DataItem } from '@garvae/react-pie-donut-chart';
+import React from 'react';
 
-const DATA: TDataItem[] = [
-  {
-    color: '#287BC8',
-    id: '001',
-    order: 1,
-    value: 10,
-  },
-  {
-    color: '#D64045',
-    id: '002',
-    order: 2,
-    value: 40,
-  },
-  {
-    color: '#daf6ec',
-    id: '003',
-    order: 3,
-    value: 30,
-  },
-  {
-    color: '#9ED8DB',
-    id: '004',
-    order: 4,
-    value: 20,
-  },
-  {
-    color: '#2B2D42',
-    id: '005',
-    order: 5,
-    value: 50,
-  },
+const DATA: DataItem[] = [
+    {
+        color: '#287BC8',
+        id: '001',
+        order: 1,
+        value: 10,
+    },
+    {
+        color: '#D64045',
+        id: '002',
+        order: 2,
+        value: 40,
+    },
+    {
+        color: '#daf6ec',
+        id: '003',
+        order: 3,
+        value: 30,
+    },
+    {
+        color: '#9ED8DB',
+        id: '004',
+        order: 4,
+        value: 20,
+    },
+    {
+        color: '#2B2D42',
+        id: '005',
+        order: 5,
+        value: 50,
+    },
 ];
 
 // "Pie" type chart variant with "parentRef" prop (auto-resize)
 const ChartPieAutoResize = () => {
-  const ref = React.useRef<HTMLDivElement>(null)
+    const ref = React.useRef<HTMLDivElement>(null);
 
-  return (
-    <div style={{width: '300px', height: '300px'}} ref={ref}>
-      <ChartPie data={DATA} parentRef={ref}/>
-    </div>
-  );
+    return (
+        <div
+            ref={ref}
+            style={{ height: '300px', width: '300px' }}
+        >
+            <PieDonutChart
+                data={DATA}
+                parentRef={ref}
+            />
+        </div>
+    );
 };
 
 // "Pie" type chart variant with "size" prop (no auto-resize)
 const ChartPieWithFixedSize = () => {
-  return (
-    <ChartPie data={DATA} size={300}/>
-  );
+    return (
+        <PieDonutChart
+            data={DATA}
+            size={300}
+        />
+    );
 };
 
 // "Donut" type chart variant with "size" prop (no auto-resize)
 const ChartDonutWithFixedSize = () => {
-  return (
-    <ChartPie data={DATA} size={300} gap={10}/>
-  );
+    return (
+        <PieDonutChart
+            data={DATA}
+            gap={10}
+            size={300}
+        />
+    );
 };
 ```
 

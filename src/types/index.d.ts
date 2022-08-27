@@ -361,59 +361,82 @@ export type PieDonutChartProps = {
  * @example - basic usage. More examples: https://github.com/garvae/react-pie-donut-chart
  *
  * ```typescript jsx
- * import { PieDonutChart, TDataItem } from 'PieDonutChart';
+ * import PieDonutChart, { DataItem } from '@garvae/react-pie-donut-chart';
+ * import React from 'react';
  *
- * const DATA: TDataItem[] = [
- *   {
- *     color: '#287BC8',
- *     id: '001',
- *     order: 1,
- *     value: 10,
- *   },
- *   {
- *     color: '#D64045',
- *     id: '002',
- *     order: 2,
- *     value: 40,
- *   },
- *   {
- *     color: '#daf6ec',
- *     id: '003',
- *     order: 3,
- *     value: 30,
- *   },
- *   {
- *     color: '#9ED8DB',
- *     id: '004',
- *     order: 4,
- *     value: 20,
- *   },
- *   {
- *     color: '#2B2D42',
- *     id: '005',
- *     order: 5,
- *     value: 50,
- *   },
+ * const DATA: DataItem[] = [
+ *     {
+ *         color: '#287BC8',
+ *         id: '001',
+ *         order: 1,
+ *         value: 10,
+ *     },
+ *     {
+ *         color: '#D64045',
+ *         id: '002',
+ *         order: 2,
+ *         value: 40,
+ *     },
+ *     {
+ *         color: '#daf6ec',
+ *         id: '003',
+ *         order: 3,
+ *         value: 30,
+ *     },
+ *     {
+ *         color: '#9ED8DB',
+ *         id: '004',
+ *         order: 4,
+ *         value: 20,
+ *     },
+ *     {
+ *         color: '#2B2D42',
+ *         id: '005',
+ *         order: 5,
+ *         value: 50,
+ *     },
  * ];
  *
- * // Variant with "parentRef" prop (auto-resize)
- * const ChartAutoResize = () => {
- *   const ref = React.useRef<HTMLDivElement>(null)
+ * // "Pie" type chart variant with "parentRef" prop (auto-resize)
+ * const ChartPieAutoResize = () => {
+ *     const ref = React.useRef<HTMLDivElement>(null);
  *
- *   return (
- *     <div style={{width: '300px', height: '300px'}} ref={ref}>
- *       <ChartPie data={DATA} parentRef={ref}/>
- *     </div>
- *   );
+ *     return (
+ *         <div
+ *             ref={ref}
+ *             style={{ height: '300px', width: '300px' }}
+ *         >
+ *             <PieDonutChart
+ *                 data={DATA}
+ *                 parentRef={ref}
+ *             />
+ *         </div>
+ *     );
  * };
  *
- * // Variant with "size" prop (no auto-resize)
- * const ChartSizeFixed = () => {
- *   return (
- *     <ChartPie data={DATA} size={300}/>
- *   );
+ * // "Pie" type chart variant with "size" prop (no auto-resize)
+ * const ChartPieWithFixedSize = () => {
+ *     return (
+ *         <PieDonutChart
+ *             data={DATA}
+ *             size={300}
+ *         />
+ *     );
+ * };
+ *
+ * // "Donut" type chart variant with "size" prop (no auto-resize)
+ * const ChartDonutWithFixedSize = () => {
+ *     return (
+ *         <PieDonutChart
+ *             data={DATA}
+ *             gap={10}
+ *             size={300}
+ *         />
+ *     );
  * };
  * ```
+ *
+ * @author Garvae - https://github.com/garvae
  */
 declare function PieDonutChart(props: PieDonutChartProps): JSX.Element;
 exports.PieDonutChart = PieDonutChart;
