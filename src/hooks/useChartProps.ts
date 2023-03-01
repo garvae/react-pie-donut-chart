@@ -139,6 +139,8 @@ export const useChartProps = (props: TUseChartProps) => {
   } = useChartParams({
     animationDuration,
     chartCenterSize,
+    colorChartBackground,
+    colorChartCenter,
     colorText: colorTextProp,
     data,
     donutThickness: donutThicknessProp,

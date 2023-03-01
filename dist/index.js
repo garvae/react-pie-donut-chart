@@ -4,7 +4,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2022 Garvae
+ * Copyright (c) 2023 Garvae
  *
  * Author repo: https://github.com/garvae
  * Author email: vgarvae@gmail.com
@@ -283,11 +283,11 @@ const createChartSegmentPathDraw = (props) => {
     /**
      * proportion of previous segments
      */
-    const ratioPrev = valueSegmentsPreviousTotal / valueSegmentsTotal;
+    const ratioPrev = valueSegmentsPreviousTotal / (valueSegmentsTotal || 1);
     /**
      * proportion of the current segment to total chart
      */
-    const ratioCurrent = valueSegment / valueSegmentsTotal;
+    const ratioCurrent = valueSegment / (valueSegmentsTotal || 1);
     /**
      * start angle of the current segment
      */
@@ -401,7 +401,10 @@ const Chart = (props) => {
         /**
          * the sum of previous segments values
          */
-        const prevTotal = ((_a = data === null || data === void 0 ? void 0 : data.filter((_, index) => index < i)) === null || _a === void 0 ? void 0 : _a.reduce((c, n) => c + n.value, 0)) || 0;
+        let prevTotal = 0;
+        if (i > 0) {
+            prevTotal = ((_a = data === null || data === void 0 ? void 0 : data.filter((_, index) => index < i)) === null || _a === void 0 ? void 0 : _a.reduce((c, n) => c + n.value, 0)) || 0;
+        }
         /**
          * the proportion of previous segments
          */
@@ -658,6 +661,7 @@ Received mutation has invalid Node element.
 Node element has invalid "clientWidth" or "clientHeight" param (or both)
 `;
 const processResizeMutationNoChangesErrText = 'Received mutation has no changes';
+const CUSTOM_NODE_EVENT_NAME_RESIZE = 'resize';
 /**
  * Mutations calls subscription processing
  * @param {MutationRecord[]} mutations
@@ -723,7 +727,6 @@ const processResizeMutation = (mutations) => {
 /**
  * Custom node event name
  */
-const CUSTOM_NODE_EVENT_NAME_RESIZE = 'resize';
 /**
  * Inspired by: https://stackoverflow.com/a/46555778/14140292
  *
@@ -988,53 +991,64 @@ const USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT = 'Items with equal "order" par
  */
 const useChartDataRemap = (props) => {
     const { data: dataProp, gap, } = props;
-    const incomingData = React.useMemo(() => dataProp
-        .map((item, i) => {
-        let id = item.id;
-        if (id && dataProp.filter(dataItem => dataItem.id === id).length > 1) {
-            const newId = generateUniqueID();
-            consoleWarn(`
-        Data item #${i} param "id" error: Must be unique.
-        
-        Provided: "id" = ${id}
-        This was caught and now one of equals "id" replaced with: "id" = ${newId}
-        ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ID_TEXT}
-        `);
-            id = newId;
+    const incomingData = React.useMemo(() => {
+        const dataValid = dataProp.filter(segment => !!segment.value);
+        if (!dataValid.length) {
+            return [];
         }
-        const order = item.order;
-        if (typeof order === 'number' && dataProp.filter(dataItem => dataItem.order === order).length > 1) {
-            consoleWarn(`
-        Data item #${i} param "order" error: Should be unique.
-        
-        Provided: "order" = ${order}
-        ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT}
-        Just make sure the result on the chart is what you expected.
-        `);
-        }
-        return {
-            color: item.color || randomColorHEX(),
-            id: id || generateUniqueID(),
-            order: item.order || dataProp.length + 1 + i,
-            value: item.value,
-        };
-    })
-        .sort((a, b) => {
-        if (a.order < b.order) {
-            return -1;
-        }
-        if (a.order > b.order) {
-            return 1;
-        }
-        return 0;
-    }), [dataProp]);
+        return dataValid
+            .map((item, i) => {
+            let id = item.id;
+            if (id && dataValid.filter(dataItem => dataItem.id === id).length > 1) {
+                const newId = generateUniqueID();
+                consoleWarn(`
+          Data item #${i} param "id" error: Must be unique.
+          
+          Provided: "id" = ${id}
+          This was caught and now one of equals "id" replaced with: "id" = ${newId}
+          ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ID_TEXT}
+          `);
+                id = newId;
+            }
+            let order = item.order;
+            if (typeof order === 'number' && dataValid.filter(dataItem => dataItem.order === order).length > 1) {
+                consoleWarn(`
+          Data item #${i} param "order" error: Should be unique.
+          
+          Provided: "order" = ${order}
+          ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT}
+          Just make sure the result on the chart is what you expected.
+          `);
+            }
+            order = 0;
+            if (dataValid.length > 1) {
+                order = item.order || dataValid.length + 1 + i;
+            }
+            return {
+                color: item.color || randomColorHEX(),
+                id: id || generateUniqueID(),
+                order,
+                value: item.value,
+            };
+        })
+            .sort((a, b) => {
+            if (a.order < b.order) {
+                return -1;
+            }
+            if (a.order > b.order) {
+                return 1;
+            }
+            return 0;
+        });
+    }, [dataProp]);
     return React.useMemo(() => {
         if (!gap) {
             return incomingData;
         }
         const segments = [];
         if (gap) {
-            Array(incomingData.length * 2)
+            const arrLength = incomingData.length > 1 ? incomingData.length * 2 : 1;
+            Array(arrLength)
                 .fill(null)
                 .forEach((_, i) => {
                 if (i === 0) {
@@ -1057,6 +1071,8 @@ const useChartDataRemap = (props) => {
     }, [gap, incomingData]);
 };
 
+const SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT = '#fff';
+const SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK = '#111';
 /**
  * Listens for some incoming params changes and calculates some of current chart params
  * @function useChartParams (hook)
@@ -1064,7 +1080,7 @@ const useChartDataRemap = (props) => {
  * @return { TUseChartParamsReturn } returns chart params (centerSize, colorText, etc...)
  */
 const useChartParams = (props) => {
-    const { animationDuration, chartCenterSize, colorText: colorTextProp, data, donutThickness, gap, isSelectedValueShownInCenter, selected, size, text: textProp, } = props;
+    const { animationDuration, chartCenterSize, colorChartBackground, colorChartCenter, colorText: colorTextProp, data, donutThickness, gap, isSelectedValueShownInCenter, selected, size, text: textProp, } = props;
     /**
      * sum of data item's values
      */
@@ -1120,7 +1136,7 @@ const useChartParams = (props) => {
             if (isSelectedValueShownInCenter && selected) {
                 return String(selected.value);
             }
-            if (gap) {
+            if (data.length > 1 && gap) {
                 return String(totalDataValue - gap * data.length / 2);
             }
             return String(totalDataValue);
@@ -1143,6 +1159,30 @@ const useChartParams = (props) => {
         if (colorTextProp) {
             return colorTextProp;
         }
+        if (data.length === 1) {
+            let textBackgroundColor = colorChartBackground || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT;
+            if (centerSize || donutThickness) {
+                if (colorChartCenter) {
+                    textBackgroundColor = colorChartCenter;
+                }
+            }
+            else if (data[0].color) {
+                textBackgroundColor = data[0].color;
+            }
+            textBackgroundColor.toLocaleLowerCase();
+            const colorSegment = (data[0].color || (selected === null || selected === void 0 ? void 0 : selected.color) || (biggestValueItem === null || biggestValueItem === void 0 ? void 0 : biggestValueItem.color) || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT).toLocaleLowerCase();
+            let c = SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT;
+            const isTextBackgroundColorWhite = (textBackgroundColor === 'white' || textBackgroundColor.slice(0, 3) === 'fff');
+            if ((textBackgroundColor.startsWith('#') && colorSegment.startsWith('#')) || (textBackgroundColor === colorSegment)) {
+                const textBackgroundColorClean = textBackgroundColor.replace('#', '');
+                const colorSegmentClean = colorSegment.replace('#', '');
+                if (textBackgroundColorClean === colorSegmentClean
+                    && (isTextBackgroundColorWhite || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK.toLowerCase().replace('#', '') !== colorSegmentClean)) {
+                    c = SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK;
+                }
+            }
+            return c;
+        }
         if (textProp) {
             return biggestValueItem.color;
         }
@@ -1155,6 +1195,11 @@ const useChartParams = (props) => {
         colorTextProp,
         selected,
         textProp,
+        centerSize,
+        colorChartBackground,
+        colorChartCenter,
+        data,
+        donutThickness,
     ]);
     return {
         centerSize,
@@ -1179,6 +1224,9 @@ const useChartSelectedSegment = (props) => {
     return React.useMemo(() => {
         if (!data || !Array.isArray(data) || !data.length || !isSelectedValueShownInCenter || (!focusedSegment && !selected)) {
             return null;
+        }
+        if (data.length === 1) {
+            return data[0];
         }
         const s = data.find(item => item.id === focusedSegment || item.id === selected);
         if (!s) {
@@ -1690,6 +1738,8 @@ const useChartProps = (props) => {
     const { centerSize, colorText, donutThickness, radius, segmentsStyles, text, totalDataValue, viewBox, } = useChartParams({
         animationDuration,
         chartCenterSize,
+        colorChartBackground,
+        colorChartCenter,
         colorText: colorTextProp,
         data,
         donutThickness: donutThicknessProp,

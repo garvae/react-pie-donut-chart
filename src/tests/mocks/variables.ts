@@ -117,6 +117,20 @@ export const TEST_CHART_PROPS_COMMON: PieDonutChartProps = {
 };
 
 export const FAKE_DATA_SLICED = TEST_PROPS.data.slice(0, 2);
+export const FAKE_DATA_SINGLE_SEGMENT = [ TEST_PROPS.data[0] ];
+export const FAKE_DATA_ONLY_ONE_VALID_SEGMENT = TEST_CHART_PROPS_COMMON.data.map((item, i) => {
+  if (i === 0) {
+    return {
+      ...item,
+      value: 10,
+    };
+  }
+
+  return {
+    ...item,
+    value: 0,
+  };
+});
 
 export const CHECK_INCOMING_VALUES_TEST_VALUES_VALID: TCreateChartSegmentPathDraw = {
   radiusInner: TEST_SIZE_CHART / 3,

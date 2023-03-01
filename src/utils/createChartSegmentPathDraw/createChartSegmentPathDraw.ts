@@ -26,12 +26,12 @@ export const createChartSegmentPathDraw = (props: TCreateChartSegmentPathDraw) =
   /**
    * proportion of previous segments
    */
-  const ratioPrev = valueSegmentsPreviousTotal / valueSegmentsTotal;
+  const ratioPrev = valueSegmentsPreviousTotal / (valueSegmentsTotal || 1);
 
   /**
    * proportion of the current segment to total chart
    */
-  const ratioCurrent = valueSegment / valueSegmentsTotal;
+  const ratioCurrent = valueSegment / (valueSegmentsTotal || 1);
 
   /**
    * start angle of the current segment

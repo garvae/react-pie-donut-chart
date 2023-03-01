@@ -32,51 +32,67 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
     gap,
   } = props;
 
-  const incomingData = useMemo(() => dataProp
-    .map((item, i) => {
+  const incomingData = useMemo(() => {
 
-      let id = item.id;
-      if (id && dataProp.filter(dataItem => dataItem.id === id).length > 1) {
-        const newId = generateUniqueID();
+    const dataValid = dataProp.filter(segment => !!segment.value);
 
-        consoleWarn(`
-        Data item #${i} param "id" error: Must be unique.
-        
-        Provided: "id" = ${id}
-        This was caught and now one of equals "id" replaced with: "id" = ${newId}
-        ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ID_TEXT}
-        `);
+    if (!dataValid.length) {
+      return [];
+    }
 
-        id = newId;
-      }
+    return dataValid
+      .map((item, i) => {
 
-      const order = item.order;
-      if (typeof order === 'number' && dataProp.filter(dataItem => dataItem.order === order).length > 1) {
-        consoleWarn(`
-        Data item #${i} param "order" error: Should be unique.
-        
-        Provided: "order" = ${order}
-        ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT}
-        Just make sure the result on the chart is what you expected.
-        `);
-      }
+        let id = item.id;
+        if (id && dataValid.filter(dataItem => dataItem.id === id).length > 1) {
+          const newId = generateUniqueID();
 
-      return {
-        color: item.color || randomColorHEX(),
-        id: id || generateUniqueID(),
-        order: item.order || dataProp.length + 1 + i,
-        value: item.value,
-      };
-    })
-    .sort((a, b) => {
-      if (a.order < b.order) {
-        return -1;
-      }
-      if (a.order > b.order) {
-        return 1;
-      }
-      return 0;
-    }) as TDataItemRequired[], [ dataProp ]);
+          consoleWarn(`
+          Data item #${i} param "id" error: Must be unique.
+          
+          Provided: "id" = ${id}
+          This was caught and now one of equals "id" replaced with: "id" = ${newId}
+          ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ID_TEXT}
+          `);
+
+          id = newId;
+        }
+
+        let order = item.order;
+
+        if (typeof order === 'number' && dataValid.filter(dataItem => dataItem.order === order).length > 1) {
+          consoleWarn(`
+          Data item #${i} param "order" error: Should be unique.
+          
+          Provided: "order" = ${order}
+          ${USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT}
+          Just make sure the result on the chart is what you expected.
+          `);
+        }
+
+        order = 0;
+
+        if (dataValid.length > 1) {
+          order = item.order || dataValid.length + 1 + i;
+        }
+
+        return {
+          color: item.color || randomColorHEX(),
+          id: id || generateUniqueID(),
+          order,
+          value: item.value,
+        };
+      })
+      .sort((a, b) => {
+        if (a.order < b.order) {
+          return -1;
+        }
+        if (a.order > b.order) {
+          return 1;
+        }
+        return 0;
+      }) as TDataItemRequired[];
+  }, [ dataProp ]);
 
   return useMemo(() => {
     if (!gap) {
@@ -86,7 +102,9 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
     const segments: TDataItemRequired[] = [];
 
     if (gap) {
-      Array(incomingData.length * 2)
+      const arrLength = incomingData.length > 1 ? incomingData.length * 2 : 1;
+
+      Array(arrLength)
         .fill(null)
         .forEach((_, i) => {
 

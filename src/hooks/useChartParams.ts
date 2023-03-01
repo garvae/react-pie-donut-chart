@@ -13,10 +13,14 @@ import {
 import { sanitizeNumber } from 'utils/sanitizeNumber';
 import { DEFAULT_CHART_TEXT_COLOR } from 'variables/defaults';
 
+export const  SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT = '#fff';
+export const  SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK = '#111';
 
 type TUseChartParams = {
   animationDuration: number;
   chartCenterSize: TPieDonutChartPropsInternal['chartCenterSize'];
+  colorChartBackground: TPieDonutChartPropsInternal['colorChartBackground'];
+  colorChartCenter: TPieDonutChartPropsInternal['colorChartCenter'];
   colorText: TPieDonutChartPropsInternal['colorText'];
   data: TDataItemRequired[];
   donutThickness: TPieDonutChartPropsInternal['donutThickness'];
@@ -62,6 +66,8 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
   const {
     animationDuration,
     chartCenterSize,
+    colorChartBackground,
+    colorChartCenter,
     colorText: colorTextProp,
     data,
     donutThickness,
@@ -139,7 +145,7 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
         return String(selected.value);
       }
 
-      if (gap) {
+      if (data.length > 1 && gap) {
         return String(totalDataValue - gap * data.length / 2);
       }
 
@@ -166,6 +172,41 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
       return colorTextProp;
     }
 
+    if (data.length === 1) {
+
+      let textBackgroundColor = colorChartBackground || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT;
+
+      if (centerSize || donutThickness) {
+        if (colorChartCenter) {
+          textBackgroundColor = colorChartCenter;
+        }
+      } else if (data[0].color) {
+        textBackgroundColor = data[0].color;
+      }
+
+      textBackgroundColor.toLocaleLowerCase();
+
+      const colorSegment = (data[0].color || selected?.color || biggestValueItem?.color || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT).toLocaleLowerCase();
+
+      let c = SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT;
+
+      const isTextBackgroundColorWhite = (textBackgroundColor === 'white' || textBackgroundColor.slice(0, 3) === 'fff');
+
+      if ((textBackgroundColor.startsWith('#') && colorSegment.startsWith('#')) || (textBackgroundColor === colorSegment)) {
+        const textBackgroundColorClean = textBackgroundColor.replace('#', '');
+        const colorSegmentClean = colorSegment.replace('#', '');
+
+        if (
+          textBackgroundColorClean === colorSegmentClean
+            && (isTextBackgroundColorWhite || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK.toLowerCase().replace('#', '') !== colorSegmentClean)
+        ) {
+          c = SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK;
+        }
+      }
+
+      return c;
+    }
+
     if (textProp) {
       return biggestValueItem.color;
     }
@@ -180,6 +221,11 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
     colorTextProp,
     selected,
     textProp,
+    centerSize,
+    colorChartBackground,
+    colorChartCenter,
+    data,
+    donutThickness,
   ]);
 
   return {

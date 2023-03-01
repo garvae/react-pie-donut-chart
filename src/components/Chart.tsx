@@ -136,9 +136,14 @@ export const Chart = (props: TChartProps) => {
           /**
            * the sum of previous segments values
            */
-          const prevTotal = data
-            ?.filter((_, index) => index < i)
-            ?.reduce((c, n) => c + n.value, 0) || 0;
+          let prevTotal = 0;
+
+          if (i > 0) {
+            prevTotal = data
+              ?.filter((_, index) => index < i)
+              ?.reduce((c, n) => c + n.value, 0) || 0;
+          }
+
 
           /**
            * the proportion of previous segments

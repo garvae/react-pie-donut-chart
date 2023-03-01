@@ -1,6 +1,6 @@
-import { CUSTOM_NODE_EVENT_NAME_RESIZE } from 'hooks/helpers/useHandleResize/startResizeListener/startResizeListener';
 import { consoleError } from 'utils/console';
 import { isTest } from 'utils/env';
+
 
 const processResizeMutationDefaultErrText = 'Error while processing "processResizeMutation" function:';
 export const processResizeMutationNoMutationsErrText = 'No mutations received';
@@ -10,6 +10,8 @@ Received mutation has invalid Node element.
 Node element has invalid "clientWidth" or "clientHeight" param (or both)
 `;
 export const processResizeMutationNoChangesErrText = 'Received mutation has no changes';
+
+export const CUSTOM_NODE_EVENT_NAME_RESIZE = 'resize';
 
 /**
  * Mutations calls subscription processing
@@ -80,7 +82,7 @@ export const processResizeMutation = (mutations: MutationRecord[]) => {
 
   const event = new CustomEvent(CUSTOM_NODE_EVENT_NAME_RESIZE, { detail: {
     height: h,
-    width: w, 
+    width: w,
   } });
   el.dispatchEvent?.(event);
 };

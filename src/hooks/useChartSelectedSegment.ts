@@ -30,6 +30,10 @@ export const useChartSelectedSegment = (props: TUseChartSelectedSegment): TDataI
       return null;
     }
 
+    if (data.length === 1) {
+      return data[0];
+    }
+
     const s = data.find(item => item.id === focusedSegment || item.id === selected);
 
     if (!s) {

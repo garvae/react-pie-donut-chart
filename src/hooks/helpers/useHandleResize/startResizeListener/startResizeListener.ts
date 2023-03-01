@@ -3,7 +3,6 @@
  */
 import { processResizeMutation } from 'hooks/helpers/useHandleResize/startResizeListener/processResizeMutation';
 
-export const CUSTOM_NODE_EVENT_NAME_RESIZE = 'resize';
 
 /**
  * Describes props for the 'startResizeListener' function returned by 'useResizeListener' hook
