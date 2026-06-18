@@ -1,5 +1,9 @@
+# Temporarily disabled during maintenance.
+# CI will be restored after pnpm/tooling/build/test modernization is complete.
+# See: docs/maintenance/01-pnpm-ci-pause.md
 name: CI
-on: [push]
+on:
+  workflow_dispatch:
 jobs:
   build:
     name: Build and lint on Node ${{ matrix.node }} and ${{ matrix.os }}

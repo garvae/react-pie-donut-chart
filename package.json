@@ -46,7 +46,7 @@
   },
   "scripts": {
     "analyze": "size-limit",
-    "build": "yarn rollup:compile",
+    "build": "npm run rollup:compile",
     "build:index-cleanup": "node scripts/clean-dist-index.js",
     "copy:license": "cpx LICENSE dist",
     "copy:readme": "cpx README.md dist",
@@ -56,13 +56,13 @@
     "generate:packagejson": "node scripts/generate-package-json.js",
     "generate:ts-config": "node scripts/generate-ts-config.js && prettier --write tsconfig.json",
     "lint:js": "cross-env LINT=true eslint src/**/*.{ts,tsx} --fix",
-    "postbuild": "yarn build:index-cleanup && yarn generate:packagejson && yarn copy:license && yarn copy:types && yarn copy:readme",
+    "postbuild": "npm run build:index-cleanup && npm run generate:packagejson && npm run copy:license && npm run copy:types && npm run copy:readme",
     "postinstall": "husky install",
-    "postprepare": "yarn generate:packagejson",
-    "pre-commit": "yarn lint:js && yarn test",
-    "prebuild": "yarn generate:ts-config && yarn delete:dist && yarn lint:js",
+    "postprepare": "npm run generate:packagejson",
+    "pre-commit": "npm run lint:js && npm run test",
+    "prebuild": "npm run generate:ts-config && npm run delete:dist && npm run lint:js",
     "prepare": "husky install",
-    "pretest": "yarn generate:ts-config",
+    "pretest": "npm run generate:ts-config",
     "publish:dist": "cd dist && npm publish",
     "rollup:compile": "rollup src/index.ts --file dist/index.js --format cjs -c rollup.config.js",
     "size": "size-limit",
@@ -73,6 +73,19 @@
   "resolutions": {
     "react-error-overlay": "6.0.9"
   },
+  "pnpm": {
+    "overrides": {
+      "react-error-overlay": "6.0.9"
+    },
+    "onlyBuiltDependencies": [
+      "core-js",
+      "esbuild",
+      "node-sass",
+      "pre-commit",
+      "spawn-sync"
+    ]
+  },
+  "packageManager": "pnpm@10.32.1",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix"
@@ -95,7 +108,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn pre-commit"
+      "pre-commit": "npm run pre-commit"
     }
   },
   "devDependencies": {
