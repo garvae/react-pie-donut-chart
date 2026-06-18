@@ -1,25 +1,19 @@
-name: Publish
+# Temporarily disabled during maintenance.
+# Automatic publish was wired to run after successful CI on master.
+# This workflow is now a no-op and will not publish the npm package under any trigger.
+# npm publish automation will be redesigned in a later maintenance PR after
+# tooling modernization (ESLint, Rollup, Node version, test stack) is complete.
+# See: docs/maintenance/01-pnpm-ci-pause.md
+name: Publish Disabled
+
 on:
-  workflow_run:
-    workflows: [ "CI" ]
-    branches: [ master ]
-    types:
-      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
-  build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  publish-disabled:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
-          # Defaults to the user or organization that owns the workflow file
-          scope: '@garvae'
-      - run: yarn
-      - run: yarn publish:dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
+      - run: echo "npm publish is temporarily disabled during maintenance. See docs/maintenance/01-pnpm-ci-pause.md"

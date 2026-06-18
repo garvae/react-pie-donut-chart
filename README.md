@@ -16,7 +16,7 @@ Moreover, this component is accessible.
 - ✔️ability to show some text in the center of the chart
 - ✔️ready for TypeScript
 - ✔️detailed documentation
-- ✔️100% Tests-covered 
+- ✔️ aims for strong test coverage (maintenance goal: near-100% for core behavior)
 
 ---
 
