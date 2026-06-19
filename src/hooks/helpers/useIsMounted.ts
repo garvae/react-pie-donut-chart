@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { isTest } from 'utils/env';
 
@@ -36,5 +32,5 @@ export const useIsMounted = (): TUseIsMountedReturn => {
     }
 
     return ref.current;
-  }, [ ref ]);
+  }, [ref]);
 };

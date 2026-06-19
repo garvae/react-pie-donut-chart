@@ -22,12 +22,7 @@ type TCreateSvgCommandsString = {
  * @return { string } path
  */
 export const createSvgCommandsString = (props: TCreateSvgCommandsString) => {
-  const {
-    angleDegrees,
-    radiusInner,
-    radiusOuter,
-    size,
-  } = props;
+  const { angleDegrees, radiusInner, radiusOuter, size } = props;
 
   /**
    * Here we determine which way the arc will be formed to the point - along a short or long one.
@@ -41,7 +36,7 @@ export const createSvgCommandsString = (props: TCreateSvgCommandsString) => {
   const coordsPointCommandA1 = getPointCoords({
     angleDegrees,
     radius: radiusOuter,
-    size,
+    size
   });
 
   const commandA1 = `A ${radiusOuter} ${radiusOuter} 0 ${longPathFlag} 0 ${coordsPointCommandA1}`;
@@ -49,7 +44,7 @@ export const createSvgCommandsString = (props: TCreateSvgCommandsString) => {
   const coordsPointCommandL1 = getPointCoords({
     angleDegrees,
     radius: radiusInner,
-    size,
+    size
   });
 
   const commandL1 = `L ${coordsPointCommandL1}`;
@@ -59,16 +54,10 @@ export const createSvgCommandsString = (props: TCreateSvgCommandsString) => {
   const coordsPointCommandL2 = getPointCoords({
     angleDegrees: 0,
     radius: radiusOuter,
-    size,
+    size
   });
 
   const commandL2 = `L ${coordsPointCommandL2}`;
 
-  return [
-    commandM1,
-    commandA1,
-    commandL1,
-    commandA2,
-    commandL2,
-  ].join(' ');
+  return [commandM1, commandA1, commandL1, commandA2, commandL2].join(' ');
 };

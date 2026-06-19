@@ -1,4 +1,3 @@
-
 /**
  * Describes properties for the "createSvgCommandsString" function
  * @typedef { Object } TGetStartPointCoords
@@ -19,16 +18,11 @@ type TGetStartPointCoords = {
  * @return { string } coords 'x y'
  */
 export const getPointCoords = (props: TGetStartPointCoords): string => {
-
-  const {
-    angleDegrees,
-    radius,
-    size,
-  } = props;
+  const { angleDegrees, radius, size } = props;
 
   const halfSize = size / 2;
   const x = radius * Math.cos((angleDegrees * Math.PI) / 180) + halfSize;
-  const y = - radius * Math.sin((angleDegrees * Math.PI) / 180) + halfSize;
+  const y = -radius * Math.sin((angleDegrees * Math.PI) / 180) + halfSize;
 
   return `${x} ${y}`;
 };

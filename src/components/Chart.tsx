@@ -1,14 +1,10 @@
-import React from 'react';
-
 import { TUseChartPropsReturn } from 'hooks/useChartProps';
+import React from 'react';
 import { convertPercentToDegrees } from 'utils/createChartSegmentPathDraw/_utils/convertPercentToDegrees';
 import { createChartSegmentPathDraw } from 'utils/createChartSegmentPathDraw/createChartSegmentPathDraw';
 import { isKeyDownEnter } from 'utils/isKeyDownEnter';
 import { sanitizeNumber } from 'utils/sanitizeNumber';
-import {
-  SINGLE_VALUE_CORRECTION_RATIO,
-  DEFAULT_COLOR_SEGMENT_FOCUSED_OUTLINE,
-} from 'variables/defaults';
+import { DEFAULT_COLOR_SEGMENT_FOCUSED_OUTLINE, SINGLE_VALUE_CORRECTION_RATIO } from 'variables/defaults';
 
 /** segment offset correction angle */
 export const SEGMENT_OFFSET_CORRECTION_ANGLE = 90;
@@ -20,36 +16,37 @@ export const TEST_DATA_ATTR_CHART_GROUP_SEGMENT_GAP = 'data-test-gap';
 export const TEST_DATA_ATTR_CHART_GROUP_SEGMENT_THICKNESS = 'data-test-thickness';
 export const TEST_DATA_ATTR_CHART_GROUP_SEGMENT_SELECTED = 'data-test-selected';
 
-export type TChartProps = Pick<TUseChartPropsReturn,
-'chartRef'
-| 'classNameChartSegment'
-| 'classNameSvgGroupSegments'
-| 'colorSegmentFocusedOutline'
-| 'data'
-| 'donutThickness'
-| 'focusedSegment'
-| 'gap'
-| 'handleClearSelects'
-| 'hoverScaleRatio'
-| 'hoveredSegment'
-| 'isScaleOnHover'
-| 'isSelectOnClick'
-| 'isSelectOnKeyEnterDown'
-| 'mouseDownSegment'
-| 'stylesHoveredSegment'
-| 'onSegmentClick'
-| 'onSegmentKeyEnterDown'
-| 'radius'
-| 'segmentsStyles'
-| 'selected'
-| 'setFocusedSegment'
-| 'setHoveredSegment'
-| 'setMouseDownSegment'
-| 'setSelected'
-| 'size'
-| 'strokeWidth'
-| 'tabIndex'
-| 'totalDataValue'
+export type TChartProps = Pick<
+  TUseChartPropsReturn,
+  | 'chartRef'
+  | 'classNameChartSegment'
+  | 'classNameSvgGroupSegments'
+  | 'colorSegmentFocusedOutline'
+  | 'data'
+  | 'donutThickness'
+  | 'focusedSegment'
+  | 'gap'
+  | 'handleClearSelects'
+  | 'hoverScaleRatio'
+  | 'hoveredSegment'
+  | 'isScaleOnHover'
+  | 'isSelectOnClick'
+  | 'isSelectOnKeyEnterDown'
+  | 'mouseDownSegment'
+  | 'stylesHoveredSegment'
+  | 'onSegmentClick'
+  | 'onSegmentKeyEnterDown'
+  | 'radius'
+  | 'segmentsStyles'
+  | 'selected'
+  | 'setFocusedSegment'
+  | 'setHoveredSegment'
+  | 'setMouseDownSegment'
+  | 'setSelected'
+  | 'size'
+  | 'strokeWidth'
+  | 'tabIndex'
+  | 'totalDataValue'
 >;
 
 /**
@@ -59,7 +56,6 @@ export type TChartProps = Pick<TUseChartPropsReturn,
  * @returns { JSX.Element } returns svg group <g> of <path> (segments)
  */
 export const Chart = (props: TChartProps) => {
-
   const {
     chartRef,
     classNameChartSegment,
@@ -89,7 +85,7 @@ export const Chart = (props: TChartProps) => {
     strokeWidth,
     stylesHoveredSegment,
     tabIndex,
-    totalDataValue,
+    totalDataValue
   } = props;
 
   if (!data.length) {
@@ -101,245 +97,218 @@ export const Chart = (props: TChartProps) => {
       className={classNameSvgGroupSegments}
       data-testid={TEST_DATA_ID_CHART_GROUP_SEGMENTS}
       onBlurCapture={handleClearSelects}
-      onMouseLeave={
-        () => {
-          if (hoveredSegment) {
-            setHoveredSegment(null);
-          }
+      onMouseLeave={() => {
+        if (hoveredSegment) {
+          setHoveredSegment(null);
         }
-      }
-      ref={chartRef}
-    >
-      {
-        data.map((item, i) => {
+      }}
+      ref={chartRef}>
+      {data.map((item, i) => {
+        /**
+         * if current segment is a gap
+         */
+        const isGapSegment = !!gap && i % 2 !== 0;
 
-          /**
-           * if current segment is a gap
-           */
-          const isGapSegment = !!gap && i % 2 !== 0;
+        const { color, id, value: valueParam } = item;
 
-          const {
-            color,
-            id,
-            value: valueParam,
-          } = item;
+        let value = valueParam;
 
-          let value = valueParam;
+        /**
+         * correction when only one item in data
+         */
+        if (data.length === 1) {
+          value = value * SINGLE_VALUE_CORRECTION_RATIO;
+        }
 
-          /**
-           * correction when only one item in data
-           */
-          if (data.length === 1) {
-            value = value * SINGLE_VALUE_CORRECTION_RATIO;
-          }
+        /**
+         * the sum of previous segments values
+         */
+        let prevTotal = 0;
 
-          /**
-           * the sum of previous segments values
-           */
-          let prevTotal = 0;
+        if (i > 0) {
+          prevTotal = data?.filter((_, index) => index < i)?.reduce((c, n) => c + n.value, 0) || 0;
+        }
 
-          if (i > 0) {
-            prevTotal = data
-              ?.filter((_, index) => index < i)
-              ?.reduce((c, n) => c + n.value, 0) || 0;
-          }
+        /**
+         * the proportion of previous segments
+         */
+        const prevTotalPercentage = (sanitizeNumber(prevTotal) / sanitizeNumber(totalDataValue, 1)) * 100;
 
+        /**
+         * the proportion of the current segment
+         */
+        const currentPercentage = (sanitizeNumber(value) / sanitizeNumber(totalDataValue, 1)) * 100;
 
-          /**
-           * the proportion of previous segments
-           */
-          const prevTotalPercentage = sanitizeNumber(prevTotal) / sanitizeNumber(totalDataValue, 1) * 100;
+        /**
+         * the offset of the current segment
+         * + corrections depends on index and svg rotation
+         */
+        let segmentOffset = convertPercentToDegrees({ percent: currentPercentage }) - SEGMENT_OFFSET_CORRECTION_ANGLE;
 
-          /**
-           * the proportion of the current segment
-           */
-          const currentPercentage = sanitizeNumber(value) / sanitizeNumber(totalDataValue, 1) * 100;
+        if (i !== 0) {
+          segmentOffset = segmentOffset + convertPercentToDegrees({ percent: prevTotalPercentage });
+        }
 
-          /**
-           * the offset of the current segment
-           * + corrections depends on index and svg rotation
-           */
-          let segmentOffset = convertPercentToDegrees({ percent: currentPercentage }) - SEGMENT_OFFSET_CORRECTION_ANGLE;
+        /**
+         * is current segment selected
+         */
+        const isSelected = selected === id;
 
-          if (i !== 0) {
-            segmentOffset = segmentOffset + convertPercentToDegrees({ percent: prevTotalPercentage });
-          }
+        /**
+         * is current segment hovered
+         */
+        const isHovered = hoveredSegment === id;
 
-          /**
-           * is current segment selected
-           */
-          const isSelected = selected === id;
+        /**
+         * is current segment focused
+         */
+        const isFocused = focusedSegment === id;
 
-          /**
-           * is current segment hovered
-           */
-          const isHovered = hoveredSegment === id;
+        /**
+         * is mouse down on current segment
+         */
+        const isMouseDown = mouseDownSegment === id;
 
-          /**
-           * is current segment focused
-           */
-          const isFocused = focusedSegment === id;
+        /**
+         * the 'transform' of the current segment
+         */
 
-          /**
-           * is mouse down on current segment
-           */
-          const isMouseDown = mouseDownSegment === id;
+        let transform = `rotate(${segmentOffset}deg) scale(1)`;
 
-          /**
-           * the 'transform' of the current segment
-           */
+        if (!isGapSegment && (isSelected || isFocused || (isScaleOnHover && isHovered))) {
+          transform = `rotate(${segmentOffset}deg) scale(${hoverScaleRatio})`;
+        }
 
-          let transform = `rotate(${segmentOffset}deg) scale(1)`;
+        /**
+         * className
+         */
+        const classNameSegmentDefault = 'PieDonutChart__segment';
+        const classNameSegment = classNameChartSegment
+          ? `${classNameSegmentDefault} ${classNameChartSegment}`
+          : classNameSegmentDefault;
 
-          if (!isGapSegment && (isSelected || isFocused || (isScaleOnHover && isHovered))) {
-            transform = `rotate(${segmentOffset}deg) scale(${hoverScaleRatio})`;
-          }
+        /**
+         * stroke on focus
+         */
+        let stroke = undefined;
 
-          /**
-           * className
-           */
-          const classNameSegmentDefault = 'PieDonutChart__segment';
-          const classNameSegment = classNameChartSegment
-            ? `${classNameSegmentDefault} ${classNameChartSegment}`
-            : classNameSegmentDefault;
+        if (!isGapSegment && isFocused && !isMouseDown) {
+          stroke = colorSegmentFocusedOutline || DEFAULT_COLOR_SEGMENT_FOCUSED_OUTLINE;
+        }
 
-          /**
-           * stroke on focus
-           */
-          let stroke = undefined;
+        /**
+         * create the segment path
+         */
+        const segmentPath = createChartSegmentPathDraw({
+          radiusInner: donutThickness ? radius - donutThickness : 0,
+          radiusOuter: radius,
+          size,
+          valueSegment: value,
+          valueSegmentsPreviousTotal: prevTotal,
+          valueSegmentsTotal: totalDataValue
+        });
 
-          if (!isGapSegment && isFocused && !isMouseDown) {
-            stroke = colorSegmentFocusedOutline || DEFAULT_COLOR_SEGMENT_FOCUSED_OUTLINE;
-          }
+        /**
+         * Tests attributes (gap segments)
+         */
+        const testsAttributesGap = { [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_GAP]: gap };
 
-          /**
-           * create the segment path
-           */
-          const segmentPath = createChartSegmentPathDraw({
-            radiusInner: donutThickness ? radius - donutThickness : 0,
-            radiusOuter: radius,
-            size,
-            valueSegment: value,
-            valueSegmentsPreviousTotal: prevTotal,
-            valueSegmentsTotal: totalDataValue,
-          });
+        /**
+         * Tests attributes
+         */
+        const testsAttributes = {
+          [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID]: id,
+          [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_SELECTED]: isSelected,
+          [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_THICKNESS]: donutThickness,
+          ...(isGapSegment ? testsAttributesGap : {})
+        };
 
-          /**
-           * Tests attributes (gap segments)
-           */
-          const testsAttributesGap = { [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_GAP]: gap };
-
-          /**
-           * Tests attributes
-           */
-          const testsAttributes = {
-            [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID]: id,
-            [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_SELECTED]: isSelected,
-            [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_THICKNESS]: donutThickness,
-            ...(isGapSegment ? testsAttributesGap : {}),
-          };
-
-          return (
-            <path
-              {...testsAttributes}
-              className={classNameSegment}
-              d={segmentPath}
-              data-testid={TEST_DATA_ID_CHART_GROUP_SEGMENT}
-              fill={color}
-              key={`chart-segment-${id}`}
-              onClick={
-                () => {
-                  if (isGapSegment) {
-                    return;
-                  }
-
-                  if (isSelectOnClick && selected !== id) {
-                    setSelected(id);
-                  }
-
-                  onSegmentClick?.(id);
-                }
+        return (
+          <path
+            {...testsAttributes}
+            className={classNameSegment}
+            d={segmentPath}
+            data-testid={TEST_DATA_ID_CHART_GROUP_SEGMENT}
+            fill={color}
+            key={`chart-segment-${id}`}
+            onClick={() => {
+              if (isGapSegment) {
+                return;
               }
-              onFocus={
-                () => {
-                  if (isGapSegment) {
-                    return;
-                  }
 
-                  if (focusedSegment !== id) {
-                    setFocusedSegment(id);
-                  }
-                }
+              if (isSelectOnClick && selected !== id) {
+                setSelected(id);
               }
-              onKeyDownCapture={
-                e => {
-                  if (isGapSegment) {
-                    return;
-                  }
 
-                  /**
-                   * fires only if key === 'enter'
-                   */
-                  if (isKeyDownEnter(e)) {
-                    if (isSelectOnKeyEnterDown && selected !== id) {
-                      setSelected(id);
-                    }
+              onSegmentClick?.(id);
+            }}
+            onFocus={() => {
+              if (isGapSegment) {
+                return;
+              }
 
-                    onSegmentKeyEnterDown?.(id);
-                  }
-                }
+              if (focusedSegment !== id) {
+                setFocusedSegment(id);
               }
-              onMouseDown={
-                () => {
-                  if (isGapSegment) {
-                    return;
-                  }
+            }}
+            onKeyDownCapture={(e) => {
+              if (isGapSegment) {
+                return;
+              }
 
-                  if (mouseDownSegment !== id) {
-                    setMouseDownSegment(id);
-                  }
+              /**
+               * fires only if key === 'enter'
+               */
+              if (isKeyDownEnter(e)) {
+                if (isSelectOnKeyEnterDown && selected !== id) {
+                  setSelected(id);
                 }
-              }
-              onMouseOverCapture={
-                () => {
-                  if (isGapSegment) {
-                    return;
-                  }
 
-                  if (hoveredSegment !== id) {
-                    setHoveredSegment(id);
-                  }
-                }
+                onSegmentKeyEnterDown?.(id);
               }
-              onMouseUp={
-                e => {
-                  if (isGapSegment) {
-                    return;
-                  }
+            }}
+            onMouseDown={() => {
+              if (isGapSegment) {
+                return;
+              }
 
-                  setMouseDownSegment(null);
-                  e.currentTarget.blur();
-                }
+              if (mouseDownSegment !== id) {
+                setMouseDownSegment(id);
               }
-              stroke={stroke}
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={isGapSegment ? 0 : strokeWidth}
-              style={
-                {
-                  ...segmentsStyles,
-                  cursor: isGapSegment ? 'initial' : 'pointer',
-                  outline: 'none',
-                  transform,
-                  transitionProperty: 'all',
-                  ...(!isGapSegment && isHovered && stylesHoveredSegment ? stylesHoveredSegment : {}),
-                }
+            }}
+            onMouseOverCapture={() => {
+              if (isGapSegment) {
+                return;
               }
-              tabIndex={isGapSegment ? -1 : tabIndex}
-            />
-          );
-        })
-      }
+
+              if (hoveredSegment !== id) {
+                setHoveredSegment(id);
+              }
+            }}
+            onMouseUp={(e) => {
+              if (isGapSegment) {
+                return;
+              }
+
+              setMouseDownSegment(null);
+              e.currentTarget.blur();
+            }}
+            stroke={stroke}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={isGapSegment ? 0 : strokeWidth}
+            style={{
+              ...segmentsStyles,
+              cursor: isGapSegment ? 'initial' : 'pointer',
+              outline: 'none',
+              transform,
+              transitionProperty: 'all',
+              ...(!isGapSegment && isHovered && stylesHoveredSegment ? stylesHoveredSegment : {})
+            }}
+            tabIndex={isGapSegment ? -1 : tabIndex}
+          />
+        );
+      })}
     </g>
   );
 };

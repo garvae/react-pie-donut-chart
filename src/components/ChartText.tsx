@@ -1,19 +1,19 @@
-import React from 'react';
-
 import { TUseChartPropsReturn } from 'hooks/useChartProps';
+import React from 'react';
 
 export const TEST_DATA_ID_CHART_TEXT_FOREIGN_OBJECT = 'TEST_DATA_ID_CHART_TEXT_FOREIGN_OBJECT';
 
-type TChartText = Pick<TUseChartPropsReturn,
-'children'
-| 'classNameChildren'
-| 'classNameSvgGroupText'
-| 'classNameSvgObjectText'
-| 'classNameText'
-| 'colorText'
-| 'fontSize'
-| 'size'
-| 'text'
+type TChartText = Pick<
+  TUseChartPropsReturn,
+  | 'children'
+  | 'classNameChildren'
+  | 'classNameSvgGroupText'
+  | 'classNameSvgObjectText'
+  | 'classNameText'
+  | 'colorText'
+  | 'fontSize'
+  | 'size'
+  | 'text'
 >;
 
 /**
@@ -22,8 +22,7 @@ type TChartText = Pick<TUseChartPropsReturn,
  * @param { TChartText } props
  * @returns { JSX.Element } returns svg group <g> of <foreignObject> which contains passed "text" or (and) "children"
  */
-export const ChartText: React.FC<TChartText> = props => {
-
+export const ChartText: React.FC<TChartText> = (props) => {
   const {
     children,
     classNameChildren,
@@ -33,7 +32,7 @@ export const ChartText: React.FC<TChartText> = props => {
     colorText,
     fontSize,
     size,
-    text,
+    text
   } = props;
 
   if (!text && !children) {
@@ -41,10 +40,7 @@ export const ChartText: React.FC<TChartText> = props => {
   }
 
   return (
-    <g
-      className={classNameSvgGroupText}
-      style={{ pointerEvents: 'none' }}
-    >
+    <g className={classNameSvgGroupText} style={{ pointerEvents: 'none' }}>
       <foreignObject
         className={classNameSvgObjectText}
         data-testid={TEST_DATA_ID_CHART_TEXT_FOREIGN_OBJECT}
@@ -52,48 +48,37 @@ export const ChartText: React.FC<TChartText> = props => {
         style={{ position: 'relative' }}
         width={size}
         x="0"
-        y="0"
-      >
-        {
-          text && (
-            <div
-              className={classNameText}
-              style={
-                {
-                  alignItems: 'center',
-                  color: colorText,
-                  display: 'flex',
-                  fontSize: `${fontSize}px`,
-                  height: '100%',
-                  justifyContent: 'center',
-                  position: 'absolute',
-                  transition: 'font-size .3s, color .3s',
-                  width: '100%',
-                }
-              }
-            >
-              {text}
-            </div>
-          )
-        }
+        y="0">
+        {text && (
+          <div
+            className={classNameText}
+            style={{
+              alignItems: 'center',
+              color: colorText,
+              display: 'flex',
+              fontSize: `${fontSize}px`,
+              height: '100%',
+              justifyContent: 'center',
+              position: 'absolute',
+              transition: 'font-size .3s, color .3s',
+              width: '100%'
+            }}>
+            {text}
+          </div>
+        )}
 
-        {
-          children && (
-            <div
-              className={classNameChildren}
-              style={
-                {
-                  display: 'flex',
-                  height: '100%',
-                  position: 'absolute',
-                  width: '100%',
-                }
-              }
-            >
-              {children}
-            </div>
-          )
-        }
+        {children && (
+          <div
+            className={classNameChildren}
+            style={{
+              display: 'flex',
+              height: '100%',
+              position: 'absolute',
+              width: '100%'
+            }}>
+            {children}
+          </div>
+        )}
       </foreignObject>
     </g>
   );

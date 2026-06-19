@@ -12,16 +12,16 @@ enum ETypeofType {
   FUNCTION = 'function',
   NUMBER = 'number',
   OBJECT = 'object',
-  STRING = 'string',
+  STRING = 'string'
 }
 
 type TCheckPropsErrorsItem = {
-  condition?: boolean,
+  condition?: boolean;
   err?: string;
-  isUndefinedPossible?: boolean,
+  isUndefinedPossible?: boolean;
   name: string;
-  type?: ETypeofType,
-  value?: unknown
+  type?: ETypeofType;
+  value?: unknown;
 };
 
 /**
@@ -30,7 +30,6 @@ type TCheckPropsErrorsItem = {
  * @param { TPieDonutChartPropsInternal } props
  */
 export const checkPropsErrors = (props: TPieDonutChartPropsInternal) => {
-
   const {
     animationSpeed,
     chartCenterSize,
@@ -71,7 +70,7 @@ export const checkPropsErrors = (props: TPieDonutChartPropsInternal) => {
     stylesHoveredSegment,
     tabIndex,
     text,
-    widthSegmentFocusedOutline,
+    widthSegmentFocusedOutline
   } = props;
 
   const numberUndefinedParams = {
@@ -86,14 +85,14 @@ export const checkPropsErrors = (props: TPieDonutChartPropsInternal) => {
     resizeReRenderDebounceTime,
     size,
     tabIndex,
-    widthSegmentFocusedOutline,
+    widthSegmentFocusedOutline
   };
 
   const booleanUndefinedParams = {
     isScaleOnHover,
     isSelectOnClick,
     isSelectOnKeyEnterDown,
-    isSelectedValueShownInCenter,
+    isSelectedValueShownInCenter
   };
 
   const stringUndefinedParams = {
@@ -114,70 +113,62 @@ export const checkPropsErrors = (props: TPieDonutChartPropsInternal) => {
     colorSegmentsBackground,
     colorText,
     selected,
-    text,
+    text
   };
 
   const functionUndefinedParams = {
     onSegmentClick,
-    onSegmentKeyEnterDown,
+    onSegmentKeyEnterDown
   };
 
   const objectUndefinedParams = { stylesHoveredSegment };
 
   const properties: TCheckPropsErrorsItem[] = [
-    ...Object.entries(numberUndefinedParams).map(([ key, value ]) => ({
+    ...Object.entries(numberUndefinedParams).map(([key, value]) => ({
       isUndefinedPossible: true,
       name: key,
       type: ETypeofType.NUMBER,
-      value,
+      value
     })),
 
-    ...Object.entries(booleanUndefinedParams).map(([ key, value ]) => ({
+    ...Object.entries(booleanUndefinedParams).map(([key, value]) => ({
       isUndefinedPossible: true,
       name: key,
       type: ETypeofType.BOOLEAN,
-      value,
+      value
     })),
 
-    ...Object.entries(stringUndefinedParams).map(([ key, value ]) => ({
+    ...Object.entries(stringUndefinedParams).map(([key, value]) => ({
       isUndefinedPossible: true,
       name: key,
       type: ETypeofType.STRING,
-      value,
+      value
     })),
 
-    ...Object.entries(functionUndefinedParams).map(([ key, value ]) => ({
+    ...Object.entries(functionUndefinedParams).map(([key, value]) => ({
       isUndefinedPossible: true,
       name: key,
       type: ETypeofType.FUNCTION,
-      value,
+      value
     })),
 
-    ...Object.entries(objectUndefinedParams).map(([ key, value ]) => ({
+    ...Object.entries(objectUndefinedParams).map(([key, value]) => ({
       isUndefinedPossible: true,
       name: key,
       type: ETypeofType.OBJECT,
-      value,
+      value
     })),
 
     {
       condition: !!(data && Array.isArray(data)),
       err: INVALID_DATA_DEFAULT_ERROR,
-      name: 'data',
-    },
+      name: 'data'
+    }
   ];
 
   if (!isProduction()) {
-    properties.forEach(item => {
-
-      const {
-        condition,
-        err,
-        isUndefinedPossible,
-        name: nameProp,
-        type,
-        value,
-      } = item;
+    properties.forEach((item) => {
+      const { condition, err, isUndefinedPossible, name: nameProp, type, value } = item;
 
       let name = nameProp;
 
@@ -244,15 +235,14 @@ export const checkPropsErrors = (props: TPieDonutChartPropsInternal) => {
               const isParentRefCurrentHasKeyOffsetWidth = 'offsetWidth' in parentRef.current;
 
               if (
-                !isParentRefCurrentHasKeyOffsetHeight
-                || !isParentRefCurrentHasKeyOffsetWidth
-                || typeof parentRef.current.offsetHeight !== 'number'
-                || typeof parentRef.current.offsetWidth !== 'number'
+                !isParentRefCurrentHasKeyOffsetHeight ||
+                !isParentRefCurrentHasKeyOffsetWidth ||
+                typeof parentRef.current.offsetHeight !== 'number' ||
+                typeof parentRef.current.offsetWidth !== 'number'
               ) {
                 consoleError(parentRefError);
               }
             }
-
           }
         }
       }
@@ -263,12 +253,7 @@ export const checkPropsErrors = (props: TPieDonutChartPropsInternal) => {
      */
     if (props.data && Array.isArray(props.data)) {
       props.data.forEach((item, i) => {
-        const {
-          color,
-          id,
-          order,
-          value,
-        } = item;
+        const { color, id, order, value } = item;
 
         let dataItemId = `index of ${i}`;
 

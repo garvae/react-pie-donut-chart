@@ -1,31 +1,20 @@
-import React from 'react';
-
-import {
-  renderHook,
-  render,
-  screen,
-  fireEvent,
-} from '@testing-library/react';
+import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  TestUseClickOutside,
   TEST_USE_CLICK_OUTSIDE_BUTTON_TEXT,
+  TestUseClickOutside
 } from 'hooks/__TESTS__/helpers/useClickOutside/TestUseClickOutside';
-import {
-  useClickOutside,
-  TUseClickOutside,
-  useClickOutsideNoCbErrText,
-} from 'hooks/helpers/useClickOutside';
+import { TUseClickOutside, useClickOutside, useClickOutsideNoCbErrText } from 'hooks/helpers/useClickOutside';
+import React from 'react';
 import { mockConsole } from 'tests/mocks/console';
 import { TEST_PROPS } from 'tests/mocks/variables';
 import { multilineToSingleLineLowerCased } from 'tests/utils/multilineToSingleLine';
 import { originalEnv } from 'utils/env';
 
-
 const USE_CLICK_OUTSIDE_TEST_PROPS: TUseClickOutside = {
   callback: jest.fn(),
   isWithKeyEsc: true,
-  ref: TEST_PROPS.parentRef,
+  ref: TEST_PROPS.parentRef
 };
 
 describe('hook "useClickOutside"', () => {
@@ -33,15 +22,18 @@ describe('hook "useClickOutside"', () => {
     expect.assertions(1);
     const { consoleErrorMocked } = mockConsole();
 
-    renderHook(() => useClickOutside({
-      ...USE_CLICK_OUTSIDE_TEST_PROPS,
-      callback: undefined,
-    }));
+    renderHook(() =>
+      useClickOutside({
+        ...USE_CLICK_OUTSIDE_TEST_PROPS,
+        callback: undefined
+      })
+    );
 
     const consoleCallText = consoleErrorMocked.mock.calls[0][0];
 
-    expect(multilineToSingleLineLowerCased(consoleCallText))
-      .toContain(multilineToSingleLineLowerCased(useClickOutsideNoCbErrText));
+    expect(multilineToSingleLineLowerCased(consoleCallText)).toContain(
+      multilineToSingleLineLowerCased(useClickOutsideNoCbErrText)
+    );
   });
 
   it('fires the callback when catches "MouseEvent" outside of the target. NODE_ENV: \'test\'', () => {
@@ -51,12 +43,10 @@ describe('hook "useClickOutside"', () => {
 
     const Cmp = (
       <TestUseClickOutside
-        propsUseClickOutside={
-          {
-            ...USE_CLICK_OUTSIDE_TEST_PROPS,
-            callback: stub,
-          }
-        }
+        propsUseClickOutside={{
+          ...USE_CLICK_OUTSIDE_TEST_PROPS,
+          callback: stub
+        }}
       />
     );
 
@@ -72,7 +62,7 @@ describe('hook "useClickOutside"', () => {
 
     process.env = {
       ...originalEnv,
-      NODE_ENV: 'production',
+      NODE_ENV: 'production'
     };
 
     rerender(Cmp);
@@ -93,23 +83,21 @@ describe('hook "useClickOutside"', () => {
     const { consoleErrorMocked } = mockConsole();
     const stub = jest.fn();
 
-    render((
+    render(
       <TestUseClickOutside
-        propsUseClickOutside={
-          {
-            ...USE_CLICK_OUTSIDE_TEST_PROPS,
-            callback: stub,
-          }
-        }
+        propsUseClickOutside={{
+          ...USE_CLICK_OUTSIDE_TEST_PROPS,
+          callback: stub
+        }}
       />
-    ));
+    );
 
     jest.advanceTimersToNextTimer();
 
     const button = screen.getByText(TEST_USE_CLICK_OUTSIDE_BUTTON_TEXT);
     fireEvent.keyUp(button, {
       code: 27,
-      key: 'Escape', 
+      key: 'Escape'
     });
 
     expect(consoleErrorMocked).not.toHaveBeenCalled();

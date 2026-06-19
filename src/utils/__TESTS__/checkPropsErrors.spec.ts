@@ -3,15 +3,11 @@ import { TEST_PROPS } from 'tests/mocks/variables';
 import {
   TPieDonutChartCommonPropsClassNames,
   TPieDonutChartCommonPropsColors,
-  TPieDonutChartPropsInternal,
+  TPieDonutChartPropsInternal
 } from 'types/PieDonutChart.types.internal';
 import { checkPropsErrors } from 'utils/checkPropsErrors';
 
-const {
-  classNames: classNamesProp,
-  colors: colorsProp,
-  ...restProps
-} = TEST_PROPS;
+const { classNames: classNamesProp, colors: colorsProp, ...restProps } = TEST_PROPS;
 
 const classNames: TPieDonutChartCommonPropsClassNames = {
   classNameChartBackground: classNamesProp.chartBackground,
@@ -23,7 +19,7 @@ const classNames: TPieDonutChartCommonPropsClassNames = {
   classNameSvgGroupSegmentsBackground: classNamesProp.svgGroupSegmentsBackground,
   classNameSvgGroupText: classNamesProp.svgGroupText,
   classNameSvgObjectText: classNamesProp.svgObjectText,
-  classNameText: classNamesProp.text,
+  classNameText: classNamesProp.text
 };
 
 const colors: TPieDonutChartCommonPropsColors = {
@@ -31,21 +27,20 @@ const colors: TPieDonutChartCommonPropsColors = {
   colorChartCenter: colorsProp.chartCenter,
   colorSegmentFocusedOutline: colorsProp.segmentFocusedOutline,
   colorSegmentsBackground: colorsProp.segmentsBackground,
-  colorText: colorsProp.text,
+  colorText: colorsProp.text
 };
 
 const CHECK_PROPS_ERRORS_TEST_PROPS = {
   ...classNames,
   ...colors,
-  ...restProps,
+  ...restProps
 } as unknown as TPieDonutChartPropsInternal;
-
 
 describe('function "checkPropsErrors"', () => {
   it('checks valid props and shows no console errors', () => {
     expect.assertions(1);
 
-    const { consoleErrorMocked }  = mockConsole();
+    const { consoleErrorMocked } = mockConsole();
 
     // @ts-ignore
     checkPropsErrors(CHECK_PROPS_ERRORS_TEST_PROPS);
@@ -53,11 +48,10 @@ describe('function "checkPropsErrors"', () => {
     expect(consoleErrorMocked).not.toHaveBeenCalled();
   });
 
-
   it('checks invalid props and shows console errors', () => {
     expect.assertions(1);
 
-    const { consoleErrorMocked }  = mockConsole();
+    const { consoleErrorMocked } = mockConsole();
 
     checkPropsErrors({
       ...CHECK_PROPS_ERRORS_TEST_PROPS,
@@ -72,23 +66,22 @@ describe('function "checkPropsErrors"', () => {
       // @ts-ignore
       onSegmentClick: 'invalid',
       // @ts-ignore
-      stylesHoveredSegment: 'invalid',
+      stylesHoveredSegment: 'invalid'
     });
 
     expect(consoleErrorMocked).toHaveBeenCalledTimes(6);
   });
 
   describe('checks"parentRef" prop', () => {
-
     it('is not of type "object"', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
+      const { consoleErrorMocked } = mockConsole();
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: 1234,
+        parentRef: 1234
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -97,13 +90,13 @@ describe('function "checkPropsErrors"', () => {
     it('doesn\'t have "current" key', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
+      const { consoleErrorMocked } = mockConsole();
       const invalidParentRef = { invalid: {} };
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: invalidParentRef,
+        parentRef: invalidParentRef
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -112,12 +105,12 @@ describe('function "checkPropsErrors"', () => {
     it('"current" is not of type "object"', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
+      const { consoleErrorMocked } = mockConsole();
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: { current: 1234 },
+        parentRef: { current: 1234 }
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -126,13 +119,13 @@ describe('function "checkPropsErrors"', () => {
     it('"current" doesn\'t have "offsetHeight" key', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
+      const { consoleErrorMocked } = mockConsole();
       const invalidParentRef = { invalid: { offsetWidth: 1 } };
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: invalidParentRef,
+        parentRef: invalidParentRef
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -141,16 +134,18 @@ describe('function "checkPropsErrors"', () => {
     it('"current" has invalid "offsetHeight" key', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
-      const invalidParentRef = { current: {
-        offsetHeight: '*',
-        offsetWidth: 1,
-      } };
+      const { consoleErrorMocked } = mockConsole();
+      const invalidParentRef = {
+        current: {
+          offsetHeight: '*',
+          offsetWidth: 1
+        }
+      };
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: invalidParentRef,
+        parentRef: invalidParentRef
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -159,13 +154,13 @@ describe('function "checkPropsErrors"', () => {
     it('"current" has no "offsetWidth" key', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
+      const { consoleErrorMocked } = mockConsole();
       const invalidParentRef = { invalid: { offsetHeight: 1 } };
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: invalidParentRef,
+        parentRef: invalidParentRef
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -174,16 +169,18 @@ describe('function "checkPropsErrors"', () => {
     it('"current" has invalid "offsetWidth" key', () => {
       expect.assertions(1);
 
-      const { consoleErrorMocked }  = mockConsole();
-      const invalidParentRef = { current: {
-        offsetHeight: 1,
-        offsetWidth: '*',
-      } };
+      const { consoleErrorMocked } = mockConsole();
+      const invalidParentRef = {
+        current: {
+          offsetHeight: 1,
+          offsetWidth: '*'
+        }
+      };
 
       checkPropsErrors({
         ...CHECK_PROPS_ERRORS_TEST_PROPS,
         // @ts-ignore
-        parentRef: invalidParentRef,
+        parentRef: invalidParentRef
       });
 
       expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -193,28 +190,31 @@ describe('function "checkPropsErrors"', () => {
   it('checks invalid "data" prop elements and shows console errors', () => {
     expect.assertions(1);
 
-    const { consoleErrorMocked }  = mockConsole();
+    const { consoleErrorMocked } = mockConsole();
 
     // @ts-ignore
     checkPropsErrors({
       ...CHECK_PROPS_ERRORS_TEST_PROPS,
-      data: [ {
-      // @ts-ignore
-        color: 1234,
-        // @ts-ignore
-        id: 1234,
-        // @ts-ignore
-        order: '1',
-        // @ts-ignore
-        value: '50',
-      }, {
-      // @ts-ignore
-        color: 2234,
-        // @ts-ignore
-        id: 2234,
-        // @ts-ignore
-        order: '2',
-      } ],
+      data: [
+        {
+          // @ts-ignore
+          color: 1234,
+          // @ts-ignore
+          id: 1234,
+          // @ts-ignore
+          order: '1',
+          // @ts-ignore
+          value: '50'
+        },
+        {
+          // @ts-ignore
+          color: 2234,
+          // @ts-ignore
+          id: 2234,
+          // @ts-ignore
+          order: '2'
+        }
+      ]
     });
 
     expect(consoleErrorMocked).toHaveBeenCalledTimes(8);
@@ -223,12 +223,12 @@ describe('function "checkPropsErrors"', () => {
   it('checks the invalid "donutThickness" prop and shows console errors', () => {
     expect.assertions(1);
 
-    const { consoleErrorMocked }  = mockConsole();
+    const { consoleErrorMocked } = mockConsole();
 
     // @ts-ignore
     checkPropsErrors({
       ...CHECK_PROPS_ERRORS_TEST_PROPS,
-      donutThickness: CHECK_PROPS_ERRORS_TEST_PROPS.size,
+      donutThickness: CHECK_PROPS_ERRORS_TEST_PROPS.size
     });
 
     expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
@@ -237,12 +237,12 @@ describe('function "checkPropsErrors"', () => {
   it('checks the invalid "children" prop and shows console errors', () => {
     expect.assertions(1);
 
-    const { consoleErrorMocked }  = mockConsole();
+    const { consoleErrorMocked } = mockConsole();
 
     checkPropsErrors({
       ...CHECK_PROPS_ERRORS_TEST_PROPS,
       // @ts-ignore
-      children: {},
+      children: {}
     });
 
     expect(consoleErrorMocked).toHaveBeenCalledTimes(1);

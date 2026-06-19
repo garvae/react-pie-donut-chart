@@ -18,7 +18,7 @@
     "noImplicitReturns": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "paths": {"tslib" : ["node_modules/tslib/tslib.d.ts"]},
+    "paths": { "tslib": ["node_modules/tslib/tslib.d.ts"] },
     "resolveJsonModule": true,
     "rootDir": "src",
     "skipLibCheck": true,
@@ -30,14 +30,5 @@
     "typeRoots": ["node_modules/@types", "src/types"]
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "_other",
-    "build",
-    "cache",
-    "coverage",
-    "nginx",
-    "node_modules",
-    "temp",
-    "test-environment"
-  ]
+  "exclude": ["_other", "build", "cache", "coverage", "nginx", "node_modules", "temp", "test-environment"]
 }

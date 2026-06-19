@@ -1,10 +1,4 @@
-import {
-  isClient,
-  isProduction,
-  isTest,
-  originalEnv,
-} from 'utils/env';
-
+import { isClient, isProduction, isTest, originalEnv } from 'utils/env';
 
 describe('function "isClient"', () => {
   it('returns a valid value', () => {
@@ -22,7 +16,7 @@ describe('function "isProduction"', () => {
 
     process.env = {
       ...originalEnv,
-      NODE_ENV: 'production',
+      NODE_ENV: 'production'
     };
 
     expect(isProduction()).toBeTruthy();
@@ -45,7 +39,7 @@ describe('function "isTest"', () => {
 
     process.env = {
       ...originalEnv,
-      NODE_ENV: 'production',
+      NODE_ENV: 'production'
     };
 
     expect(isTest()).toBeFalsy();

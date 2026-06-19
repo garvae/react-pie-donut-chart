@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 
 import { TDataItemRequired } from 'types/PieDonutChart.types.internal';
 
-
 export type TUseChartSelectedSegment = {
   data: TDataItemRequired[];
   focusedSegment: string | null;
@@ -17,16 +16,16 @@ export type TUseChartSelectedSegment = {
  * @return { TDataItemRequired | null } returns chart's selected segment
  */
 export const useChartSelectedSegment = (props: TUseChartSelectedSegment): TDataItemRequired | null => {
-
-  const {
-    data,
-    focusedSegment,
-    isSelectedValueShownInCenter,
-    selected,
-  } = props;
+  const { data, focusedSegment, isSelectedValueShownInCenter, selected } = props;
 
   return useMemo(() => {
-    if (!data || !Array.isArray(data) || !data.length || !isSelectedValueShownInCenter || (!focusedSegment && !selected)) {
+    if (
+      !data ||
+      !Array.isArray(data) ||
+      !data.length ||
+      !isSelectedValueShownInCenter ||
+      (!focusedSegment && !selected)
+    ) {
       return null;
     }
 
@@ -34,17 +33,12 @@ export const useChartSelectedSegment = (props: TUseChartSelectedSegment): TDataI
       return data[0];
     }
 
-    const s = data.find(item => item.id === focusedSegment || item.id === selected);
+    const s = data.find((item) => item.id === focusedSegment || item.id === selected);
 
     if (!s) {
       return null;
     }
 
     return s;
-  }, [
-    data,
-    focusedSegment,
-    isSelectedValueShownInCenter,
-    selected,
-  ]);
+  }, [data, focusedSegment, isSelectedValueShownInCenter, selected]);
 };

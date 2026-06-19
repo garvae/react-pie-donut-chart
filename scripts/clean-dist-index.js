@@ -13,7 +13,7 @@ try {
     fs.unlinkSync(dist);
   }
 
-  fs.writeFileSync(dist,newData);
+  fs.writeFileSync(dist, newData);
 } catch (err) {
   // eslint-disable-next-line no-console
   console.error('clean-dist-index.js error: ', err);

@@ -1,9 +1,8 @@
-module.exports = api => {
-
+module.exports = (api) => {
   const isTest = api.env('test');
 
-  if (isTest){
-    return { presets: [ [ '@babel/preset-env', { targets: { node: 'current' } } ], '@babel/preset-react' ] };
+  if (isTest) {
+    return { presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-react'] };
   }
 
   return {
@@ -17,23 +16,26 @@ module.exports = api => {
       'node_modules',
       'public',
       'test',
-      'test-environment',
+      'test-environment'
     ],
     plugins: [
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-syntax-dynamic-import',
-      '@babel/plugin-proposal-optional-chaining',
+      '@babel/plugin-proposal-optional-chaining'
     ],
     presets: [
       '@babel/preset-typescript',
       '@babel/react',
-      [ '@babel/env', {
-        modules: false,
-        targets: {
-          browsers: [ 'last 2 versions' ],
-          node: '12',
-        },
-      } ],
-    ],
+      [
+        '@babel/env',
+        {
+          modules: false,
+          targets: {
+            browsers: ['last 2 versions'],
+            node: '12'
+          }
+        }
+      ]
+    ]
   };
 };

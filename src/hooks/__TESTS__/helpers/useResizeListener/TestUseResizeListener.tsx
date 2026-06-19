@@ -1,15 +1,9 @@
-import React, {
-  useState,
-  useRef,
-} from 'react';
-
 import { startResizeListener } from 'hooks/helpers/useHandleResize/startResizeListener/startResizeListener';
-
+import React, { useRef, useState } from 'react';
 
 export const TestUseResizeListener = () => {
-
-  const [ clicksCount, setClicksCount ] = useState<number>(0);
-  const [ cbCount, setCbCount ] = useState<number>(0);
+  const [clicksCount, setClicksCount] = useState<number>(0);
+  const [cbCount, setCbCount] = useState<number>(0);
   const ref = useRef<HTMLDivElement>(null);
 
   const startResizeListenerCb = () => {
@@ -18,21 +12,18 @@ export const TestUseResizeListener = () => {
 
   startResizeListener({
     cb: startResizeListenerCb,
-    node: ref.current,
+    node: ref.current
   });
 
   return (
     <div
       onClick={() => setClicksCount(clicksCount + 1)}
       ref={ref}
-      role='button'
-      style={
-        {
-          height: '200px',
-          width: `${clicksCount * 2}px`, 
-        }
-      }
-    >
+      role="button"
+      style={{
+        height: '200px',
+        width: `${clicksCount * 2}px`
+      }}>
       {cbCount}
     </div>
   );

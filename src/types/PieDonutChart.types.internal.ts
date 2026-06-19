@@ -1,7 +1,4 @@
-import {
-  DataItem,
-  PieDonutChartProps,
-} from './index';
+import { DataItem, PieDonutChartProps } from './index';
 
 export type TPieDonutChartCommonPropsClassNames = {
   classNameChartBackground?: string;
@@ -24,8 +21,8 @@ export type TPieDonutChartCommonPropsColors = {
   colorText?: string;
 };
 
-export type TPieDonutChartPropsInternal = Omit<PieDonutChartProps, 'classNames' | 'colors'> & TPieDonutChartCommonPropsClassNames & TPieDonutChartCommonPropsColors;
+export type TPieDonutChartPropsInternal = Omit<PieDonutChartProps, 'classNames' | 'colors'> &
+  TPieDonutChartCommonPropsClassNames &
+  TPieDonutChartCommonPropsColors;
 
 export type TDataItemRequired = Required<DataItem>;
-
-

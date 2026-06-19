@@ -1,13 +1,7 @@
-import React from 'react';
-
-import {
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TestUseResizeListener } from 'hooks/__TESTS__/helpers/useResizeListener/TestUseResizeListener';
-
+import React from 'react';
 
 describe('hook "useResizeListener"', () => {
   describe('function "startResizeListener"', () => {
@@ -28,4 +22,3 @@ describe('hook "useResizeListener"', () => {
     });
   });
 });
-

@@ -1,14 +1,7 @@
-import React from 'react';
-
-import {
-  render,
-  waitFor,
-} from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { PieDonutChart } from 'components/PieDonutChart';
-import {
-  TEST_CHART_PROPS_COMMON,
-  TEST_PROPS,
-} from 'tests/mocks/variables';
+import React from 'react';
+import { TEST_CHART_PROPS_COMMON, TEST_PROPS } from 'tests/mocks/variables';
 import { getCurrentFontSize } from 'utils/getCurrentFontSize';
 
 describe('prop "fontSize"', () => {
@@ -18,13 +11,7 @@ describe('prop "fontSize"', () => {
     const text = TEST_PROPS.text;
     const fontSize = TEST_PROPS.fontSize;
 
-    const { getByText } = render((
-      <PieDonutChart
-        {...TEST_CHART_PROPS_COMMON}
-        fontSize={fontSize}
-        text={text}
-      />
-    ));
+    const { getByText } = render(<PieDonutChart {...TEST_CHART_PROPS_COMMON} fontSize={fontSize} text={text} />);
 
     expect(getByText(text)).toHaveStyle(`font-size: ${fontSize}px`);
   });
@@ -34,16 +21,11 @@ describe('prop "fontSize"', () => {
 
     const text = TEST_PROPS.text;
 
-    const { getByText } = render((
-      <PieDonutChart
-        {...TEST_CHART_PROPS_COMMON}
-        text={text}
-      />
-    ));
+    const { getByText } = render(<PieDonutChart {...TEST_CHART_PROPS_COMMON} text={text} />);
 
     const expectedFontSize = getCurrentFontSize({
       size: TEST_PROPS.size,
-      text,
+      text
     });
 
     await waitFor(() => {

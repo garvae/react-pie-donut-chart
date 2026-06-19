@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  RefObject,
-} from 'react';
+import { RefObject, useEffect } from 'react';
 
 import { consoleError } from 'utils/console';
 import { isTest } from 'utils/env';
@@ -46,12 +43,7 @@ export type TUseClickOutside = {
  * ```
  */
 export const useClickOutside = (props: TUseClickOutside) => {
-
-  const {
-    callback,
-    isWithKeyEsc,
-    ref,
-  } = props;
+  const { callback, isWithKeyEsc, ref } = props;
 
   useEffect(() => {
     if (!callback) {
@@ -92,9 +84,7 @@ export const useClickOutside = (props: TUseClickOutside) => {
       if (
         element &&
         element !== target &&
-        (composedPath
-          ? !composedPathArr.includes(element)
-          : !element.contains(target))
+        (composedPath ? !composedPathArr.includes(element) : !element.contains(target))
       ) {
         callback(e);
       }
@@ -126,9 +116,5 @@ export const useClickOutside = (props: TUseClickOutside) => {
         window.removeEventListener('keyup', handleKeyUp);
       }
     };
-  }, [
-    ref,
-    callback,
-    isWithKeyEsc,
-  ]);
+  }, [ref, callback, isWithKeyEsc]);
 };

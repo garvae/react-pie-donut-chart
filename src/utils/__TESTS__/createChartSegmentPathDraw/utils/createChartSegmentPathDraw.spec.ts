@@ -1,8 +1,8 @@
 import { mockConsole } from 'tests/mocks/console';
 import {
-  CHECK_INCOMING_VALUES_TEST_VALUES_VALID,
   CHECK_INCOMING_VALUES_TEST_VALUES_INVALID,
-  TEST_CHART_SEGMENT_PATH_DRAW,
+  CHECK_INCOMING_VALUES_TEST_VALUES_VALID,
+  TEST_CHART_SEGMENT_PATH_DRAW
 } from 'tests/mocks/variables';
 import { createChartSegmentPathDraw } from 'utils/createChartSegmentPathDraw/createChartSegmentPathDraw';
 

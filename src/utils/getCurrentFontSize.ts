@@ -18,13 +18,7 @@ export type TGetCurrentFontSizeProps = {
  * @return { number } returns chart font size
  */
 export const getCurrentFontSize = (props: TGetCurrentFontSizeProps): number => {
-  const {
-    centerSize,
-    donutThickness,
-    fontSize: fontSizeProp,
-    size: sizeProp,
-    text,
-  } = props;
+  const { centerSize, donutThickness, fontSize: fontSizeProp, size: sizeProp, text } = props;
 
   if (fontSizeProp) {
     return fontSizeProp;
@@ -37,7 +31,7 @@ export const getCurrentFontSize = (props: TGetCurrentFontSizeProps): number => {
       size = size - donutThickness * 2;
     }
 
-    return Math.floor(size / text.length * FONT_SIZE_VALUE_CORRECTION_RATIO);
+    return Math.floor((size / text.length) * FONT_SIZE_VALUE_CORRECTION_RATIO);
   }
 
   return DEFAULT_FONT_SIZE;

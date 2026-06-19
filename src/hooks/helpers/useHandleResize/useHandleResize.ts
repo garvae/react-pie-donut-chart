@@ -1,15 +1,7 @@
-import {
-  useCallback,
-  useState,
-  useLayoutEffect,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-} from 'react';
-
 import { resizeHandler } from 'hooks/helpers/useHandleResize/resizeHandler';
 import { startResizeListener } from 'hooks/helpers/useHandleResize/startResizeListener/startResizeListener';
 import { useIsMounted } from 'hooks/helpers/useIsMounted';
+import { Dispatch, SetStateAction, useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 import { debounce } from 'utils/debounce';
 import { isClient } from 'utils/env';
@@ -21,7 +13,7 @@ export type TUseHandleResize = {
   minSize: TPieDonutChartPropsInternal['minSize'];
   parentRef: TPieDonutChartPropsInternal['parentRef'];
   resizeReRenderDebounceTime: number;
-  setAnimationDuration: Dispatch<SetStateAction<number>>,
+  setAnimationDuration: Dispatch<SetStateAction<number>>;
   size: TPieDonutChartPropsInternal['size'];
 };
 
@@ -43,7 +35,6 @@ type TUseHandleResizeReturn = {
  * @return { TUseHandleResizeReturn } - current chart's params (size)
  */
 export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn => {
-
   const {
     animationDuration,
     maxSize,
@@ -51,30 +42,29 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
     parentRef,
     resizeReRenderDebounceTime,
     setAnimationDuration,
-    size: sizeProp,
+    size: sizeProp
   } = props;
 
   const isMounted = useIsMounted();
-  const [ size, setSize ] = useState<number>(0);
-  const [ parentRefCurrent, setParentRefCurrent ] = useState<HTMLElement | null>(null);
+  const [size, setSize] = useState<number>(0);
+  const [parentRefCurrent, setParentRefCurrent] = useState<HTMLElement | null>(null);
 
-  const processUpdate = useCallback((newSize: number) => {
-    if (isMounted()) {
-      /**
-       * Freezes animation to prevent unnecessary animation bugs while resize.
-       * It will be restored automatically
-       */
-      if (animationDuration !== 0) {
-        setAnimationDuration(0);
+  const processUpdate = useCallback(
+    (newSize: number) => {
+      if (isMounted()) {
+        /**
+         * Freezes animation to prevent unnecessary animation bugs while resize.
+         * It will be restored automatically
+         */
+        if (animationDuration !== 0) {
+          setAnimationDuration(0);
+        }
+
+        setSize(newSize);
       }
-
-      setSize(newSize);
-    }
-  }, [
-    animationDuration,
-    isMounted,
-    setAnimationDuration,
-  ]);
+    },
+    [animationDuration, isMounted, setAnimationDuration]
+  );
 
   /**
    * debounced size updater
@@ -88,38 +78,33 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
   /**
    * updates size
    */
-  const updateSize = useCallback((newSize: number) => {
+  const updateSize = useCallback(
+    (newSize: number) => {
+      const n = sanitizeNumber(newSize, size);
 
-    const n = sanitizeNumber(newSize, size);
-
-    if (resizeReRenderDebounceTime === 0) {
-      processUpdate(newSize);
-    } else {
-      updateSizeDebounced(n);
-    }
-  }, [
-    processUpdate,
-    resizeReRenderDebounceTime,
-    size,
-    updateSizeDebounced,
-  ]);
+      if (resizeReRenderDebounceTime === 0) {
+        processUpdate(newSize);
+      } else {
+        updateSizeDebounced(n);
+      }
+    },
+    [processUpdate, resizeReRenderDebounceTime, size, updateSizeDebounced]
+  );
 
   /**
    * resize handler
    */
-  const handleResize = useCallback(() => resizeHandler({
-    maxSize,
-    minSize,
-    parentRef,
-    size: sizeProp,
-    updateSize,
-  }), [
-    maxSize,
-    minSize,
-    parentRef,
-    sizeProp,
-    updateSize,
-  ]);
+  const handleResize = useCallback(
+    () =>
+      resizeHandler({
+        maxSize,
+        minSize,
+        parentRef,
+        size: sizeProp,
+        updateSize
+      }),
+    [maxSize, minSize, parentRef, sizeProp, updateSize]
+  );
 
   /**
    * useResizeListener callback
@@ -131,9 +116,9 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
   useLayoutEffect(() => {
     startResizeListener({
       cb: handleResize,
-      node: parentRef?.current || null,
+      node: parentRef?.current || null
     });
-  }, [ handleResize, parentRef ]);
+  }, [handleResize, parentRef]);
 
   /**
    * fires handleResize on window's 'resize' event
@@ -145,7 +130,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
     }
 
     return undefined;
-  }, [ handleResize, sizeProp ]);
+  }, [handleResize, sizeProp]);
 
   /**
    * initializes size
@@ -158,12 +143,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
     }
 
     return undefined;
-  }, [
-    handleResize,
-    parentRef,
-    size,
-    sizeProp,
-  ]);
+  }, [handleResize, parentRef, size, sizeProp]);
 
   /**
    * Listen for "parentRef" prop changes
@@ -173,11 +153,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
       setParentRefCurrent(parentRef.current);
       handleResize();
     }
-  }, [
-    handleResize,
-    parentRef,
-    parentRefCurrent,
-  ]);
+  }, [handleResize, parentRef, parentRefCurrent]);
 
   /**
    * Listen for "size" prop changes
@@ -186,13 +162,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
     if (sizeProp && size !== sizeProp) {
       handleResize();
     }
-  }, [
-    handleResize,
-    parentRef,
-    parentRefCurrent,
-    size,
-    sizeProp,
-  ]);
+  }, [handleResize, parentRef, parentRefCurrent, size, sizeProp]);
 
   return { size };
 };

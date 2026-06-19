@@ -3,7 +3,6 @@
  */
 import { processResizeMutation } from 'hooks/helpers/useHandleResize/startResizeListener/processResizeMutation';
 
-
 /**
  * Describes props for the 'startResizeListener' function returned by 'useResizeListener' hook
  * @typedef { Object } TResizeListener
@@ -23,11 +22,7 @@ type TResizeListener = {
  * @function useResizeListener (hook)
  */
 export const startResizeListener = (props: TResizeListener): void => {
-
-  const {
-    cb,
-    node,
-  } = props;
+  const { cb, node } = props;
 
   /**
    * Custom mutation calls subscription
@@ -36,9 +31,9 @@ export const startResizeListener = (props: TResizeListener): void => {
 
   if (node?.nodeName) {
     observer.observe(node, {
-      attributeFilter: [ 'style' ],
+      attributeFilter: ['style'],
       attributeOldValue: true,
-      attributes: true,
+      attributes: true
     });
 
     node.addEventListener('resize', cb);

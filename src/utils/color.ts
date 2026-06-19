@@ -1,17 +1,10 @@
-import {
-  consoleError,
-  createErrorWithDescription,
-} from 'utils/console';
+import { consoleError, createErrorWithDescription } from 'utils/console';
 
 const ChanelRand = (): number => Math.floor(Math.random() * (256 + 1));
 
 type TRGBRandReturn = [number, number, number];
 
-const rgbRand = (): TRGBRandReturn => [
-  ChanelRand(),
-  ChanelRand(),
-  ChanelRand(),
-];
+const rgbRand = (): TRGBRandReturn => [ChanelRand(), ChanelRand(), ChanelRand()];
 const rgbToHex = (rgb: TRGBRandReturn) => ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 const colorRand = () => rgbToHex(rgbRand());
 
@@ -60,26 +53,16 @@ export const convertHexToRgb = (color: string): string => {
     report: `
     Error in: "convertHexToRgb" function
     Received value: ${color}
-    `,
+    `
   });
 
-  if (
-    !color
-    || typeof color !== 'string'
-    || color.length < 3
-    || color.length > 7
-  ) {
+  if (!color || typeof color !== 'string' || color.length < 3 || color.length > 7) {
     consoleError(errMessage);
     return '';
   }
 
   const replacer = (...args: string[]) => {
-    const [
-      _,
-      r,
-      g,
-      b,
-    ] = args;
+    const [_, r, g, b] = args;
 
     return '' + r + r + g + g + b + b;
   };
@@ -87,7 +70,7 @@ export const convertHexToRgb = (color: string): string => {
   const rgbHexArr = color
     ?.replace(HEX_REG_EXP, replacer)
     .match(/.{2}/g)
-    ?.map(x => parseInt(x, 16));
+    ?.map((x) => parseInt(x, 16));
 
   /**
    * "HEX_REG_EXP.test" is here to create more strong tests

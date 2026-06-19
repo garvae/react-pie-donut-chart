@@ -14,18 +14,9 @@ export type TResizeHandler = {
  * and fires callback when new valid size calculated
  */
 export const resizeHandler = (props: TResizeHandler) => {
-  const {
-    maxSize,
-    minSize,
-    parentRef,
-    size,
-    updateSize,
-  } = props;
+  const { maxSize, minSize, parentRef, size, updateSize } = props;
 
-  const {
-    offsetHeight,
-    offsetWidth,
-  } = parentRef?.current || {};
+  const { offsetHeight, offsetWidth } = parentRef?.current || {};
 
   const h = offsetHeight || size;
   const w = offsetWidth || size;
@@ -47,9 +38,9 @@ export const resizeHandler = (props: TResizeHandler) => {
   }
 
   if (s) {
-    if (minSize && (minSize >= s)) {
+    if (minSize && minSize >= s) {
       updateSize(minSize);
-    } else if (maxSize && (maxSize <= s)) {
+    } else if (maxSize && maxSize <= s) {
       updateSize(maxSize);
     } else {
       updateSize(s);
