@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
 
-import {
-  TDataItemRequired,
-  TPieDonutChartPropsInternal,
-} from 'types/PieDonutChart.types.internal';
+import { TDataItemRequired, TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 import { randomColorHEX } from 'utils/color';
 import { consoleWarn } from 'utils/console';
 import { generateUniqueID } from 'utils/id';
 
-export const USE_CHART_DATA_REMAP_ERR_UNIQUE_ID_TEXT = 'It recommended to you to check provided "data" and make sure all id are unique';
-export const USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT = 'Items with equal "order" params will be sorted one by another.';
+export const USE_CHART_DATA_REMAP_ERR_UNIQUE_ID_TEXT =
+  'It recommended to you to check provided "data" and make sure all id are unique';
+export const USE_CHART_DATA_REMAP_ERR_UNIQUE_ORDER_TEXT =
+  'Items with equal "order" params will be sorted one by another.';
 
 type TUseChartDataRemap = {
   data: TPieDonutChartPropsInternal['data'];
@@ -26,15 +25,10 @@ type TUseChartDataRemap = {
  * @return { TDataItemRequired[] } returns "re-mapped" sorted data (with all necessary params) and fake "gap" segments (if it's needed)
  */
 export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[] => {
-
-  const {
-    data: dataProp,
-    gap,
-  } = props;
+  const { data: dataProp, gap } = props;
 
   const incomingData = useMemo(() => {
-
-    const dataValid = dataProp.filter(segment => !!segment.value);
+    const dataValid = dataProp.filter((segment) => !!segment.value);
 
     if (!dataValid.length) {
       return [];
@@ -42,9 +36,8 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
 
     return dataValid
       .map((item, i) => {
-
         let id = item.id;
-        if (id && dataValid.filter(dataItem => dataItem.id === id).length > 1) {
+        if (id && dataValid.filter((dataItem) => dataItem.id === id).length > 1) {
           const newId = generateUniqueID();
 
           consoleWarn(`
@@ -60,7 +53,7 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
 
         let order = item.order;
 
-        if (typeof order === 'number' && dataValid.filter(dataItem => dataItem.order === order).length > 1) {
+        if (typeof order === 'number' && dataValid.filter((dataItem) => dataItem.order === order).length > 1) {
           consoleWarn(`
           Data item #${i} param "order" error: Should be unique.
           
@@ -80,7 +73,7 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
           color: item.color || randomColorHEX(),
           id: id || generateUniqueID(),
           order,
-          value: item.value,
+          value: item.value
         };
       })
       .sort((a, b) => {
@@ -92,7 +85,7 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
         }
         return 0;
       }) as TDataItemRequired[];
-  }, [ dataProp ]);
+  }, [dataProp]);
 
   return useMemo(() => {
     if (!gap) {
@@ -107,11 +100,10 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
       Array(arrLength)
         .fill(null)
         .forEach((_, i) => {
-
           if (i === 0) {
             segments.push({
               ...incomingData[0],
-              order: 0,
+              order: 0
             });
             return;
           }
@@ -121,7 +113,7 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
               color: 'transparent',
               id: generateUniqueID(),
               order: i,
-              value: gap,
+              value: gap
             });
 
             return;
@@ -129,12 +121,11 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
 
           segments.push({
             ...incomingData[i / 2],
-            order: i,
+            order: i
           });
         });
     }
 
     return segments;
-  }, [ gap, incomingData ]);
-
+  }, [gap, incomingData]);
 };

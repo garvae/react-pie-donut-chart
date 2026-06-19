@@ -1,10 +1,8 @@
-import React from 'react';
-
-
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TEST_DATA_ID_CHART_GROUP_SEGMENT } from 'components/Chart';
 import { PieDonutChart } from 'components/PieDonutChart';
+import React from 'react';
 import { TEST_CHART_PROPS_COMMON } from 'tests/mocks/variables';
 
 describe('prop "tabIndex"', () => {
@@ -13,12 +11,7 @@ describe('prop "tabIndex"', () => {
     const assertions = TEST_CHART_PROPS_COMMON.data.length;
     expect.assertions(assertions);
 
-    const { getAllByTestId } = render((
-      <PieDonutChart
-        {...TEST_CHART_PROPS_COMMON}
-        tabIndex={0}
-      />
-    ));
+    const { getAllByTestId } = render(<PieDonutChart {...TEST_CHART_PROPS_COMMON} tabIndex={0} />);
 
     const segments = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT);
     const segment = segments[0];
@@ -26,7 +19,7 @@ describe('prop "tabIndex"', () => {
 
     userEvent.tab();
     expect(segment).toHaveFocus();
-    otherSegments.forEach(item => expect(item).not.toHaveFocus());
+    otherSegments.forEach((item) => expect(item).not.toHaveFocus());
   });
 
   it('disables chart navigation with a "tab"', () => {
@@ -34,15 +27,10 @@ describe('prop "tabIndex"', () => {
     const assertions = TEST_CHART_PROPS_COMMON.data.length;
     expect.assertions(assertions);
 
-    const { getAllByTestId } = render((
-      <PieDonutChart
-        {...TEST_CHART_PROPS_COMMON}
-        tabIndex={-1}
-      />
-    ));
+    const { getAllByTestId } = render(<PieDonutChart {...TEST_CHART_PROPS_COMMON} tabIndex={-1} />);
 
     const segments = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT);
     userEvent.tab();
-    segments.forEach(item => expect(item).not.toHaveFocus());
+    segments.forEach((item) => expect(item).not.toHaveFocus());
   });
 });

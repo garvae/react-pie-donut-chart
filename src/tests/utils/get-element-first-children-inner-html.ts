@@ -1,4 +1,3 @@
-
 type TGetElementFirstChildrenInnerHtml = {
   element: HTMLElement;
 };
@@ -9,7 +8,6 @@ type TGetElementFirstChildrenInnerHtml = {
  * @param { TGetElementFirstChildrenInnerHtml } props
  */
 export const getElementFirstChildrenInnerHtml = (props: TGetElementFirstChildrenInnerHtml): string => {
-
   const { element } = props;
 
   if (!element) {

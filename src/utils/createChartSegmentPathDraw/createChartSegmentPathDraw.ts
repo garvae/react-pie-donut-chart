@@ -9,15 +9,7 @@ import { TCreateChartSegmentPathDraw } from 'utils/createChartSegmentPathDraw/cr
  * @return { string } path
  */
 export const createChartSegmentPathDraw = (props: TCreateChartSegmentPathDraw) => {
-
-  const {
-    radiusInner,
-    radiusOuter,
-    size,
-    valueSegment,
-    valueSegmentsPreviousTotal,
-    valueSegmentsTotal,
-  } = props;
+  const { radiusInner, radiusOuter, size, valueSegment, valueSegmentsPreviousTotal, valueSegmentsTotal } = props;
 
   if (!checkIncomingValues(props)) {
     return '';
@@ -52,6 +44,6 @@ export const createChartSegmentPathDraw = (props: TCreateChartSegmentPathDraw) =
     angleDegrees,
     radiusInner,
     radiusOuter,
-    size,
+    size
   });
 };

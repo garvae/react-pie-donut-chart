@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  CSSProperties,
-  ReactNode,
-  RefObject,
-} from 'react';
+import { CSSProperties, ReactNode, RefObject } from 'react';
 
 /**
  * Chart container ref
@@ -13,7 +9,7 @@ export type PieDonutChartPropRef = RefObject<HTMLElement>;
 /**
  * Chart size
  */
-export type PieDonutChartPropSize = number ;
+export type PieDonutChartPropSize = number;
 
 /**
  * Chart data item type (chart segment)
@@ -43,7 +39,6 @@ export type DataItem = {
   order?: number;
   value: number;
 };
-
 
 /**
  * Chart elements [class~] props
@@ -302,8 +297,8 @@ export type PieDonutChartProps = {
   chartCenterSize?: number;
   children?: ReactNode | string | number;
   className?: string;
-  classNames?: PieDonutChartPropsClassNames,
-  colors?: PieDonutChartPropsColors,
+  classNames?: PieDonutChartPropsClassNames;
+  colors?: PieDonutChartPropsColors;
   data: DataItem[];
   donutThickness?: number;
   fontSize?: number;
@@ -323,14 +318,15 @@ export type PieDonutChartProps = {
   tabIndex?: number;
   text?: string;
   widthSegmentFocusedOutline?: number;
-}  & (
-  {
-    parentRef?: never;
-    size: PieDonutChartPropSize;
-  } | {
-    parentRef: PieDonutChartPropRef;
-    size?: never;
-  }
+} & (
+  | {
+      parentRef?: never;
+      size: PieDonutChartPropSize;
+    }
+  | {
+      parentRef: PieDonutChartPropRef;
+      size?: never;
+    }
 );
 
 /**

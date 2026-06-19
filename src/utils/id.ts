@@ -11,16 +11,11 @@
  * ```
  */
 export const generateUniqueID = (complexity = 8) => {
-
   const cmplxt = typeof complexity === 'number' && complexity > 0 ? complexity : 8;
 
-  const chr4 = () => Math.random()
-    .toString(16)
-    .slice(-4);
+  const chr4 = () => Math.random().toString(16).slice(-4);
 
-  const newIdArr = Array(cmplxt)
-    .fill(null)
-    .map(chr4);
+  const newIdArr = Array(cmplxt).fill(null).map(chr4);
 
   if (newIdArr.length === 1) {
     return newIdArr[0];

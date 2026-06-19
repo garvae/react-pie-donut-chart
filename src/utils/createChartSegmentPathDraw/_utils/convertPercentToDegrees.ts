@@ -1,4 +1,3 @@
-
 /**
  * Describes properties for the convertPercentToDegrees function
  * @typedef { Object } TConvertPercentToDegrees
@@ -15,12 +14,11 @@ type TConvertPercentToDegrees = {
  * @returns { number } angle degrees
  */
 export const convertPercentToDegrees = (props: TConvertPercentToDegrees) => {
-
   const { percent } = props;
 
   if (typeof percent !== 'number') {
     return 0;
   }
 
-  return percent / 100 * 360;
+  return (percent / 100) * 360;
 };

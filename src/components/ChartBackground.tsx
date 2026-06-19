@@ -1,14 +1,9 @@
-import React from 'react';
-
 import { TUseChartPropsReturn } from 'hooks/useChartProps';
+import React from 'react';
 
 export const TEST_DATA_ID_CHART_BACKGROUND = 'TEST_DATA_ID_CHART_BACKGROUND';
 
-type TChartBackground = Pick<TUseChartPropsReturn,
-'classNameChartBackground'
-| 'colorChartBackground'
-| 'radius'
->;
+type TChartBackground = Pick<TUseChartPropsReturn, 'classNameChartBackground' | 'colorChartBackground' | 'radius'>;
 
 /**
  * Chart's background
@@ -16,13 +11,8 @@ type TChartBackground = Pick<TUseChartPropsReturn,
  * @param { TChartBackground } props
  * @returns { JSX.Element } returns svg circle <circle>
  */
-export const ChartBackground: React.FC<TChartBackground> = props => {
-
-  const {
-    classNameChartBackground,
-    colorChartBackground,
-    radius,
-  } = props;
+export const ChartBackground: React.FC<TChartBackground> = (props) => {
+  const { classNameChartBackground, colorChartBackground, radius } = props;
 
   if (!colorChartBackground) {
     return null;

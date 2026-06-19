@@ -1,8 +1,4 @@
-import {
-  renderHook,
-  waitFor,
-  act,
-} from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { useChartStates } from 'hooks/useChartStates';
 
 describe('hook "useChartStates"', () => {
@@ -13,10 +9,9 @@ describe('hook "useChartStates"', () => {
       const animationSpeed1 = 111;
       const animationSpeed2 = 222;
 
-      const {
-        rerender,
-        result,
-      } = renderHook(props => useChartStates(props), { initialProps: { animationSpeed: animationSpeed1 } });
+      const { rerender, result } = renderHook((props) => useChartStates(props), {
+        initialProps: { animationSpeed: animationSpeed1 }
+      });
 
       await waitFor(() => {
         const { animationDuration } = result.current;
@@ -37,7 +32,9 @@ describe('hook "useChartStates"', () => {
       const animationSpeed1 = 111;
       const animationSpeed2 = 222;
 
-      const { result } = renderHook(props => useChartStates(props), { initialProps: { animationSpeed: animationSpeed1 } });
+      const { result } = renderHook((props) => useChartStates(props), {
+        initialProps: { animationSpeed: animationSpeed1 }
+      });
 
       await waitFor(() => {
         const { animationDuration } = result.current;

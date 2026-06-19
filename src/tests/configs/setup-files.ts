@@ -1,7 +1,4 @@
-import {
-  TextEncoder,
-  TextDecoder,
-} from 'util';
+import { TextDecoder, TextEncoder } from 'util';
 
 import { originalEnv } from 'utils/env';
 

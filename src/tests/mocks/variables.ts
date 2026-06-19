@@ -1,48 +1,46 @@
+import { containerRefMocked } from 'tests/mocks/container-ref';
 import {
   DataItem,
   PieDonutChartPropRef,
+  PieDonutChartPropSize,
   PieDonutChartProps,
   PieDonutChartPropsClassNames,
-  PieDonutChartPropsColors,
-  PieDonutChartPropSize,
+  PieDonutChartPropsColors
 } from 'types';
-
-import { containerRefMocked } from 'tests/mocks/container-ref';
 import { AllRequired } from 'types/utils';
 import { TCreateChartSegmentPathDraw } from 'utils/createChartSegmentPathDraw/createChartSegmentPathDraw.types';
-
 
 export const TEST_DATA: AllRequired<DataItem>[] = [
   {
     color: '#287BC8',
     id: '001',
     order: 1,
-    value: 10,
+    value: 10
   },
   {
     color: '#D64045',
     id: '002',
     order: 2,
-    value: 40,
+    value: 40
   },
   {
     color: '#daf6ec',
     id: '003',
     order: 3,
-    value: 30,
+    value: 30
   },
   {
     color: '#2B2D42',
     id: '005',
     order: 5,
-    value: 50,
+    value: 50
   },
   {
     color: '#9ED8DB',
     id: '004',
     order: 4,
-    value: 20,
-  },
+    value: 20
+  }
 ];
 
 export const TEST_SIZE_CHART = 300;
@@ -61,7 +59,7 @@ export const TEST_CLASSNAMES: AllRequired<PieDonutChartPropsClassNames> = {
   svgGroupSegmentsBackground: 'test-classname-classNameSvgGroupSegmentsBackground',
   svgGroupText: 'test-classname-classNameSvgGroupText',
   svgObjectText: 'test-classname-classNameSvgObjectText',
-  text: 'test-classname-classNameText',
+  text: 'test-classname-classNameText'
 };
 
 export const TEST_COLORS: AllRequired<PieDonutChartPropsColors> = {
@@ -69,7 +67,7 @@ export const TEST_COLORS: AllRequired<PieDonutChartPropsColors> = {
   chartCenter: TEST_COLOR,
   segmentFocusedOutline: TEST_COLOR,
   segmentsBackground: TEST_COLOR,
-  text: TEST_COLOR,
+  text: TEST_COLOR
 };
 
 export type TPieDonutChartPropsUserAll = Omit<PieDonutChartProps, 'size' | 'parentRef'> & {
@@ -77,10 +75,12 @@ export type TPieDonutChartPropsUserAll = Omit<PieDonutChartProps, 'size' | 'pare
   size: PieDonutChartPropSize;
 };
 
-export const TEST_PROPS: AllRequired<Omit<TPieDonutChartPropsUserAll, 'children' | 'parentRef' | 'stylesHoveredSegment'>> & {
-  children: TPieDonutChartPropsUserAll['children'],
-  parentRef: TPieDonutChartPropsUserAll['parentRef'],
-  stylesHoveredSegment: TPieDonutChartPropsUserAll['stylesHoveredSegment'],
+export const TEST_PROPS: AllRequired<
+  Omit<TPieDonutChartPropsUserAll, 'children' | 'parentRef' | 'stylesHoveredSegment'>
+> & {
+  children: TPieDonutChartPropsUserAll['children'];
+  parentRef: TPieDonutChartPropsUserAll['parentRef'];
+  stylesHoveredSegment: TPieDonutChartPropsUserAll['stylesHoveredSegment'];
 } = {
   animationSpeed: 123,
   chartCenterSize: 100,
@@ -108,27 +108,27 @@ export const TEST_PROPS: AllRequired<Omit<TPieDonutChartPropsUserAll, 'children'
   stylesHoveredSegment: { color: TEST_COLOR },
   tabIndex: 0,
   text: 'Test text',
-  widthSegmentFocusedOutline: 3,
+  widthSegmentFocusedOutline: 3
 };
 
 export const TEST_CHART_PROPS_COMMON: PieDonutChartProps = {
   data: TEST_PROPS.data,
-  size: TEST_PROPS.size,
+  size: TEST_PROPS.size
 };
 
 export const FAKE_DATA_SLICED = TEST_PROPS.data.slice(0, 2);
-export const FAKE_DATA_SINGLE_SEGMENT = [ TEST_PROPS.data[0] ];
+export const FAKE_DATA_SINGLE_SEGMENT = [TEST_PROPS.data[0]];
 export const FAKE_DATA_ONLY_ONE_VALID_SEGMENT = TEST_CHART_PROPS_COMMON.data.map((item, i) => {
   if (i === 0) {
     return {
       ...item,
-      value: 10,
+      value: 10
     };
   }
 
   return {
     ...item,
-    value: 0,
+    value: 0
   };
 });
 
@@ -138,15 +138,16 @@ export const CHECK_INCOMING_VALUES_TEST_VALUES_VALID: TCreateChartSegmentPathDra
   size: TEST_SIZE_CHART,
   valueSegment: 1,
   valueSegmentsPreviousTotal: 0,
-  valueSegmentsTotal: 3,
+  valueSegmentsTotal: 3
 };
 
 export const CHECK_INCOMING_VALUES_TEST_VALUES_INVALID: TCreateChartSegmentPathDraw = {
   ...CHECK_INCOMING_VALUES_TEST_VALUES_VALID,
-  size: TEST_SIZE_CHART / 5,
+  size: TEST_SIZE_CHART / 5
 };
 
 /**
  * Depends on "CHECK_INCOMING_VALUES_TEST_VALUES_VALID"
  */
-export const TEST_CHART_SEGMENT_PATH_DRAW = 'M 300 150 A 150 150 0 0 0 75.00000000000003 20.0961894323342 L 100.00000000000003 63.39745962155612 A 100 100 0 0 1 250 150 L 300 150';
+export const TEST_CHART_SEGMENT_PATH_DRAW =
+  'M 300 150 A 150 150 0 0 0 75.00000000000003 20.0961894323342 L 100.00000000000003 63.39745962155612 A 100 100 0 0 1 250 150 L 300 150';

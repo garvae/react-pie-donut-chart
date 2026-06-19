@@ -1,7 +1,4 @@
-import {
-  TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID,
-  SEGMENT_OFFSET_CORRECTION_ANGLE,
-} from 'components/Chart';
+import { SEGMENT_OFFSET_CORRECTION_ANGLE, TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID } from 'components/Chart';
 import { TEST_CHART_PROPS_COMMON } from 'tests/mocks/variables';
 import { convertPercentToDegrees } from 'utils/createChartSegmentPathDraw/_utils/convertPercentToDegrees';
 
@@ -34,21 +31,18 @@ type TGetSegmentParamsReturn = {
  * @param { TGetSegmentParams } props
  */
 export const getSegmentParams = (props: TGetSegmentParams): TGetSegmentParamsReturn => {
+  const { isFirst, prevTotalPercentage, segment } = props;
 
-  const {
-    isFirst,
-    prevTotalPercentage,
-    segment,
-  } = props;
-
-  const segmentInData = TEST_CHART_PROPS_COMMON.data.find(item => item.id === segment.getAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID));
+  const segmentInData = TEST_CHART_PROPS_COMMON.data.find(
+    (item) => item.id === segment.getAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID)
+  );
   const totalDataValue = TEST_CHART_PROPS_COMMON.data?.reduce((current, next) => current + next.value, 0);
 
   if (!segmentInData) {
     throw new Error('Segment not found');
   }
 
-  const segmentPercentage = segmentInData.value / totalDataValue * 100;
+  const segmentPercentage = (segmentInData.value / totalDataValue) * 100;
 
   let segmentOffset = convertPercentToDegrees({ percent: segmentPercentage }) - SEGMENT_OFFSET_CORRECTION_ANGLE;
 
@@ -60,6 +54,6 @@ export const getSegmentParams = (props: TGetSegmentParams): TGetSegmentParamsRet
     segmentId: segmentInData.id,
     segmentOffset,
     segmentValue: segmentInData.value,
-    totalDataValue,
+    totalDataValue
   };
 };

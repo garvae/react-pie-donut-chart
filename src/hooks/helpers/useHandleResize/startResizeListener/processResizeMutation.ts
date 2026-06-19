@@ -1,7 +1,6 @@
 import { consoleError } from 'utils/console';
 import { isTest } from 'utils/env';
 
-
 const processResizeMutationDefaultErrText = 'Error while processing "processResizeMutation" function:';
 export const processResizeMutationNoMutationsErrText = 'No mutations received';
 export const processResizeMutationElNotFoundErrText = 'Node element is not found in the received mutation';
@@ -55,19 +54,18 @@ export const processResizeMutation = (mutations: MutationRecord[]) => {
     return;
   }
 
-  const isChange = mutations
-    .find(m => {
-      if (!m.oldValue) {
-        return true;
-      }
+  const isChange = mutations.find((m) => {
+    if (!m.oldValue) {
+      return true;
+    }
 
-      const oldValue = String(m.oldValue);
+    const oldValue = String(m.oldValue);
 
-      const isWidthChanged = !oldValue.includes(`width: ${w}px`);
-      const isHeightChanged = !oldValue.includes(`height: ${h}px`);
+    const isWidthChanged = !oldValue.includes(`width: ${w}px`);
+    const isHeightChanged = !oldValue.includes(`height: ${h}px`);
 
-      return isWidthChanged || isHeightChanged;
-    });
+    return isWidthChanged || isHeightChanged;
+  });
 
   if (!isChange) {
     if (isTest()) {
@@ -80,9 +78,11 @@ export const processResizeMutation = (mutations: MutationRecord[]) => {
     return;
   }
 
-  const event = new CustomEvent(CUSTOM_NODE_EVENT_NAME_RESIZE, { detail: {
-    height: h,
-    width: w,
-  } });
+  const event = new CustomEvent(CUSTOM_NODE_EVENT_NAME_RESIZE, {
+    detail: {
+      height: h,
+      width: w
+    }
+  });
   el.dispatchEvent?.(event);
 };

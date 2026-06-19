@@ -1,4 +1,3 @@
-
 import { generateUniqueID } from 'utils/id';
 
 describe('function "id"', () => {

@@ -1,48 +1,35 @@
-import React, {
-  RefObject,
-  PropsWithChildren,
-} from 'react';
-
-
-import {
-  render,
-  fireEvent,
-} from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  TChartProps,
   Chart,
-  TEST_DATA_ID_CHART_GROUP_SEGMENTS,
-  TEST_DATA_ID_CHART_GROUP_SEGMENT,
+  TChartProps,
   TEST_DATA_ATTR_CHART_GROUP_SEGMENT_GAP,
+  TEST_DATA_ID_CHART_GROUP_SEGMENT,
+  TEST_DATA_ID_CHART_GROUP_SEGMENTS
 } from 'components/Chart';
 import { TEST_DATA_ID_CHART_SVG_MAIN } from 'components/PieDonutChart';
+import React, { PropsWithChildren, RefObject } from 'react';
 import { TEST_PROPS } from 'tests/mocks/variables';
 
 import { DataItem } from '../../types';
 
-
 const SVGWrapper = (props: PropsWithChildren) => {
-
   const { children } = props;
 
   return (
     <svg
       data-testid={TEST_DATA_ID_CHART_SVG_MAIN}
-      style={
-        {
-          alignItems: 'center',
-          aspectRatio: '1 / 1',
-          display: 'flex',
-          height: `${TEST_PROPS.size}px`,
-          justifyContent: 'center',
-          overflow: 'visible',
-          transformOrigin: 'center',
-          width: `${TEST_PROPS.size}px`,
-        }
-      }
-      viewBox={`0 0 ${TEST_PROPS.size} ${TEST_PROPS.size}`}
-    >
+      style={{
+        alignItems: 'center',
+        aspectRatio: '1 / 1',
+        display: 'flex',
+        height: `${TEST_PROPS.size}px`,
+        justifyContent: 'center',
+        overflow: 'visible',
+        transformOrigin: 'center',
+        width: `${TEST_PROPS.size}px`
+      }}
+      viewBox={`0 0 ${TEST_PROPS.size} ${TEST_PROPS.size}`}>
       {children}
     </svg>
   );
@@ -79,7 +66,7 @@ const CHART_TEST_PROPS: TChartProps = {
   strokeWidth: TEST_PROPS.widthSegmentFocusedOutline,
   stylesHoveredSegment: TEST_PROPS.stylesHoveredSegment,
   tabIndex: TEST_PROPS.tabIndex,
-  totalDataValue: TEST_PROPS.data.reduce((current, next) => current + next.value, 0),
+  totalDataValue: TEST_PROPS.data.reduce((current, next) => current + next.value, 0)
 };
 
 describe('main "Chart" component', () => {
@@ -88,38 +75,26 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const {
-      getAllByTestId,
-      getByTestId,
-      rerender,
-    } = render((
+    const { getAllByTestId, getByTestId, rerender } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          setHoveredSegment={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} setHoveredSegment={stub} />
       </SVGWrapper>
-    ));
+    );
 
     const chart = getByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENTS);
     const segment = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT)[0];
 
     fireEvent.mouseOver(segment, { bubbles: true });
 
-
     const expectedHoveredSegment = CHART_TEST_PROPS.data[0].id;
     expect(stub).toHaveBeenCalledTimes(1);
     expect(stub).toHaveBeenCalledWith(expectedHoveredSegment);
 
-    rerender((
+    rerender(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          hoveredSegment={expectedHoveredSegment}
-          setHoveredSegment={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} hoveredSegment={expectedHoveredSegment} setHoveredSegment={stub} />
       </SVGWrapper>
-    ));
+    );
 
     fireEvent.mouseLeave(chart, { bubbles: true });
 
@@ -130,16 +105,13 @@ describe('main "Chart" component', () => {
   it('renders the chart when the specified "data" length is 1', () => {
     expect.assertions(1);
 
-    const data = [ CHART_TEST_PROPS.data[0] ];
+    const data = [CHART_TEST_PROPS.data[0]];
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          data={data}
-        />
+        <Chart {...CHART_TEST_PROPS} data={data} />
       </SVGWrapper>
-    ));
+    );
 
     const segments = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT);
 
@@ -151,22 +123,17 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          isSelectOnKeyEnterDown
-          onSegmentKeyEnterDown={undefined}
-          setSelected={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} isSelectOnKeyEnterDown onSegmentKeyEnterDown={undefined} setSelected={stub} />
       </SVGWrapper>
-    ));
+    );
 
     const segment = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT)[0];
 
     fireEvent.keyDown(segment, {
       code: 13,
-      key: 'Enter',
+      key: 'Enter'
     });
 
     expect(stub).toHaveBeenCalledWith(CHART_TEST_PROPS.data[0].id);
@@ -177,14 +144,11 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          onSegmentClick={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} onSegmentClick={stub} />
       </SVGWrapper>
-    ));
+    );
 
     /**
      * Second element should be "gap" segment when "gap" prop was provided
@@ -203,14 +167,11 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          setFocusedSegment={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} setFocusedSegment={stub} />
       </SVGWrapper>
-    ));
+    );
 
     /**
      * Second element should be "gap" segment when "gap" prop was provided
@@ -229,14 +190,11 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          onSegmentKeyEnterDown={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} onSegmentKeyEnterDown={stub} />
       </SVGWrapper>
-    ));
+    );
 
     /**
      * Second element should be "gap" segment when "gap" prop was provided
@@ -247,7 +205,7 @@ describe('main "Chart" component', () => {
 
     fireEvent.keyDown(gapSegment, {
       code: 13,
-      key: 'Enter',
+      key: 'Enter'
     });
 
     expect(stub).not.toHaveBeenCalled();
@@ -258,14 +216,11 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          onSegmentKeyEnterDown={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} onSegmentKeyEnterDown={stub} />
       </SVGWrapper>
-    ));
+    );
 
     /**
      * Second element should be "gap" segment when "gap" prop was provided
@@ -284,14 +239,11 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          onSegmentKeyEnterDown={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} onSegmentKeyEnterDown={stub} />
       </SVGWrapper>
-    ));
+    );
 
     /**
      * Second element should be "gap" segment when "gap" prop was provided
@@ -310,14 +262,11 @@ describe('main "Chart" component', () => {
 
     const stub = jest.fn();
 
-    const { getAllByTestId } = render((
+    const { getAllByTestId } = render(
       <SVGWrapper>
-        <Chart
-          {...CHART_TEST_PROPS}
-          onSegmentKeyEnterDown={stub}
-        />
+        <Chart {...CHART_TEST_PROPS} onSegmentKeyEnterDown={stub} />
       </SVGWrapper>
-    ));
+    );
 
     /**
      * Second element should be "gap" segment when "gap" prop was provided

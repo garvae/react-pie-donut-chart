@@ -2,7 +2,7 @@ const fs = require('fs');
 const { resolve } = require('path');
 
 try {
-  const raw = fs.readFileSync(resolve(__dirname,'../', 'package.json'));
+  const raw = fs.readFileSync(resolve(__dirname, '../', 'package.json'));
   const parsed = JSON.parse(raw);
 
   delete parsed['lint-staged'];
@@ -16,10 +16,10 @@ try {
 
   const newJson = {
     ...parsed,
-    'main': 'index.js',
-    'module': 'react-pie-chart.esm.js',
-    'typings': 'index.d.ts',
-    'umd:main': 'index.js',
+    main: 'index.js',
+    module: 'react-pie-chart.esm.js',
+    typings: 'index.d.ts',
+    'umd:main': 'index.js'
   };
 
   const newJsonData = JSON.stringify(newJson, null, 2);

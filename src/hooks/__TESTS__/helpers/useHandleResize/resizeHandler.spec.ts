@@ -1,8 +1,4 @@
-
-import {
-  TResizeHandler,
-  resizeHandler,
-} from 'hooks/helpers/useHandleResize/resizeHandler';
+import { resizeHandler, TResizeHandler } from 'hooks/helpers/useHandleResize/resizeHandler';
 import { TEST_PROPS } from 'tests/mocks/variables';
 
 const RESIZE_HANDLER_MOCK: TResizeHandler = {
@@ -10,14 +6,14 @@ const RESIZE_HANDLER_MOCK: TResizeHandler = {
   minSize: TEST_PROPS.minSize,
   parentRef: TEST_PROPS.parentRef,
   size: TEST_PROPS.size,
-  updateSize: () => undefined,
+  updateSize: () => undefined
 };
 
 type TGetPropsWithChangedOffsetParams = {
-  offsetHeight: number,
-  offsetWidth: number,
+  offsetHeight: number;
+  offsetWidth: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  stub: jest.Mock<any, any>,
+  stub: jest.Mock<any, any>;
 };
 
 const getPropsWithChangedOffsetParams = (props: TGetPropsWithChangedOffsetParams): TResizeHandler => ({
@@ -26,10 +22,10 @@ const getPropsWithChangedOffsetParams = (props: TGetPropsWithChangedOffsetParams
     ...RESIZE_HANDLER_MOCK.parentRef,
     current: {
       ...RESIZE_HANDLER_MOCK.parentRef?.current,
-      ...props,
-    } as HTMLElement,
+      ...props
+    } as HTMLElement
   },
-  updateSize: props.stub,
+  updateSize: props.stub
 });
 
 describe('function "resizeHandler"', () => {
@@ -38,21 +34,25 @@ describe('function "resizeHandler"', () => {
 
     const stub = jest.fn();
 
-    resizeHandler(getPropsWithChangedOffsetParams({
-      offsetHeight: 10,
-      // @ts-ignore
-      offsetWidth: '1234',
-      stub,
-    }));
+    resizeHandler(
+      getPropsWithChangedOffsetParams({
+        offsetHeight: 10,
+        // @ts-ignore
+        offsetWidth: '1234',
+        stub
+      })
+    );
 
     expect(stub).not.toHaveBeenCalled();
 
-    resizeHandler(getPropsWithChangedOffsetParams({
-      // @ts-ignore
-      offsetHeight: '1234',
-      offsetWidth: 10,
-      stub,
-    }));
+    resizeHandler(
+      getPropsWithChangedOffsetParams({
+        // @ts-ignore
+        offsetHeight: '1234',
+        offsetWidth: 10,
+        stub
+      })
+    );
 
     expect(stub).not.toHaveBeenCalled();
   });
@@ -62,11 +62,13 @@ describe('function "resizeHandler"', () => {
 
     const stub = jest.fn();
 
-    resizeHandler(getPropsWithChangedOffsetParams({
-      offsetHeight: -1,
-      offsetWidth: -2,
-      stub,
-    }));
+    resizeHandler(
+      getPropsWithChangedOffsetParams({
+        offsetHeight: -1,
+        offsetWidth: -2,
+        stub
+      })
+    );
 
     expect(stub).toHaveBeenCalledWith(RESIZE_HANDLER_MOCK.minSize);
   });
@@ -76,17 +78,21 @@ describe('function "resizeHandler"', () => {
 
     const stub = jest.fn();
 
-    resizeHandler(getPropsWithChangedOffsetParams({
-      offsetHeight: 2,
-      offsetWidth: 3,
-      stub,
-    }));
+    resizeHandler(
+      getPropsWithChangedOffsetParams({
+        offsetHeight: 2,
+        offsetWidth: 3,
+        stub
+      })
+    );
 
-    resizeHandler(getPropsWithChangedOffsetParams({
-      offsetHeight: 3,
-      offsetWidth: 2,
-      stub,
-    }));
+    resizeHandler(
+      getPropsWithChangedOffsetParams({
+        offsetHeight: 3,
+        offsetWidth: 2,
+        stub
+      })
+    );
 
     expect(stub).toHaveBeenNthCalledWith(1, RESIZE_HANDLER_MOCK.minSize);
     expect(stub).toHaveBeenNthCalledWith(2, RESIZE_HANDLER_MOCK.minSize);
@@ -102,9 +108,9 @@ describe('function "resizeHandler"', () => {
       ...getPropsWithChangedOffsetParams({
         offsetHeight: maxSize + 1,
         offsetWidth: maxSize + 1,
-        stub,
+        stub
       }),
-      minSize: undefined,
+      minSize: undefined
     });
 
     expect(stub).toHaveBeenCalledWith(maxSize);
@@ -119,9 +125,9 @@ describe('function "resizeHandler"', () => {
       ...getPropsWithChangedOffsetParams({
         offsetHeight: -1,
         offsetWidth: -2,
-        stub,
+        stub
       }),
-      minSize: undefined,
+      minSize: undefined
     });
 
     expect(stub).toHaveBeenCalledWith(0);
@@ -138,9 +144,9 @@ describe('function "resizeHandler"', () => {
       ...getPropsWithChangedOffsetParams({
         offsetHeight: smallestParam,
         offsetWidth: -10,
-        stub,
+        stub
       }),
-      maxSize: undefined,
+      maxSize: undefined
     });
 
     const anotherSmallestParam = minSize + 2;
@@ -149,9 +155,9 @@ describe('function "resizeHandler"', () => {
       ...getPropsWithChangedOffsetParams({
         offsetHeight: -10,
         offsetWidth: anotherSmallestParam,
-        stub,
+        stub
       }),
-      maxSize: undefined,
+      maxSize: undefined
     });
 
     expect(stub).toHaveBeenNthCalledWith(1, smallestParam);

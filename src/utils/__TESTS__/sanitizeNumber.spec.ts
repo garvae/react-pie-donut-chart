@@ -1,8 +1,5 @@
 import { mockConsole } from 'tests/mocks/console';
-import {
-  sanitizeNumber,
-  DEFAULT_SANITISE_NUMBER_VALUE,
-} from 'utils/sanitizeNumber';
+import { DEFAULT_SANITISE_NUMBER_VALUE, sanitizeNumber } from 'utils/sanitizeNumber';
 
 describe('function "sanitizeNumber"', () => {
   it('returns a valid number when props are valid', () => {

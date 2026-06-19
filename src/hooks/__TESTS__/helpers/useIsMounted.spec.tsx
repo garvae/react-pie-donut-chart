@@ -17,7 +17,7 @@ describe('hook "useIsMounted"', () => {
 
     process.env = {
       ...originalEnv,
-      NODE_ENV: 'production',
+      NODE_ENV: 'production'
     };
 
     const { result } = renderHook(() => useIsMounted());
@@ -31,13 +31,10 @@ describe('hook "useIsMounted"', () => {
 
     process.env = {
       ...originalEnv,
-      NODE_ENV: 'production',
+      NODE_ENV: 'production'
     };
 
-    const {
-      result,
-      unmount,
-    } = renderHook(() => useIsMounted());
+    const { result, unmount } = renderHook(() => useIsMounted());
 
     unmount();
     const isMounted = result.current;

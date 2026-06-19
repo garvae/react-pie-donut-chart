@@ -1,22 +1,18 @@
-import {
-  useEffect,
-  useMemo,
-} from 'react';
-
 import { useHandleResize } from 'hooks/helpers/useHandleResize/useHandleResize';
 import { useChartDataRemap } from 'hooks/useChartDataRemap';
 import { useChartParams } from 'hooks/useChartParams';
 import { useChartSelectedSegment } from 'hooks/useChartSelectedSegment';
 import { useChartStates } from 'hooks/useChartStates';
+import { useEffect, useMemo } from 'react';
 import { TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 import { checkPropsErrors } from 'utils/checkPropsErrors';
 import { getCurrentFontSize } from 'utils/getCurrentFontSize';
 import {
-  DEFAULT_FOCUSED_SEGMENT_STROKE_WIDTH_TO_SIZE_RATIO,
+  DEFAULT_ANIMATION_SPEED,
   DEFAULT_CHART_CENTER_COLOR,
   DEFAULT_CHART_SEGMENT_SCALE_RATIO,
-  DEFAULT_RESIZE_RE_RENDER_DEBOUNCE_TIME,
-  DEFAULT_ANIMATION_SPEED,
+  DEFAULT_FOCUSED_SEGMENT_STROKE_WIDTH_TO_SIZE_RATIO,
+  DEFAULT_RESIZE_RE_RENDER_DEBOUNCE_TIME
 } from 'variables/defaults';
 
 /**
@@ -26,7 +22,7 @@ import {
  * @property { TPieDonutChartPropsInternal } props - incoming chart properties
  */
 type TUseChartProps = {
-  props: TPieDonutChartPropsInternal
+  props: TPieDonutChartPropsInternal;
 };
 
 /**
@@ -36,7 +32,6 @@ type TUseChartProps = {
  * @return all params for chart
  */
 export const useChartProps = (props: TUseChartProps) => {
-
   const { props: properties } = props;
 
   const {
@@ -79,12 +74,12 @@ export const useChartProps = (props: TUseChartProps) => {
     size: sizeProp,
     tabIndex = 0,
     text: textProp,
-    widthSegmentFocusedOutline,
+    widthSegmentFocusedOutline
   } = properties;
 
   const data = useChartDataRemap({
     data: dataProp,
-    gap,
+    gap
   });
 
   const {
@@ -99,14 +94,14 @@ export const useChartProps = (props: TUseChartProps) => {
     setFocusedSegment,
     setHoveredSegment,
     setMouseDownSegment,
-    setSelected,
+    setSelected
   } = useChartStates({ animationSpeed });
 
   const selected = useChartSelectedSegment({
     data,
     focusedSegment,
     isSelectedValueShownInCenter,
-    selected: selectedProp || selectedState,
+    selected: selectedProp || selectedState
   });
 
   const { size } = useHandleResize({
@@ -116,7 +111,7 @@ export const useChartProps = (props: TUseChartProps) => {
     parentRef,
     resizeReRenderDebounceTime,
     setAnimationDuration,
-    size: sizeProp,
+    size: sizeProp
   });
 
   const strokeWidth = useMemo(() => {
@@ -125,52 +120,42 @@ export const useChartProps = (props: TUseChartProps) => {
     }
 
     return size * DEFAULT_FOCUSED_SEGMENT_STROKE_WIDTH_TO_SIZE_RATIO;
-  }, [ size, widthSegmentFocusedOutline ]);
+  }, [size, widthSegmentFocusedOutline]);
 
-  const {
-    centerSize,
-    colorText,
-    donutThickness,
-    radius,
-    segmentsStyles,
-    text,
-    totalDataValue,
-    viewBox,
-  } = useChartParams({
-    animationDuration,
-    chartCenterSize,
-    colorChartBackground,
-    colorChartCenter,
-    colorText: colorTextProp,
-    data,
-    donutThickness: donutThicknessProp,
-    gap,
-    isSelectedValueShownInCenter,
-    selected,
-    size,
-    text: textProp,
-  });
+  const { centerSize, colorText, donutThickness, radius, segmentsStyles, text, totalDataValue, viewBox } =
+    useChartParams({
+      animationDuration,
+      chartCenterSize,
+      colorChartBackground,
+      colorChartCenter,
+      colorText: colorTextProp,
+      data,
+      donutThickness: donutThicknessProp,
+      gap,
+      isSelectedValueShownInCenter,
+      selected,
+      size,
+      text: textProp
+    });
 
   /**
    * Chart font-size
    */
-  const fontSize = useMemo(() => getCurrentFontSize({
-    centerSize,
-    donutThickness,
-    fontSize: fontSizeProp,
-    size,
-    text,
-  }), [
-    centerSize,
-    donutThickness,
-    fontSizeProp,
-    size,
-    text,
-  ]);
+  const fontSize = useMemo(
+    () =>
+      getCurrentFontSize({
+        centerSize,
+        donutThickness,
+        fontSize: fontSizeProp,
+        size,
+        text
+      }),
+    [centerSize, donutThickness, fontSizeProp, size, text]
+  );
 
   useEffect(() => {
     checkPropsErrors(properties);
-  }, [ properties ]);
+  }, [properties]);
 
   return {
     centerSize,
@@ -220,7 +205,7 @@ export const useChartProps = (props: TUseChartProps) => {
     tabIndex,
     text,
     totalDataValue,
-    viewBox,
+    viewBox
   };
 };
 

@@ -1,15 +1,6 @@
-import {
-  useState,
-  useCallback,
-  useRef,
-  RefObject,
-  SetStateAction,
-  Dispatch,
-  useLayoutEffect,
-} from 'react';
-
 import { useClickOutside } from 'hooks/helpers/useClickOutside';
 import { useIsMounted } from 'hooks/helpers/useIsMounted';
+import { Dispatch, RefObject, SetStateAction, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 
 export const SAFETY_ANIMATION_DURATION_UPDATE_TIME = 100;
@@ -44,18 +35,17 @@ type TUpdateStateValue<T> = {
  * @param { TUseChartStates } props
  */
 export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn => {
-
   const { animationSpeed: animationSpeedProp } = props;
 
   const chartRef = useRef<SVGSVGElement>(null);
 
   const isMounted = useIsMounted();
 
-  const [ selectedState, setSelected ] = useState<string | null>(null);
-  const [ mouseDownSegment, setMouseDownSegment ] = useState<string | null>(null);
-  const [ focusedSegment, setFocusedSegment ] = useState<string | null>(null);
-  const [ hoveredSegment, setHoveredSegment ] = useState<string | null>(null);
-  const [ animationDuration, setAnimationDuration ] = useState<number>(0);
+  const [selectedState, setSelected] = useState<string | null>(null);
+  const [mouseDownSegment, setMouseDownSegment] = useState<string | null>(null);
+  const [focusedSegment, setFocusedSegment] = useState<string | null>(null);
+  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
+  const [animationDuration, setAnimationDuration] = useState<number>(0);
 
   const handleClearSelects = useCallback(() => {
     if (focusedSegment) {
@@ -65,33 +55,27 @@ export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn =>
     if (selectedState) {
       setSelected(null);
     }
-  }, [
-    focusedSegment,
-    selectedState,
-    setFocusedSegment,
-    setSelected,
-  ]);
+  }, [focusedSegment, selectedState, setFocusedSegment, setSelected]);
 
   /**
    * Safety states update
    * @param {TUpdateStateValue} p
    */
-  const updateStateValue = useCallback(<T>(p: TUpdateStateValue<T>) => {
+  const updateStateValue = useCallback(
+    <T>(p: TUpdateStateValue<T>) => {
+      const { setter, value } = p;
 
-    const {
-      setter,
-      value,
-    } = p;
-
-    if (isMounted()) {
-      setter(value);
-    }
-  }, [ isMounted ]);
+      if (isMounted()) {
+        setter(value);
+      }
+    },
+    [isMounted]
+  );
 
   useClickOutside({
     callback: handleClearSelects,
     isWithKeyEsc: true,
-    ref: chartRef,
+    ref: chartRef
   });
 
   /**
@@ -99,11 +83,10 @@ export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn =>
    */
   useLayoutEffect(() => {
     if (typeof animationSpeedProp === 'number' && animationDuration !== animationSpeedProp) {
-
       const timeout = setTimeout(() => {
         updateStateValue<number>({
           setter: setAnimationDuration,
-          value: animationSpeedProp,
+          value: animationSpeedProp
         });
       }, SAFETY_ANIMATION_DURATION_UPDATE_TIME);
 
@@ -113,12 +96,7 @@ export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn =>
     }
 
     return undefined;
-  }, [
-    animationDuration,
-    animationSpeedProp,
-    updateStateValue,
-  ]);
-
+  }, [animationDuration, animationSpeedProp, updateStateValue]);
 
   return {
     animationDuration,
@@ -128,25 +106,30 @@ export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn =>
     hoveredSegment,
     mouseDownSegment,
     selectedState,
-    setAnimationDuration: value => updateStateValue<number>({
-      setter: setAnimationDuration,
-      value,
-    }),
-    setFocusedSegment: value => updateStateValue<string | null>({
-      setter: setFocusedSegment,
-      value,
-    }),
-    setHoveredSegment: value => updateStateValue<string | null>({
-      setter: setHoveredSegment,
-      value,
-    }),
-    setMouseDownSegment: value => updateStateValue<string | null>({
-      setter: setMouseDownSegment,
-      value,
-    }),
-    setSelected: value => updateStateValue<string | null>({
-      setter: setSelected,
-      value,
-    }),
+    setAnimationDuration: (value) =>
+      updateStateValue<number>({
+        setter: setAnimationDuration,
+        value
+      }),
+    setFocusedSegment: (value) =>
+      updateStateValue<string | null>({
+        setter: setFocusedSegment,
+        value
+      }),
+    setHoveredSegment: (value) =>
+      updateStateValue<string | null>({
+        setter: setHoveredSegment,
+        value
+      }),
+    setMouseDownSegment: (value) =>
+      updateStateValue<string | null>({
+        setter: setMouseDownSegment,
+        value
+      }),
+    setSelected: (value) =>
+      updateStateValue<string | null>({
+        setter: setSelected,
+        value
+      })
   };
 };

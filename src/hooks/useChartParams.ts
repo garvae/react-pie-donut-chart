@@ -1,20 +1,13 @@
-import {
-  useMemo,
-  CSSProperties,
-} from 'react';
+import { CSSProperties, useMemo } from 'react';
 
 import { DataItem } from 'types';
 
-import {
-  TDataItemRequired,
-  TPieDonutChartPropsInternal,
-
-} from 'types/PieDonutChart.types.internal';
+import { TDataItemRequired, TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 import { sanitizeNumber } from 'utils/sanitizeNumber';
 import { DEFAULT_CHART_TEXT_COLOR } from 'variables/defaults';
 
-export const  SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT = '#fff';
-export const  SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK = '#111';
+export const SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT = '#fff';
+export const SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK = '#111';
 
 type TUseChartParams = {
   animationDuration: number;
@@ -62,7 +55,6 @@ type TUseChartParamsReturn = {
  * @return { TUseChartParamsReturn } returns chart params (centerSize, colorText, etc...)
  */
 export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn => {
-
   const {
     animationDuration,
     chartCenterSize,
@@ -75,30 +67,31 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
     isSelectedValueShownInCenter,
     selected,
     size,
-    text: textProp,
+    text: textProp
   } = props;
 
   /**
    * sum of data item's values
    */
-  const totalDataValue = useMemo(() => data.reduce((current, next) => current + next.value, 0) || 0, [ data ]);
+  const totalDataValue = useMemo(() => data.reduce((current, next) => current + next.value, 0) || 0, [data]);
 
   /**
    * the item with the biggest value in data
    */
-  const biggestValueItem: DataItem = useMemo(() => {
-    let bvi = data[0];
+  const biggestValueItem: DataItem =
+    useMemo(() => {
+      let bvi = data[0];
 
-    if (data.length > 1) {
-      data.forEach(item => {
-        if (item.value > bvi.value) {
-          bvi = item;
-        }
-      });
-    }
+      if (data.length > 1) {
+        data.forEach((item) => {
+          if (item.value > bvi.value) {
+            bvi = item;
+          }
+        });
+      }
 
-    return bvi;
-  }, [ data ]) || 0;
+      return bvi;
+    }, [data]) || 0;
 
   /**
    * chart viewBox
@@ -108,7 +101,7 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
   /**
    * chart radius
    */
-  const radius = useMemo(() => sanitizeNumber(size / 2), [ size ]);
+  const radius = useMemo(() => sanitizeNumber(size / 2), [size]);
 
   /**
    * chart center circle radius
@@ -123,17 +116,16 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
     }
 
     return 0;
-  }, [
-    chartCenterSize,
-    donutThickness,
-    radius,
-  ]);
+  }, [chartCenterSize, donutThickness, radius]);
 
-  const segmentsStyles: CSSProperties = useMemo(() => ({
-    transformOrigin: 'center',
-    transition: 'ease-in-out',
-    transitionDuration: `${animationDuration}ms`,
-  }), [ animationDuration ]);
+  const segmentsStyles: CSSProperties = useMemo(
+    () => ({
+      transformOrigin: 'center',
+      transition: 'ease-in-out',
+      transitionDuration: `${animationDuration}ms`
+    }),
+    [animationDuration]
+  );
 
   const text = useMemo(() => {
     if (textProp) {
@@ -146,23 +138,14 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
       }
 
       if (data.length > 1 && gap) {
-        return String(totalDataValue - gap * data.length / 2);
+        return String(totalDataValue - (gap * data.length) / 2);
       }
 
       return String(totalDataValue);
     }
 
     return '';
-  }, [
-    centerSize,
-    data.length,
-    donutThickness,
-    gap,
-    isSelectedValueShownInCenter,
-    selected,
-    textProp,
-    totalDataValue,
-  ]);
+  }, [centerSize, data.length, donutThickness, gap, isSelectedValueShownInCenter, selected, textProp, totalDataValue]);
 
   /**
    * current text color
@@ -173,7 +156,6 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
     }
 
     if (data.length === 1) {
-
       let textBackgroundColor = colorChartBackground || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT;
 
       if (centerSize || donutThickness) {
@@ -186,19 +168,28 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
 
       textBackgroundColor.toLocaleLowerCase();
 
-      const colorSegment = (data[0].color || selected?.color || biggestValueItem?.color || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT).toLocaleLowerCase();
+      const colorSegment = (
+        data[0].color ||
+        selected?.color ||
+        biggestValueItem?.color ||
+        SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT
+      ).toLocaleLowerCase();
 
       let c = SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_LIGHT;
 
-      const isTextBackgroundColorWhite = (textBackgroundColor === 'white' || textBackgroundColor.slice(0, 3) === 'fff');
+      const isTextBackgroundColorWhite = textBackgroundColor === 'white' || textBackgroundColor.slice(0, 3) === 'fff';
 
-      if ((textBackgroundColor.startsWith('#') && colorSegment.startsWith('#')) || (textBackgroundColor === colorSegment)) {
+      if (
+        (textBackgroundColor.startsWith('#') && colorSegment.startsWith('#')) ||
+        textBackgroundColor === colorSegment
+      ) {
         const textBackgroundColorClean = textBackgroundColor.replace('#', '');
         const colorSegmentClean = colorSegment.replace('#', '');
 
         if (
-          textBackgroundColorClean === colorSegmentClean
-            && (isTextBackgroundColorWhite || SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK.toLowerCase().replace('#', '') !== colorSegmentClean)
+          textBackgroundColorClean === colorSegmentClean &&
+          (isTextBackgroundColorWhite ||
+            SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK.toLowerCase().replace('#', '') !== colorSegmentClean)
         ) {
           c = SINGLE_SEGMENT_COLOR_TEXT_DEFAULT_DARK;
         }
@@ -225,7 +216,7 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
     colorChartBackground,
     colorChartCenter,
     data,
-    donutThickness,
+    donutThickness
   ]);
 
   return {
@@ -236,6 +227,6 @@ export const useChartParams = (props: TUseChartParams): TUseChartParamsReturn =>
     segmentsStyles,
     text,
     totalDataValue,
-    viewBox,
+    viewBox
   };
 };

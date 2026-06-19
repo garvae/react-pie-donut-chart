@@ -8,11 +8,10 @@ Error in: "lowerCaseFirstLetter" function
 `;
 
 export const alignConsoleTextLeft = (text: string) => {
-
   if (!text || typeof text !== 'string') {
     if (!isProduction()) {
       // eslint-disable-next-line no-console
-      console.error([ alignConsoleTextLeftDefaultErr, `Received text: ${text}` ].join('\n\n'));
+      console.error([alignConsoleTextLeftDefaultErr, `Received text: ${text}`].join('\n\n'));
     }
 
     return '';
@@ -32,11 +31,7 @@ type TCreateErrorWithDescriptionProps = {
 };
 
 export const createErrorWithDescription = (props: TCreateErrorWithDescriptionProps) => {
-
-  const {
-    messageMain,
-    report: reportProp,
-  } = props;
+  const { messageMain, report: reportProp } = props;
 
   const title = '😢 😢 😢 Sorry, but something went wrong while calculating the chart params.';
 
@@ -48,7 +43,7 @@ Please check:
 ${defaultReportLinkMessage}
 `;
 
-  const report: string[] = [ title ];
+  const report: string[] = [title];
 
   if (messageMain && typeof messageMain === 'string') {
     report.push(messageMain);
@@ -82,11 +77,13 @@ P.S. This message will not be shown in the 'production' mode.
 export const consoleError = (err: string) => {
   if (!isProduction()) {
     // eslint-disable-next-line no-console
-    console.error(alignConsoleTextLeft(`
+    console.error(
+      alignConsoleTextLeft(`
     ${err}
     
     ${defaultConsolePs}
-    `));
+    `)
+    );
   }
 };
 
@@ -98,10 +95,12 @@ export const consoleError = (err: string) => {
 export const consoleWarn = (warn: string) => {
   if (!isProduction()) {
     // eslint-disable-next-line no-console
-    console.warn(alignConsoleTextLeft(`
+    console.warn(
+      alignConsoleTextLeft(`
     ${warn}
     
     ${defaultConsolePs}
-    `));
+    `)
+    );
   }
 };

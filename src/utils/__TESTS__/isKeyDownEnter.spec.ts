@@ -12,7 +12,7 @@ describe('function "isKeyDownEnter"', () => {
       isKeyDownEnter({ code: '13' } as React.KeyboardEvent),
       isKeyDownEnter({ key: '13' } as React.KeyboardEvent),
       isKeyDownEnter({ code: 13 } as unknown as React.KeyboardEvent),
-      isKeyDownEnter({ key: 13 } as unknown as React.KeyboardEvent),
+      isKeyDownEnter({ key: 13 } as unknown as React.KeyboardEvent)
     ];
 
     const checksFalsy = [
@@ -21,13 +21,13 @@ describe('function "isKeyDownEnter"', () => {
       isKeyDownEnter({ code: '32' } as React.KeyboardEvent),
       isKeyDownEnter({ key: '32' } as React.KeyboardEvent),
       isKeyDownEnter({ code: 32 } as unknown as React.KeyboardEvent),
-      isKeyDownEnter({ key: 32 } as unknown as React.KeyboardEvent),
+      isKeyDownEnter({ key: 32 } as unknown as React.KeyboardEvent)
     ];
 
     const assertions = checksTruthy.length + checksFalsy.length;
     expect.assertions(assertions);
 
-    checksTruthy.forEach(check => expect(check).toBeTruthy());
-    checksFalsy.forEach(check => expect(check).not.toBeTruthy());
+    checksTruthy.forEach((check) => expect(check).toBeTruthy());
+    checksFalsy.forEach((check) => expect(check).not.toBeTruthy());
   });
 });

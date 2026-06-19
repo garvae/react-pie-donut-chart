@@ -20,11 +20,10 @@ export const debounce = <T extends unknown[], U>(cb: (...args: T) => PromiseLike
 
   return (...args: T): Promise<U> => {
     clearTimeout(timer);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       timer = setTimeout(() => resolve(cb(...args)), wait);
     });
   };
 };
-
 
 export type TDebounceFunction = ReturnType<typeof debounce>;

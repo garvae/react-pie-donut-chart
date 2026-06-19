@@ -1,15 +1,15 @@
-import React from 'react';
-
 import { TUseChartPropsReturn } from 'hooks/useChartProps';
+import React from 'react';
 
 export const TEST_DATA_ID_CHART_SEGMENTS_BACKGROUND = 'TEST_DATA_ID_CHART_SEGMENTS_BACKGROUND';
 
-type TChartSegmentsBackground = Pick<TUseChartPropsReturn,
-'classNameChartSegmentsBackground'
-| 'classNameSvgGroupSegmentsBackground'
-| 'colorSegmentsBackground'
-| 'donutThickness'
-| 'radius'
+type TChartSegmentsBackground = Pick<
+  TUseChartPropsReturn,
+  | 'classNameChartSegmentsBackground'
+  | 'classNameSvgGroupSegmentsBackground'
+  | 'colorSegmentsBackground'
+  | 'donutThickness'
+  | 'radius'
 >;
 
 /**
@@ -18,14 +18,13 @@ type TChartSegmentsBackground = Pick<TUseChartPropsReturn,
  * @param { TChartSegmentsBackground } props
  * @returns { JSX.Element } returns svg group <g> of <path>
  */
-export const ChartSegmentsBackground: React.FC<TChartSegmentsBackground> = props => {
-
+export const ChartSegmentsBackground: React.FC<TChartSegmentsBackground> = (props) => {
   const {
     classNameChartSegmentsBackground,
     classNameSvgGroupSegmentsBackground,
     colorSegmentsBackground,
     donutThickness,
-    radius,
+    radius
   } = props;
 
   if (!colorSegmentsBackground) {
