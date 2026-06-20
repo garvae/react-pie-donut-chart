@@ -17,7 +17,7 @@ try {
   const newJson = {
     ...parsed,
     main: 'index.js',
-    module: 'react-pie-chart.esm.js',
+    module: 'react-pie-donut-chart.esm.js',
     typings: 'index.d.ts',
     'umd:main': 'index.js'
   };
