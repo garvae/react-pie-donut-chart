@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "_other",
+    "build",
+    "cache",
+    "coverage",
+    "nginx",
+    "node_modules",
+    "temp",
+    "test-environment",
+    "**/__TESTS__/**",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}
