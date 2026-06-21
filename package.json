@@ -44,6 +44,7 @@
   "scripts": {
     "analyze": "size-limit",
     "build": "npm run tsup:compile",
+    "check:all": "npm run check && npm run type-check && npm run type-check:test && npm run build && npm run test",
     "copy:license": "cpx LICENSE dist",
     "copy:readme": "cpx README.md dist",
     "copy:types": "cpx src/types/index.d.ts dist",
@@ -74,14 +75,14 @@
     "type-check:test": "tsc --noEmit -p tsconfig.test.json",
     "version:patch": "npm version patch"
   },
-  "resolutions": {
-    "react-error-overlay": "6.0.9"
-  },
   "pnpm": {
     "overrides": {
-      "react-error-overlay": "6.0.9"
+      "braces": ">=3.0.3",
+      "esbuild": ">=0.28.1",
+      "js-yaml": "4.2.0",
+      "micromatch": ">=4.0.8"
     },
-    "onlyBuiltDependencies": ["core-js", "esbuild", "node-sass", "pre-commit", "spawn-sync"]
+    "onlyBuiltDependencies": ["core-js", "esbuild", "spawn-sync"]
   },
   "packageManager": "pnpm@10.32.1",
   "lint-staged": {
@@ -101,20 +102,6 @@
     }
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.0",
-    "@babel/core": "^7.17.0",
-    "@babel/generator": "^7.18.12",
-    "@babel/parser": "^7.18.11",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.16.7",
-    "@babel/plugin-proposal-optional-chaining": "^7.18.9",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
-    "@babel/plugin-transform-runtime": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
-    "@babel/preset-react": "^7.16.7",
-    "@babel/preset-typescript": "^7.16.7",
-    "@babel/runtime": "^7.18.9",
     "@biomejs/biome": "^2.5.0",
     "@size-limit/preset-small-lib": "^8.0.1",
     "@testing-library/jest-dom": "^5.14.1",
@@ -122,34 +109,20 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^28.1.6",
     "@types/node": "^18.7.13",
-    "@types/node-sass": "^4.11.3",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/testing-library__jest-dom": "5.14.9",
-    "babel-jest": "^28.1.3",
-    "babel-plugin-react-css-modules": "^5.2.6",
-    "babel-plugin-transform-postcss": "^0.3.0",
     "cpx": "^1.5.0",
     "del": "^8.0.1",
     "husky": "^8.0.1",
-    "is-ci": "^3.0.0",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
-    "jsdoc": "^3.6.10",
-    "jsdoc-babel": "^0.5.0",
-    "jsdoc-to-markdown": "^7.1.1",
     "lint-staged": "^12.3.7",
-    "node-sass": "^7.0.1",
-    "pre-commit": "^1.2.2",
-    "prepend": "^1.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-error-overlay": "6.0.9",
     "rimraf": "^6.1.3",
     "size-limit": "^8.0.1",
     "ts-jest": "^28.0.7",
-    "ts-loader": "^9.2.6",
-    "ts-node": "^10.4.0",
     "tslib": "^2.4.0",
     "tsup": "^8.5.1",
     "typescript": "^4.6.4"
