@@ -86,7 +86,7 @@ const config = {
   setupFiles: ['<rootDir>/src/tests/configs/setup-env.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect', '<rootDir>/src/tests/configs/setup-files.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/tests/configs/setup-files.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   slowTestThreshold: 10,
