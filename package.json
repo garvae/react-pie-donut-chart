@@ -44,7 +44,7 @@
   "scripts": {
     "analyze": "size-limit",
     "build": "npm run tsup:compile",
-    "check:all": "npm run check && npm run type-check && npm run type-check:test && npm run build && npm run test",
+    "check:all": "npm run check && npm run type-check && npm run type-check:test && npm run build && npm run test && npm run test:cover && npm run pack:smoke && npm run size",
     "copy:license": "cpx LICENSE dist",
     "copy:readme": "cpx README.md dist",
     "copy:types": "cpx src/types/index.d.ts dist",
@@ -59,6 +59,7 @@
     "lint:js": "biome lint --write .",
     "check": "biome check .",
     "check:fix": "biome check --write .",
+    "pack:smoke": "node scripts/package-smoke-test.js",
     "postbuild": "npm run generate:packagejson && npm run copy:license && npm run copy:types && npm run copy:readme",
     "postinstall": "husky install",
     "postprepare": "npm run generate:packagejson",
@@ -101,6 +102,16 @@
       "pre-commit": "npm run pre-commit"
     }
   },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "15 KB"
+    },
+    {
+      "path": "dist/react-pie-donut-chart.esm.js",
+      "limit": "15 KB"
+    }
+  ],
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
     "@size-limit/preset-small-lib": "^8.0.1",

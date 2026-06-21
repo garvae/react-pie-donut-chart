@@ -162,10 +162,14 @@ __pycache__/
 
 # Temp files
 tmp/
+.tmp/
 temp/
 *.tmp
 *.temp
 *.bak
+
+# npm pack output (used by pack:smoke)
+*.tgz
 .aider*
 google-inventory.json
 
@@ -176,7 +180,9 @@ secrets-injector.config.json
 .env.production.local
 .env.test.local
 .eslintrc
-.husky
+# Husky hook scripts (e.g. .husky/pre-commit) ARE committed; only the
+# auto-generated internal helper directory is ignored, per Husky's own convention.
+.husky/_
 .idea
 .local.eslintrc.js
 .yalc
