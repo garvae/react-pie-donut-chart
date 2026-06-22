@@ -18,24 +18,41 @@ type TResizeListener = {
 /**
  * Inspired by: https://stackoverflow.com/a/46555778/14140292
  *
+ * Only creates a MutationObserver (and attaches the custom 'resize' event
+ * listener) when there is an actual node to observe — a fixed "size" prop (no
+ * "parentRef" node) should never spin up an observer that has nothing to do.
+ *
+ * Returns a cleanup function so the caller can disconnect the observer and
+ * remove the listener (e.g. on unmount, or before re-creating them when
+ * "node"/"cb" change) instead of leaking a new observer/listener pair on
+ * every call.
+ *
  * @param {TResizeListener} props
  * @function useResizeListener (hook)
+ * @returns {(() => void) | undefined} cleanup function, or undefined when no node was observed
  */
-export const startResizeListener = (props: TResizeListener): void => {
+export const startResizeListener = (props: TResizeListener): (() => void) | undefined => {
   const { cb, node } = props;
+
+  if (!node?.nodeName) {
+    return undefined;
+  }
 
   /**
    * Custom mutation calls subscription
    */
   const observer = new MutationObserver(processResizeMutation);
 
-  if (node?.nodeName) {
-    observer.observe(node, {
-      attributeFilter: ['style'],
-      attributeOldValue: true,
-      attributes: true
-    });
+  observer.observe(node, {
+    attributeFilter: ['style'],
+    attributeOldValue: true,
+    attributes: true
+  });
 
-    node.addEventListener('resize', cb);
-  }
+  node.addEventListener('resize', cb);
+
+  return () => {
+    observer.disconnect();
+    node.removeEventListener('resize', cb);
+  };
 };

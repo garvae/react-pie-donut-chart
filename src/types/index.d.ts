@@ -435,6 +435,5 @@ export type PieDonutChartProps = {
  * @author Garvae - https://github.com/garvae
  */
 declare function PieDonutChart(props: PieDonutChartProps): JSX.Element;
-exports.PieDonutChart = PieDonutChart;
-export = PieDonutChart;
+export default PieDonutChart;
 /* eslint-enable @typescript-eslint/naming-convention */

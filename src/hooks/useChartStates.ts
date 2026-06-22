@@ -1,6 +1,7 @@
 import { useClickOutside } from 'hooks/helpers/useClickOutside';
 import { useIsMounted } from 'hooks/helpers/useIsMounted';
-import { Dispatch, RefObject, SetStateAction, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useIsomorphicLayoutEffect } from 'hooks/helpers/useIsomorphicLayoutEffect';
+import { Dispatch, RefObject, SetStateAction, useCallback, useRef, useState } from 'react';
 import { TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 
 export const SAFETY_ANIMATION_DURATION_UPDATE_TIME = 100;
@@ -81,7 +82,7 @@ export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn =>
   /**
    * Safely update "animationDuration" state avoiding animation bugs
    */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (typeof animationSpeedProp === 'number' && animationDuration !== animationSpeedProp) {
       const timeout = setTimeout(() => {
         updateStateValue<number>({
