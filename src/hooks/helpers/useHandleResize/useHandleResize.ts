@@ -1,7 +1,8 @@
 import { resizeHandler } from 'hooks/helpers/useHandleResize/resizeHandler';
 import { startResizeListener } from 'hooks/helpers/useHandleResize/startResizeListener/startResizeListener';
 import { useIsMounted } from 'hooks/helpers/useIsMounted';
-import { Dispatch, SetStateAction, useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useIsomorphicLayoutEffect } from 'hooks/helpers/useIsomorphicLayoutEffect';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 import { debounce } from 'utils/debounce';
 import { isClient } from 'utils/env';
@@ -113,17 +114,19 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
   /**
    * listens for the 'resize' custom event on the parent container
    */
-  useLayoutEffect(() => {
-    startResizeListener({
-      cb: handleResize,
-      node: parentRef?.current || null
-    });
-  }, [handleResize, parentRef]);
+  useIsomorphicLayoutEffect(
+    () =>
+      startResizeListener({
+        cb: handleResize,
+        node: parentRef?.current || null
+      }),
+    [handleResize, parentRef]
+  );
 
   /**
    * fires handleResize on window's 'resize' event
    */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (isClient() && !sizeProp) {
       window.addEventListener('resize', handleResize) /* re-renders svg if parent container resized */;
       return () => window.removeEventListener('resize', handleResize);
@@ -135,7 +138,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
   /**
    * initializes size
    */
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const isReadyForSize = parentRef?.current || sizeProp;
 
     if (isClient() && isReadyForSize && !size) {
