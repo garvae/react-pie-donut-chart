@@ -110,4 +110,83 @@ describe('hook "useChartDataRemap"', () => {
 
     expect(result.current).toHaveLength(USE_CHART_DATA_REMAP_TEST_PROPS_DATA_COMPLETE_SORTED.length * 2);
   });
+
+  it('preserves "order: 0" — zero order must not be treated as falsy/missing', () => {
+    expect.assertions(2);
+
+    const { result } = renderHook(() =>
+      useChartDataRemap({
+        data: [
+          { color: '#ff0000', id: 'a', order: 0, value: 10 },
+          { color: '#0000ff', id: 'b', order: 1, value: 20 }
+        ],
+        gap: 0
+      })
+    );
+
+    /**
+     * Item with order:0 must sort before item with order:1.
+     * If "order: 0" were treated as falsy and replaced by a fallback,
+     * the fallback would be > 1, so item 'a' would appear LAST instead of FIRST.
+     */
+    expect(result.current[0].id).toBe('a');
+    expect(result.current[1].id).toBe('b');
+  });
+
+  it('filters out data items with negative "value" and warns via consoleWarn', () => {
+    expect.assertions(2);
+
+    const { consoleWarnMocked } = mockConsole();
+
+    const { result } = renderHook(() =>
+      useChartDataRemap({
+        data: [
+          { color: '#ff0000', id: 'a', order: 1, value: -10 },
+          { color: '#0000ff', id: 'b', order: 2, value: 20 }
+        ],
+        gap: 0
+      })
+    );
+
+    // Only the valid item should survive
+    expect(result.current).toHaveLength(1);
+    expect(consoleWarnMocked).toHaveBeenCalled();
+  });
+
+  it('filters out data items with Infinity "value" and warns via consoleWarn', () => {
+    expect.assertions(2);
+
+    const { consoleWarnMocked } = mockConsole();
+
+    const { result } = renderHook(() =>
+      useChartDataRemap({
+        data: [
+          { color: '#ff0000', id: 'a', order: 1, value: Infinity },
+          { color: '#0000ff', id: 'b', order: 2, value: 20 }
+        ],
+        gap: 0
+      })
+    );
+
+    expect(result.current).toHaveLength(1);
+    expect(consoleWarnMocked).toHaveBeenCalled();
+  });
+
+  it('returns an empty array when all data items have invalid values', () => {
+    expect.assertions(1);
+
+    mockConsole();
+
+    const { result } = renderHook(() =>
+      useChartDataRemap({
+        data: [
+          { color: '#ff0000', id: 'a', order: 1, value: -5 },
+          { color: '#0000ff', id: 'b', order: 2, value: 0 }
+        ],
+        gap: 0
+      })
+    );
+
+    expect(result.current).toHaveLength(0);
+  });
 });

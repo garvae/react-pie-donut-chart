@@ -11,9 +11,12 @@ export const checkIncomingValues = (props: TCreateChartSegmentPathDraw) => {
 
   const isNotValid =
     isNaN(valueSegment) ||
+    !isFinite(valueSegment) ||
     isNaN(valueSegmentsPreviousTotal) ||
+    !isFinite(valueSegmentsPreviousTotal) ||
     isNaN(size) ||
     isNaN(valueSegmentsTotal) ||
+    !isFinite(valueSegmentsTotal) ||
     isNaN(radiusOuter) ||
     isNaN(radiusInner) ||
     valueSegment > valueSegmentsTotal ||
