@@ -32,4 +32,25 @@ describe('function "sanitizeNumber"', () => {
 
     expect(sanitizedValue).toBe(DEFAULT_SANITISE_NUMBER_VALUE);
   });
+
+  it('returns the default fallback for Infinity (not a valid finite number for geometry)', () => {
+    expect.assertions(2);
+
+    const { consoleErrorMocked } = mockConsole();
+    const testDefault = 5;
+    const sanitizedValue = sanitizeNumber(Infinity, testDefault);
+
+    expect(sanitizedValue).toBe(testDefault);
+    expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns the default fallback for -Infinity', () => {
+    expect.assertions(2);
+
+    const { consoleErrorMocked } = mockConsole();
+    const sanitizedValue = sanitizeNumber(-Infinity);
+
+    expect(sanitizedValue).toBe(DEFAULT_SANITISE_NUMBER_VALUE);
+    expect(consoleErrorMocked).toHaveBeenCalledTimes(1);
+  });
 });

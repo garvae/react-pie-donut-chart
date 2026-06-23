@@ -10,6 +10,30 @@ describe('function "randomColorHEX"', () => {
 
     expect(HEX_REG_EXP.test(color)).toBeTruthy();
   });
+
+  it('returns a valid HEX color even when Math.random returns a value very close to 1 (boundary case)', () => {
+    expect.assertions(2);
+
+    const originalRandom = Math.random;
+    /**
+     * When Math.random() = 0.999999:
+     *   - Correct formula: Math.floor(0.999999 * 256) = Math.floor(255.999744) = 255
+     *     → channel 255 → all-channels-255 color = '#ffffff'
+     *   - Buggy formula:   Math.floor(0.999999 * 257) = Math.floor(256.999743) = 256
+     *     → channel 256 overflows the 8-bit range; the bitwise hex computation wraps to
+     *       produce '#010100' instead of '#ffffff' — a wrong, though still 7-char, result.
+     */
+    Math.random = () => 0.999999;
+
+    try {
+      const color = randomColorHEX();
+
+      expect(HEX_REG_EXP.test(color)).toBeTruthy();
+      expect(color).toBe('#ffffff');
+    } finally {
+      Math.random = originalRandom;
+    }
+  });
 });
 
 describe('function "convertHexToRgb"', () => {

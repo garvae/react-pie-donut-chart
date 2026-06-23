@@ -10,7 +10,7 @@ export const DEFAULT_SANITISE_NUMBER_VALUE = 0;
  * @return { number } - sanitized number
  */
 export const sanitizeNumber = (n: number, defaultNumber = DEFAULT_SANITISE_NUMBER_VALUE) => {
-  if (isNaN(n)) {
+  if (isNaN(n) || !isFinite(n)) {
     consoleError(
       createErrorWithDescription({
         messageMain: 'In most cases, this error is caused by invalid props.',

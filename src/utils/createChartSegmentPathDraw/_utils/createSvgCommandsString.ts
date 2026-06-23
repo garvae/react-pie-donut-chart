@@ -22,7 +22,16 @@ type TCreateSvgCommandsString = {
  * @return { string } path
  */
 export const createSvgCommandsString = (props: TCreateSvgCommandsString) => {
-  const { angleDegrees, radiusInner, radiusOuter, size } = props;
+  const { radiusInner, radiusOuter, size } = props;
+
+  /**
+   * SVG arc commands are undefined when the start and end points are identical,
+   * which happens when angleDegrees is exactly 360 (a full circle). Clamp to
+   * just under 360 so the arc end point is never the same as the start point.
+   * The visual difference is imperceptible (< 0.001° missing) but prevents the
+   * degenerate arc that would otherwise render as nothing.
+   */
+  const angleDegrees = Math.min(props.angleDegrees, 359.9999);
 
   /**
    * Here we determine which way the arc will be formed to the point - along a short or long one.

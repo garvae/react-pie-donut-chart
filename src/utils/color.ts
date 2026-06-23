@@ -1,6 +1,12 @@
 import { consoleError, createErrorWithDescription } from 'utils/console';
 
-const ChanelRand = (): number => Math.floor(Math.random() * (256 + 1));
+/**
+ * Returns a random integer in [0, 255].
+ * The correct multiplier is 256 (not 257): Math.random() returns [0, 1), so
+ * Math.floor(x * 256) ≤ 255 always. Using (256 + 1) could produce the value 256,
+ * which overflows an 8-bit channel and corrupts the resulting hex colour.
+ */
+const ChanelRand = (): number => Math.floor(Math.random() * 256);
 
 type TRGBRandReturn = [number, number, number];
 
