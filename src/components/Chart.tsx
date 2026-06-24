@@ -1,5 +1,6 @@
 import { TUseChartPropsReturn } from 'hooks/useChartProps';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { computePrefixTotals } from 'utils/computePrefixTotals';
 import { convertPercentToDegrees } from 'utils/createChartSegmentPathDraw/_utils/convertPercentToDegrees';
 import { createChartSegmentPathDraw } from 'utils/createChartSegmentPathDraw/createChartSegmentPathDraw';
 import { isKeyDownEnter } from 'utils/isKeyDownEnter';
@@ -88,6 +89,16 @@ export const Chart = (props: TChartProps) => {
     totalDataValue
   } = props;
 
+  /**
+   * One-pass prefix totals: prefixTotals[i] = sum of data[0..i-1].value.
+   * Replaces the previous O(n²) per-segment filter+reduce:
+   *   data.filter((_, index) => index < i).reduce((c, n) => c + n.value, 0)
+   * which created a new sub-array of length i and reduced it for every i, giving
+   * O(1 + 2 + ... + n) = O(n²) total work. Placed BEFORE the early return so
+   * hooks are called in the same order on every render (Rules of Hooks).
+   */
+  const prefixTotals = useMemo(() => computePrefixTotals(data), [data]);
+
   if (!data.length) {
     return null;
   }
@@ -123,11 +134,7 @@ export const Chart = (props: TChartProps) => {
         /**
          * the sum of previous segments values
          */
-        let prevTotal = 0;
-
-        if (i > 0) {
-          prevTotal = data?.filter((_, index) => index < i)?.reduce((c, n) => c + n.value, 0) || 0;
-        }
+        let prevTotal = prefixTotals[i] || 0;
 
         /**
          * the proportion of previous segments
