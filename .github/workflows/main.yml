@@ -1,30 +1,49 @@
-# Temporarily disabled during maintenance.
-# CI will be restored after pnpm/tooling/build/test modernization is complete.
-# See: docs/maintenance/01-pnpm-ci-pause.md
+# Validation-only CI. npm publish remains disabled until the release workflow is redesigned.
 name: CI
-on:
-  workflow_dispatch:
-jobs:
-  build:
-    name: Build and lint on Node ${{ matrix.node }} and ${{ matrix.os }}
 
-    runs-on: ${{ matrix.os }}
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality / Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
-        node: ['14.x']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        node:
+          - 22
+          - 24
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Use Node ${{ matrix.node }}
-        uses: actions/setup-node@v2
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+          cache: pnpm
 
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Lint && Build
-        run: yarn build
+      - name: Run full local quality gate
+        run: pnpm run check:all
+
+      - name: Audit dependencies
+        run: pnpm audit
