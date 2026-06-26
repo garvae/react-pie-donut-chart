@@ -36,6 +36,7 @@ export const useChartProps = (props: TUseChartProps) => {
 
   const {
     animationSpeed = DEFAULT_ANIMATION_SPEED,
+    ariaLabel,
     chartCenterSize,
     children,
     className,
@@ -58,6 +59,7 @@ export const useChartProps = (props: TUseChartProps) => {
     donutThickness: donutThicknessProp = 0,
     fontSize: fontSizeProp,
     gap = 0,
+    getSegmentAriaLabel,
     hoverScaleRatio = DEFAULT_CHART_SEGMENT_SCALE_RATIO,
     isScaleOnHover = true,
     isSelectOnClick = true,
@@ -158,6 +160,7 @@ export const useChartProps = (props: TUseChartProps) => {
   }, [properties]);
 
   return {
+    ariaLabel,
     centerSize,
     chartRef,
     children,
@@ -182,6 +185,7 @@ export const useChartProps = (props: TUseChartProps) => {
     focusedSegment,
     fontSize,
     gap,
+    getSegmentAriaLabel,
     handleClearSelects,
     hoverScaleRatio,
     hoveredSegment,

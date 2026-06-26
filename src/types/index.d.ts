@@ -291,9 +291,22 @@ export type PieDonutChartPropsColors = {
  * @property { string } text
  * @default undefined
  *
+ * Accessible label for the chart SVG element (maps to `aria-label` on the `<svg>`).
+ * If not provided, defaults to `"Pie donut chart"`.
+ * Useful when multiple charts are on the same page.
+ * @property { string } ariaLabel
+ * @default 'Pie donut chart'
+ *
+ * Returns a custom accessible label for each interactive segment.
+ * Receives the segment's DataItem and its zero-based index in the rendered order.
+ * If not provided, a default label is generated from the segment's value and id.
+ * @property { (segment: DataItem, index: number) => string } getSegmentAriaLabel
+ * @default undefined
+ *
  */
 export type PieDonutChartProps = {
   animationSpeed?: number;
+  ariaLabel?: string;
   chartCenterSize?: number;
   children?: ReactNode | string | number;
   className?: string;
@@ -303,6 +316,7 @@ export type PieDonutChartProps = {
   donutThickness?: number;
   fontSize?: number;
   gap?: number;
+  getSegmentAriaLabel?: (segment: DataItem, index: number) => string;
   hoverScaleRatio?: number;
   isScaleOnHover?: boolean;
   isSelectOnClick?: boolean;

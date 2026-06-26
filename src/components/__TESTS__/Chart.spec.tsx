@@ -46,6 +46,7 @@ const CHART_TEST_PROPS: TChartProps = {
   donutThickness: TEST_PROPS.donutThickness,
   focusedSegment: null,
   gap: TEST_PROPS.gap,
+  getSegmentAriaLabel: undefined,
   handleClearSelects: stubDefault,
   hoverScaleRatio: TEST_PROPS.hoverScaleRatio,
   hoveredSegment: null,

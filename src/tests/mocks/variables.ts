@@ -83,6 +83,7 @@ export const TEST_PROPS: AllRequired<
   stylesHoveredSegment: TPieDonutChartPropsUserAll['stylesHoveredSegment'];
 } = {
   animationSpeed: 123,
+  ariaLabel: 'Test chart',
   chartCenterSize: 100,
   children: null,
   className: 'test-classname-className',
@@ -92,6 +93,7 @@ export const TEST_PROPS: AllRequired<
   donutThickness: 10,
   fontSize: 24,
   gap: 8,
+  getSegmentAriaLabel: (segment: DataItem) => `Test segment ${segment.id}`,
   hoverScaleRatio: 1.75,
   isScaleOnHover: false,
   isSelectOnClick: false,
