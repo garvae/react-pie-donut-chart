@@ -1,291 +1,350 @@
-# react-pie-donut-chart
+# React Pie Donut Chart
 
-## Description
-This lightweight library allows you to create "pie" and "donut" charts easily
+A lightweight, accessible, TypeScript-ready React component for pie and donut SVG charts.
 
-The chart component has very flexible settings. It can accept a passed size
-or automatically adjust to the size of the parent component.
-Moreover, this component is accessible.
-
-## Features
-- ✔️lightweight
-- ✔️flexible settings
-- ✔️both "Donut" & "Pie" variants
-- ✔️accessible
-- ✔️responsive (svg re-renders when it's needed)
-- ✔️ability to show some text in the center of the chart
-- ✔️ready for TypeScript
-- ✔️detailed documentation
-- ✔️100% Tests-covered 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/garvae/react-pie-donut-chart/master/doc/assets/img/cover.svg" alt="react-pie-donut-chart cover" width="100%" height="auto" />
+</p>
 
 ---
 
-<p align="center">
-    <img src="https://raw.githubusercontent.com/garvae/react-pie-donut-chart/master/doc/assets/img/cover.svg" alt="cover" width="100%" height="auto">
-</p> 
+## Status
+
+This package is in active maintenance. The recent maintenance pass modernized the local
+toolchain, restored tests on current Node versions, added package smoke tests, fixed SSR
+and resize-cleanup issues, improved edge-case geometry handling, added an O(n)
+performance refactor, and added ARIA roles and keyboard accessibility semantics.
+
+The public API is intentionally kept backward-compatible. New functionality is added
+through optional props only.
+
+> **CI is currently disabled during maintenance. Publish automation is currently no-op.
+> Local quality gates run on every change.**
 
 ---
 
-## 🎬 Demo [video](https://user-images.githubusercontent.com/57904389/187030090-12e0d8cd-d497-459f-b322-ffa020171015.mp4)
-
-<p align="center">
-    <video src="https://user-images.githubusercontent.com/57904389/187030090-12e0d8cd-d497-459f-b322-ffa020171015.mp4" alt="react-pie-donut-chart variants" width="100%" height="auto">
-</p>  
-
-
-<br/>
-
-> ⚠️ If the video is not loading, try going to the [GitHub repo](https://github.com/garvae/react-pie-donut-chart) or using the [direct link](https://user-images.githubusercontent.com/57904389/187030090-12e0d8cd-d497-459f-b322-ffa020171015.mp4)
-
-> 🌐 Demo page coming soon
-
-<br/>
-
-## 🔧 Installation
+## Install
 
 ```sh
 npm install @garvae/react-pie-donut-chart
 ```
-or
+
+```sh
+pnpm add @garvae/react-pie-donut-chart
+```
+
 ```sh
 yarn add @garvae/react-pie-donut-chart
 ```
 
-<br/>
+---
 
-<hr/>
+## Quick start
 
-## ⚙️Properties
-
-
-<br/>
-
-### ❕ Required props
-
-<br/>
-
-#### `Data` prop
-
-> Chart data. An array of objects (`Array<TDataItem>`) with properties described below:
-
-|	Name	|	Type	|	Default	|	Required	|	Description	|
-|	:---	|	:---	|	:----------:	|	:---:	|	:---	|
-|	color	|	string	|	undefined	|	-	|	The color of the chart segment. Must be CSS type 'color'. Default generated automatically	|
-|	order	|	number	|	undefined	|	-	|	Order of segments in a chart. Default generated automatically	|
-|	segmentId	|	string	|	undefined	|	-	|	The unique ID of the chart segment. Default generated automatically	|
-|	value	|	number	|	undefined	|	+	|	Segment value	|
-
-<br/>
-
-#### `parentRef` prop - Required if the `size` prop is not passed
-
-|	Name	|	Type	|	Default	|	Description	|
-|	:---	|	:---	|	:----------:	|	:---	|
-|	parentRef	|	RefObject<HTMLElement>	|	undefined	|	Ref to the parent `HTMLElement`	|
-
-
-<br/>
-
-#### `size` prop - Required if the `parentRef` prop is not passed
-
-|	Name	|	Type	|	Default	|	Description	|
-|	:---	|	:---	|	:----------:	|	:---	|
-|	size	|	number	|	undefined	|	Chart size	|
-
-
-
-<hr/>
-
-<br/>
-
-### ❔ Optional props
-
-<br/>
-
-|	Name	|	Type	|	Default	|	Description	|
-|	:---	|	:---	|	:----------:	|	:---	|
-|	**animationSpeed**	|	`number`	|	`200`	|	The speed (in milliseconds) of the animation when the values of the chart element change	|
-|	**chartCenterSize**	|	`number`	|	`undefined`	|	The name of the chart center class. The "chart center" is the svg element above the main chart. It's kind of like a text background. "Chart center" will not be shown without "chartCenterSize" parameter. Don't use it if you just want to create a donut-type chart, it's better to pass the parameter "donutThickness" instead	|
-|	**children**	|	`ReactNode | string | number`	|	`undefined`	|	"Children" to render in the center of the chart.	|
-|	**className**	|	`string`	|	`undefined`	|	Main <SVG> className	|
-|	**classNames**	|	`string`	|	`undefined`	|	Chart elements classNames	|
-|	**colors**	|	`string`	|	`undefined`	|	Chart elements colors	|
-|	**resizeReRenderDebounceTime**	|	`number`	|	`50`	|	Prevents unnecessary re-renders. Debounce is disabled when 'resizeReRenderDebounceTime' = 0 or when the value of the "size" property is set	|
-|	**donutThickness**	|	`number`	|	`undefined`	|	The thickness of the donut segments. You should pass this prop if you want to create a donut chart.	|
-|	**fontSize**	|	`number`	|	`undefined`	|	The font size. By default, it calculates automatically to fit the size of the whole chart (outer radius) if the chart is "Pie" type. If the chart is "Donut" type this param calculates automatically to fit the size of "donut hole" (inner radius).	|
-|	**gap**	|	`number`	|	`undefined`	|	Gap between segments	|
-|	**hoverScaleRatio**	|	`number`	|	`1.05`	|	The ratio of the "scale" of the segment when it's hovered, selected or focused	|
-|	**isScaleOnHover**	|	`boolean`	|	`TRUE`	|	Enables or disables "scale" of the segment when it's hovered, active or focused	|
-|	**isSelectOnClick**	|	`boolean`	|	`TRUE`	|	Enables or disables segment selection on click on it	|
-|	**isSelectOnKeyEnterDown**	|	`boolean`	|	`TRUE`	|	Enables or disables segment selection on "enter" key press on it	|
-|	**isSelectedValueShownInCenter**	|	`boolean`	|	`TRUE`	|	Enables or disables the display of the value of the selected segment in the center of the chart	|
-|	**maxSize**	|	`number`	|	`undefined`	|	Chart maximum size.	|
-|	**minSize**	|	`number`	|	`undefined`	|	Chart minimum size	|
-|	**stylesHoveredSegment**	|	`CSSProperties`	|	`undefined`	|	Your own styles for hovered, selected or focused segments	|
-|	**onSegmentClick**	|	`(segmentId: string) => void`	|	`undefined`	|	Callback for segment "onClick" event	|
-|	**onSegmentKeyEnterDown**	|	`(segmentId: string) => void`	|	`undefined`	|	Callback for segment "onKeydown" event. Fires only for the "enter" key	|
-|	**selected**	|	`string`	|	`undefined`	|	Selected segment ID. In most cases you don't need it. But if you want to control this state manually - welcome =)	|
-|	**widthSegmentFocusedOutline**	|	`number`	|	`4`	|	The width of the "outline" (stroke) of the focused segment. By default, it automatically resizes based on chart size and has a ratio of 0.0066. This means that this stroke width = <chart_size> * 0.0066	|
-|	**tabIndex**	|	`number`	|	`0`	|	Enables or disables chart navigation with a "tab". Default - accessible - you can navigate the chart with the keyboard ("tab" button) And in most cases there is no reason to change it.	|
-|	**text**	|	`string`	|	`undefined`	|	Text to show in the center of the chart. By default, it shows the total value of the provided "data" or the value of the selected segment or the value of the focused segment	|
-
-<br/>
-
-##### 📌 Notes
-
-> You can choose whether you want to resize the chart based on the "parent" size or if you want to set the size manually.
-> If you need a resizable chart, you must be sure that the parent container does not have zero width and height.
-> If you want to set the size manually just add the `size` property
-
-> The `Chart` has a lot of flexible settings. You can check them out above.
-
-> Read more about `classNames` & `colors` props below
-
-<br/>
-
-
-##### 📌 Additional info about `classNames` & `colors` props
-
-<br/>
-
-##### `classNames` prop - Chart elements classNames. An object with following props:
-
-|	Name	|	Type	|	Default	|	Description	|
-|	:---	|	:---	|	:----------:	|	:---	|
-|	**chartBackground**	|	`string`	|	`undefined`	|	Chart background className. Background - svg element the same size as the chart, and it is rendered if 'colorSegmentsBackground' property is provided	|
-|	**chartCenter**	|	`string`	|	`undefined`	|	Center circle (donut hole) className	|
-|	**chartSegment**	|	`string`	|	`undefined`	|	Chart segment className	|
-|	**chartSegmentsBackground**	|	`string`	|	`undefined`	|	Chart segment background className	|
-|	**children**	|	`string`	|	`undefined`	|	Chart children className	|
-|	**svgGroupSegments**	|	`string`	|	`undefined`	|	Chart segments group <g> element className	|
-|	**svgGroupSegmentsBackground**	|	`string`	|	`undefined`	|	Chart segments group <g> element className. This background is another <g> element under the chart segments group <g> element	|
-|	**svgGroupText**	|	`string`	|	`undefined`	|	Chart text group <g> element className	|
-|	**svgObjectText**	|	`string`	|	`undefined`	|	Chart text <foreignObject> element className. <foreignObject> is something like element-wrapper for the text container	|
-|	**text**	|	`string`	|	`undefined`	|	Text <div> container className	|
-
-<br/>
-
-##### `colors` prop - Chart elements colors. An object with following props:
-
-|	Name	|	Type	|	Default	|	Description	|
-|	:---	|	:---	|	:----------:	|	:---	|
-|	**chartBackground**	|	`string`	|	`undefined`	|	Color of the chart background. Background is svg element same size with chart. Not renders if this param was not passed	|
-|	**chartCenter**	|	`string`	|	`#ffffff`	|	Center circle (donut hole) color	|
-|	**segmentFocusedOutline**	|	`string`	|	`#287bc8`	|	Focused segments outline (stroke) color	|
-|	**segmentsBackground**	|	`string`	|	`undefined`	|	Background color of the chart segments background element. `Segments background` is an svg element same size with chart. 1. Not renders if this param was not passed 2. This is not the segments background. This is background of element under all segments. Sounds complicated, I know... But it needed if you want to create a chart with gaps between segments and to color this space (`gap`) between segments. When the chart is `Pie` type this param works same like 'colorChartBackground' prop, but if chart is `Donut` type then current param will color only the circle under the segments but not the whole chart	|
-|	**text**	|	`string`	|	`undefined`	|	The color of the text. By default, it will be same color with selected segment (if any segment is selected) or same color with the biggest value in the "data" array.	|
-
-> Make sure the colors provided to the "PieDonutChart" meet the following requirements: <br/> <br/>
-> Color must be only `HEX` string and must be
-> - 7-characters starts with "#" symbol - `'#ffffff'`
-> - or 6-characters without "#" symbol - `'ffffff'`
-> - or 4-characters starts with "#" symbol - `'#fff'`
-> - or 3-characters without "#" symbol - `fff`
-
-<br/>
-
-<hr/>
-
-
-## 🚀️ Example
-
-```typescript jsx
+```tsx
 import PieDonutChart, { DataItem } from '@garvae/react-pie-donut-chart';
-import React from 'react';
 
-const DATA: DataItem[] = [
-    {
-        color: '#287BC8',
-        id: '001',
-        order: 1,
-        value: 10,
-    },
-    {
-        color: '#D64045',
-        id: '002',
-        order: 2,
-        value: 40,
-    },
-    {
-        color: '#daf6ec',
-        id: '003',
-        order: 3,
-        value: 30,
-    },
-    {
-        color: '#9ED8DB',
-        id: '004',
-        order: 4,
-        value: 20,
-    },
-    {
-        color: '#2B2D42',
-        id: '005',
-        order: 5,
-        value: 50,
-    },
+const data: DataItem[] = [
+  { id: 'react',      value: 40, color: '#61dafb' },
+  { id: 'typescript', value: 35, color: '#3178c6' },
+  { id: 'other',      value: 25, color: '#7c3aed' },
 ];
 
-// "Pie" type chart variant with "parentRef" prop (auto-resize)
-const ChartPieAutoResize = () => {
-    const ref = React.useRef<HTMLDivElement>(null);
-
-    return (
-        <div
-            ref={ref}
-            style={{ height: '300px', width: '300px' }}
-        >
-            <PieDonutChart
-                data={DATA}
-                parentRef={ref}
-            />
-        </div>
-    );
-};
-
-// "Pie" type chart variant with "size" prop (no auto-resize)
-const ChartPieWithFixedSize = () => {
-    return (
-        <PieDonutChart
-            data={DATA}
-            size={300}
-        />
-    );
-};
-
-// "Donut" type chart variant with "size" prop (no auto-resize)
-const ChartDonutWithFixedSize = () => {
-    return (
-        <PieDonutChart
-            data={DATA}
-            gap={10}
-            size={300}
-        />
-    );
-};
+export function MyChart() {
+  return <PieDonutChart data={data} size={240} />;
+}
 ```
 
-<br/>
+---
 
-<hr/>
+## Examples
 
-## 🙋‍♂ Author - **Garvae**
+### Donut chart
 
-- Facebook: [@garvae](https://www.facebook.com/garvae)
+Use `donutThickness` to create a donut ring:
+
+```tsx
+<PieDonutChart data={data} size={240} donutThickness={40} />
+```
+
+### Gaps between segments
+
+```tsx
+<PieDonutChart data={data} size={240} gap={5} />
+```
+
+### Custom center content via `children`
+
+```tsx
+<PieDonutChart data={data} size={240} donutThickness={40}>
+  <span style={{ fontSize: 20, fontWeight: 'bold' }}>42%</span>
+</PieDonutChart>
+```
+
+Or use the built-in `text` prop:
+
+```tsx
+<PieDonutChart data={data} size={240} text="Total: 100" />
+```
+
+### Responsive (auto-resize from parent)
+
+```tsx
+import { useRef } from 'react';
+import PieDonutChart, { DataItem } from '@garvae/react-pie-donut-chart';
+
+export function ResponsiveChart() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={ref} style={{ width: '100%', height: 300 }}>
+      <PieDonutChart data={data} parentRef={ref} />
+    </div>
+  );
+}
+```
+
+### Controlled selected segment
+
+```tsx
+import { useState } from 'react';
+import PieDonutChart, { DataItem } from '@garvae/react-pie-donut-chart';
+
+export function ControlledChart() {
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+
+  return (
+    <PieDonutChart
+      data={data}
+      size={240}
+      selected={selected}
+      onSegmentClick={(segmentId) => setSelected(prev => prev === segmentId ? undefined : segmentId)}
+    />
+  );
+}
+```
+
+### Accessible chart
+
+```tsx
+<PieDonutChart
+  data={data}
+  size={240}
+  ariaLabel="Technology usage chart"
+  getSegmentAriaLabel={(segment, index) =>
+    `${segment.id ?? `Segment ${index + 1}`}: ${segment.value}%`
+  }
+/>
+```
+
+---
+
+## Accessibility
+
+`PieDonutChart` renders an accessible SVG chart out of the box:
+
+- The root `<svg>` has `role="img"` and `aria-label` (defaults to `"Pie donut chart"`).
+- Use `ariaLabel` to give each chart on the page a distinct description.
+- Each interactive segment has `role="button"` and an `aria-label`.
+- Use `getSegmentAriaLabel` to return human-readable labels per segment. The factory
+  receives the segment's `DataItem` and its zero-based rendered index.
+- The selected state is exposed via `aria-pressed` on each segment.
+- **Keyboard navigation:** `Tab` moves focus between segments; `Enter` or `Space`
+  activates the focused segment (calls `onSegmentKeyEnterDown` and toggles selection
+  when `isSelectOnKeyEnterDown` is `true`).
+
+```tsx
+<PieDonutChart
+  data={data}
+  size={300}
+  ariaLabel="Quarterly results chart"
+  getSegmentAriaLabel={(segment, index) =>
+    `${segment.id ?? `Q${index + 1}`}: ${segment.value} units`
+  }
+  onSegmentKeyEnterDown={(segmentId) => console.log('activated:', segmentId)}
+/>
+```
+
+---
+
+## TypeScript
+
+The package ships its own type declarations. No separate `@types/*` package is needed.
+
+```tsx
+import PieDonutChart, {
+  DataItem,
+  PieDonutChartProps,
+} from '@garvae/react-pie-donut-chart';
+
+const data: DataItem[] = [
+  { id: 'a', value: 60, color: '#287BC8' },
+  { id: 'b', value: 40, color: '#D64045' },
+];
+
+// Use PieDonutChartProps when you need the full props type:
+const chartProps: PieDonutChartProps = {
+  data,
+  size: 300,
+  ariaLabel: 'My accessible chart',
+};
+
+export function TypedChart() {
+  return <PieDonutChart {...chartProps} />;
+}
+```
+
+---
+
+## SSR
+
+The component is SSR-safe. It does not access browser globals during server-side render.
+`useLayoutEffect` calls are replaced with `useIsomorphicLayoutEffect`, which falls back
+to `useEffect` on the server.
+
+When rendered server-side, the chart produces a static `<svg>` with no computed size
+until the client hydrates and initialises dimensions from the `size` prop or `parentRef`.
+
+---
+
+## Props
+
+### `DataItem`
+
+| Name | Type | Required | Default | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `value` | `number` | ✓ | — | Segment value. Must be a positive finite number. |
+| `id` | `string` | — | auto | Unique segment identifier. Used by `selected`, `onSegmentClick`, and `onSegmentKeyEnterDown` callbacks. |
+| `color` | `string` | — | auto | Segment color. HEX strings are recommended (`#ffffff`, `#fff`, `ffffff`, `fff`). |
+| `order` | `number` | — | auto | Display order. `order: 0` is valid and treated as the first position. |
+
+### Component props
+
+Either `size` **or** `parentRef` is required. They are mutually exclusive.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :---: | :--- |
+| `data` | `DataItem[]` | — | **Required.** Chart data array. |
+| `size` | `number` | — | Fixed chart size in pixels. Mutually exclusive with `parentRef`. |
+| `parentRef` | `RefObject<HTMLElement>` | — | Ref to a parent element; the chart auto-resizes to match its dimensions. Mutually exclusive with `size`. |
+| `ariaLabel` | `string` | `"Pie donut chart"` | Accessible label for the root `<svg>`. Provide a unique value when multiple charts appear on the same page. |
+| `getSegmentAriaLabel` | `(segment: DataItem, index: number) => string` | auto | Factory that returns an accessible label for each interactive segment. |
+| `animationSpeed` | `number` | `200` | Segment animation duration in milliseconds. |
+| `chartCenterSize` | `number` | — | Diameter of the center circle element (text background). Use `donutThickness` for donut charts instead. |
+| `children` | `ReactNode \| string \| number` | — | Content rendered in the chart center via `<foreignObject>`. |
+| `className` | `string` | — | Class name applied to the root `<svg>`. |
+| `classNames` | `PieDonutChartPropsClassNames` | — | Class names for individual chart sub-elements. See below. |
+| `colors` | `PieDonutChartPropsColors` | — | Color overrides for individual chart sub-elements. See below. |
+| `donutThickness` | `number` | — | Creates a donut chart by setting the segment ring thickness in pixels. |
+| `fontSize` | `number` | — | Center text font size override. Auto-calculated from chart size by default. |
+| `gap` | `number` | — | Gap between segments in pixels. |
+| `hoverScaleRatio` | `number` | `1.05` | Scale factor when a segment is hovered, selected, or focused. |
+| `isScaleOnHover` | `boolean` | `true` | Enable or disable segment scale on hover, select, or focus. |
+| `isSelectOnClick` | `boolean` | `true` | Enable or disable segment selection on click. |
+| `isSelectOnKeyEnterDown` | `boolean` | `true` | Enable or disable segment selection on keyboard activation (Enter or Space). |
+| `isSelectedValueShownInCenter` | `boolean` | `true` | Show the selected segment's value in the chart center. |
+| `maxSize` | `number` | — | Maximum chart size when using `parentRef`. |
+| `minSize` | `number` | — | Minimum chart size when using `parentRef`. |
+| `onSegmentClick` | `(segmentId: string) => void` | — | Callback fired on segment click. Receives the segment's `id`. |
+| `onSegmentKeyEnterDown` | `(segmentId: string) => void` | — | Callback fired when a segment is activated via keyboard (Enter or Space). Receives the segment's `id`. |
+| `resizeReRenderDebounceTime` | `number` | `50` | Debounce time (ms) for resize-triggered re-renders. Set to `0` to disable. No effect when `size` is provided. |
+| `selected` | `string` | — | Externally controlled selected segment ID (matches `DataItem.id`). |
+| `stylesHoveredSegment` | `CSSProperties` | — | Custom inline styles applied to hovered, selected, or focused segments. |
+| `tabIndex` | `number` | `0` | Tab index for keyboard navigation. Set to `-1` to exclude the chart from tab order. |
+| `text` | `string` | — | Custom text shown in the chart center. When absent, the total or selected segment value is displayed. |
+| `widthSegmentFocusedOutline` | `number` | auto | Width of the focus outline (stroke) on focused segments. Defaults to `chartSize × 0.0066`. |
+
+### `classNames` sub-prop
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| `chartBackground` | `string` | Root SVG background element |
+| `chartCenter` | `string` | Center circle (donut hole) |
+| `chartSegment` | `string` | Individual segment paths |
+| `chartSegmentsBackground` | `string` | Background element rendered behind all segments |
+| `children` | `string` | Children `<foreignObject>` wrapper |
+| `svgGroupSegments` | `string` | Segments `<g>` group |
+| `svgGroupSegmentsBackground` | `string` | Segments background `<g>` group |
+| `svgGroupText` | `string` | Text `<g>` group |
+| `svgObjectText` | `string` | Text `<foreignObject>` element |
+| `text` | `string` | Center text `<div>` container |
+
+### `colors` sub-prop
+
+| Name | Type | Default | Description |
+| :--- | :--- | :---: | :--- |
+| `chartBackground` | `string` | — | Full-chart background color |
+| `chartCenter` | `string` | `#ffffff` | Center circle (donut hole) color |
+| `segmentFocusedOutline` | `string` | `#287bc8` | Focus outline (stroke) color |
+| `segmentsBackground` | `string` | — | Background color behind all segments. Useful for coloring the gap space in donut charts. |
+| `text` | `string` | — | Center text color. Defaults to the color of the selected or largest-value segment. |
+
+> **Color format:** HEX strings are recommended for all color props.
+> Supported formats: `#ffffff`, `ffffff`, `#fff`, `fff`.
+
+---
+
+## Development
+
+```sh
+pnpm install           # install dependencies
+pnpm run check         # run formatter + linter
+pnpm run lint          # lint only
+pnpm run format:check  # check formatting without writing
+pnpm run type-check    # TypeScript check (src)
+pnpm run type-check:test  # TypeScript check (test files)
+pnpm run build         # build dist/
+pnpm run test          # run Jest test suite
+pnpm run test:cover    # run tests with coverage report
+pnpm run pack:smoke    # pack tarball and verify contents
+pnpm run size          # check bundle size
+pnpm run check:all     # run all checks in sequence
+```
+
+---
+
+## Quality gates
+
+The local quality gate (`pnpm run check:all`) covers:
+
+- **Biome** formatting and lint checks
+- **TypeScript** type checks for source and test files
+- **Build** verification via tsup
+- **Jest** test suite (~60 suites, ~197 tests)
+- **Coverage** reporting (near-100% statement coverage for the maintained behavior)
+- **Package smoke tests** — verifies tarball contents and entry-point imports
+- **Bundle size** check
+- **Dependency audit**
+
+---
+
+## Release / publishing
+
+Publish automation is intentionally disabled during this maintenance period. Releases are
+prepared and published manually after all local quality gates pass. Each maintenance stage
+is documented in `docs/maintenance/`.
+
+---
+
+## 🙋‍♂ Author — Garvae
+
+- GitHub: [@garvae](https://github.com/garvae)
 - LinkedIn: [@garvae](https://linkedin.com/in/garvae)
+- Facebook: [@garvae](https://www.facebook.com/garvae)
 - Twitter: [@vgarvae](https://twitter.com/vgarvae)
-- Github: [@garvae](https://github.com/garvae)
 
 ## ❤ Show your support
 
-Give a  ⭐ if this project helped you!
+Give a ⭐ if this project helped you!
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://www.github.com/garvae/react-pie-donut-chart/issues). You can also take a look at the [contributing guide](https://wwwhub.com/garvae/react-pie-donut-chart/raw/master/CONTRIBUTING.md).
+Contributions, issues, and feature requests are welcome!
+Feel free to check the [issues page](https://github.com/garvae/react-pie-donut-chart/issues).
+You can also look at the [contributing guide](https://github.com/garvae/react-pie-donut-chart/blob/master/CONTRIBUTING.md).
 
-<br/>
+---
 
-<hr/>
+## 📄 License
 
-## 📄 [License - MIT](https://github.com/garvae/react-pie-donut-chart/blob/master/LICENSE)
+[MIT](https://github.com/garvae/react-pie-donut-chart/blob/master/LICENSE)
