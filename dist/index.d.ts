@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  CSSProperties,
-  ReactNode,
-  RefObject,
-} from 'react';
+import { CSSProperties, ReactNode, RefObject } from 'react';
 
 /**
  * Chart container ref
@@ -13,7 +9,7 @@ export type PieDonutChartPropRef = RefObject<HTMLElement>;
 /**
  * Chart size
  */
-export type PieDonutChartPropSize = number ;
+export type PieDonutChartPropSize = number;
 
 /**
  * Chart data item type (chart segment)
@@ -43,7 +39,6 @@ export type DataItem = {
   order?: number;
   value: number;
 };
-
 
 /**
  * Chart elements [class~] props
@@ -296,18 +291,32 @@ export type PieDonutChartPropsColors = {
  * @property { string } text
  * @default undefined
  *
+ * Accessible label for the chart SVG element (maps to `aria-label` on the `<svg>`).
+ * If not provided, defaults to `"Pie donut chart"`.
+ * Useful when multiple charts are on the same page.
+ * @property { string } ariaLabel
+ * @default 'Pie donut chart'
+ *
+ * Returns a custom accessible label for each interactive segment.
+ * Receives the segment's DataItem and its zero-based index in the rendered order.
+ * If not provided, a default label is generated from the segment's value and id.
+ * @property { (segment: DataItem, index: number) => string } getSegmentAriaLabel
+ * @default undefined
+ *
  */
 export type PieDonutChartProps = {
   animationSpeed?: number;
+  ariaLabel?: string;
   chartCenterSize?: number;
   children?: ReactNode | string | number;
   className?: string;
-  classNames?: PieDonutChartPropsClassNames,
-  colors?: PieDonutChartPropsColors,
+  classNames?: PieDonutChartPropsClassNames;
+  colors?: PieDonutChartPropsColors;
   data: DataItem[];
   donutThickness?: number;
   fontSize?: number;
   gap?: number;
+  getSegmentAriaLabel?: (segment: DataItem, index: number) => string;
   hoverScaleRatio?: number;
   isScaleOnHover?: boolean;
   isSelectOnClick?: boolean;
@@ -323,14 +332,15 @@ export type PieDonutChartProps = {
   tabIndex?: number;
   text?: string;
   widthSegmentFocusedOutline?: number;
-}  & (
-  {
-    parentRef?: never;
-    size: PieDonutChartPropSize;
-  } | {
-    parentRef: PieDonutChartPropRef;
-    size?: never;
-  }
+} & (
+  | {
+      parentRef?: never;
+      size: PieDonutChartPropSize;
+    }
+  | {
+      parentRef: PieDonutChartPropRef;
+      size?: never;
+    }
 );
 
 /**
@@ -439,6 +449,5 @@ export type PieDonutChartProps = {
  * @author Garvae - https://github.com/garvae
  */
 declare function PieDonutChart(props: PieDonutChartProps): JSX.Element;
-exports.PieDonutChart = PieDonutChart;
-export = PieDonutChart;
+export default PieDonutChart;
 /* eslint-enable @typescript-eslint/naming-convention */
