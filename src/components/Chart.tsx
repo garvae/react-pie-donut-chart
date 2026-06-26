@@ -4,6 +4,7 @@ import { computePrefixTotals } from 'utils/computePrefixTotals';
 import { convertPercentToDegrees } from 'utils/createChartSegmentPathDraw/_utils/convertPercentToDegrees';
 import { createChartSegmentPathDraw } from 'utils/createChartSegmentPathDraw/createChartSegmentPathDraw';
 import { isKeyDownEnter } from 'utils/isKeyDownEnter';
+import { isKeyDownSpace } from 'utils/isKeyDownSpace';
 import { sanitizeNumber } from 'utils/sanitizeNumber';
 import { DEFAULT_COLOR_SEGMENT_FOCUSED_OUTLINE, SINGLE_VALUE_CORRECTION_RATIO } from 'variables/defaults';
 
@@ -27,6 +28,7 @@ export type TChartProps = Pick<
   | 'donutThickness'
   | 'focusedSegment'
   | 'gap'
+  | 'getSegmentAriaLabel'
   | 'handleClearSelects'
   | 'hoverScaleRatio'
   | 'hoveredSegment'
@@ -66,6 +68,7 @@ export const Chart = (props: TChartProps) => {
     donutThickness,
     focusedSegment,
     gap,
+    getSegmentAriaLabel,
     handleClearSelects,
     hoverScaleRatio,
     hoveredSegment,
@@ -216,6 +219,18 @@ export const Chart = (props: TChartProps) => {
         });
 
         /**
+         * Accessible label for this segment.
+         * Uses the caller-supplied factory if provided; falls back to a
+         * descriptive default so screen-reader users always hear something
+         * meaningful, even without any configuration.
+         */
+        const segmentAriaLabel = isGapSegment
+          ? undefined
+          : getSegmentAriaLabel
+            ? getSegmentAriaLabel(item, i)
+            : `Segment ${id ?? i}: value ${value}`;
+
+        /**
          * Tests attributes (gap segments)
          */
         const testsAttributesGap = { [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_GAP]: gap };
@@ -233,11 +248,14 @@ export const Chart = (props: TChartProps) => {
         return (
           <path
             {...testsAttributes}
+            aria-label={segmentAriaLabel}
+            aria-pressed={isGapSegment ? undefined : isSelected}
             className={classNameSegment}
             d={segmentPath}
             data-testid={TEST_DATA_ID_CHART_GROUP_SEGMENT}
             fill={color}
             key={`chart-segment-${id}`}
+            role={isGapSegment ? undefined : 'button'}
             onClick={() => {
               if (isGapSegment) {
                 return;
@@ -260,6 +278,21 @@ export const Chart = (props: TChartProps) => {
             }}
             onKeyDownCapture={(e) => {
               if (isGapSegment) {
+                return;
+              }
+
+              /**
+               * Space activates a button-role element (WAI-ARIA pattern).
+               * preventDefault prevents the default page-scroll behaviour.
+               */
+              if (isKeyDownSpace(e)) {
+                e.preventDefault();
+
+                if (isSelectOnKeyEnterDown && selected !== id) {
+                  setSelected(id);
+                }
+
+                onSegmentKeyEnterDown?.(id);
                 return;
               }
 

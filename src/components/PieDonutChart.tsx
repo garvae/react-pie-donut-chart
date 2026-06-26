@@ -13,6 +13,8 @@ import {
 
 export const TEST_DATA_ID_CHART_SVG_MAIN = 'TEST_DATA_ID_CHART_SVG_MAIN';
 
+export const DEFAULT_CHART_ARIA_LABEL = 'Pie donut chart';
+
 export const PieDonutChart: typeof PieDonutChartType = (props: PieDonutChartProps): JSX.Element => {
   const { classNames: classNamesProp, colors: colorsProp, ...rest } = props;
 
@@ -47,8 +49,10 @@ export const PieDonutChart: typeof PieDonutChartType = (props: PieDonutChartProp
 
   return (
     <svg
+      aria-label={properties.ariaLabel || DEFAULT_CHART_ARIA_LABEL}
       className={properties.className}
       data-testid={TEST_DATA_ID_CHART_SVG_MAIN}
+      role="img"
       style={{
         alignItems: 'center',
         aspectRatio: '1 / 1',
