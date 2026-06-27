@@ -19,6 +19,12 @@ jobs:
     name: Quality / Node ${{ matrix.node }}
     runs-on: ubuntu-latest
 
+    env:
+      # Prevent npm 10 (Node 22) from printing a warning about the unset
+      # ${NODE_AUTH_TOKEN} in .npmrc into `npm pack --json` stdout, which
+      # would break the JSON.parse call in scripts/package-smoke-test.js.
+      NODE_AUTH_TOKEN: ""
+
     strategy:
       fail-fast: false
       matrix:
