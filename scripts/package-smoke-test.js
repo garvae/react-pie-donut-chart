@@ -82,11 +82,17 @@ if (!fs.existsSync(distIndexJs)) {
 // 3 + 9a. npm pack, and verify the tarball's reported file list
 // ---------------------------------------------------------------------------
 log('Packing tarball with npm pack');
-// --ignore-scripts: dist/ is already built by an explicit step above; we don't
-// want npm pack's "prepare" lifecycle hook (husky install) writing extra,
-// non-JSON output to stdout, which would otherwise break the --json parsing.
+// --ignore-scripts: dist/ is already built above; the flag is a best-effort hint
+// to suppress lifecycle/Husky output before the --json payload, but npm 10 (Node 22)
+// still runs the package's own `prepare` script regardless.  To stay resilient we
+// also slice stdout from the first '[' so any leading text (e.g. Husky's skip-message)
+// is discarded before JSON.parse, keeping the script stable across npm versions.
 const packJsonRaw = run('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', TMP_DIR], ROOT);
-const packInfo = JSON.parse(packJsonRaw)[0];
+const jsonStart = packJsonRaw.indexOf('[');
+if (jsonStart === -1) {
+  fail('npm pack --json produced no parseable JSON array in stdout');
+}
+const packInfo = JSON.parse(packJsonRaw.slice(jsonStart))[0];
 const tarballPath = path.join(TMP_DIR, packInfo.filename);
 
 if (!fs.existsSync(tarballPath)) {
