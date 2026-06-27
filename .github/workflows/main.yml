@@ -24,6 +24,10 @@ jobs:
       # ${NODE_AUTH_TOKEN} in .npmrc into `npm pack --json` stdout, which
       # would break the JSON.parse call in scripts/package-smoke-test.js.
       NODE_AUTH_TOKEN: ""
+      # Prevent Husky from running its prepare/init script during `npm pack
+      # --json` lifecycle hooks in CI, which would pollute stdout and break
+      # the JSON.parse call in scripts/package-smoke-test.js.
+      HUSKY: "0"
 
     strategy:
       fail-fast: false
