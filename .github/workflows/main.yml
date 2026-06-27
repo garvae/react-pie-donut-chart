@@ -24,9 +24,12 @@ jobs:
       # ${NODE_AUTH_TOKEN} in .npmrc into `npm pack --json` stdout, which
       # would break the JSON.parse call in scripts/package-smoke-test.js.
       NODE_AUTH_TOKEN: ""
-      # Prevent Husky from running its prepare/init script during `npm pack
-      # --json` lifecycle hooks in CI, which would pollute stdout and break
-      # the JSON.parse call in scripts/package-smoke-test.js.
+      # Prevent Husky from printing to stdout when the prepare script runs
+      # during `npm pack --json` lifecycle hooks. Without this, Husky's
+      # skip-message pollutes stdout and breaks JSON.parse in package-smoke-test.js.
+      # Note: the actual --ignore-scripts fix is applied in package-smoke-test.js
+      # (passing --ignore-scripts directly to npm pack), which is the definitive
+      # fix. HUSKY=0 is kept as a defense-in-depth measure.
       HUSKY: "0"
 
     strategy:
