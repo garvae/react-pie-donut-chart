@@ -21,6 +21,8 @@ through optional props only.
 > **CI runs on every PR and push to `master`. Publish automation is manual-only —
 > see [`docs/release-checklist.md`](docs/release-checklist.md).**
 
+Release notes for the next maintained version are drafted in [`docs/releases/1.1.0.md`](docs/releases/1.1.0.md).
+
 ---
 
 ## Install

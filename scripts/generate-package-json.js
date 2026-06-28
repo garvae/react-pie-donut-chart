@@ -19,7 +19,11 @@ try {
     main: 'index.js',
     module: 'react-pie-donut-chart.esm.js',
     typings: 'index.d.ts',
-    'umd:main': 'index.js'
+    'umd:main': 'index.js',
+    // Override the root `files` field: when publishing from `./dist`, the package
+    // root IS the dist directory, so "dist" no longer refers to a subdirectory.
+    // Use explicit globs that correctly include all artefacts at the dist root.
+    files: ['*.js', '*.d.ts']
   };
 
   const newJsonData = JSON.stringify(newJson, null, 2);

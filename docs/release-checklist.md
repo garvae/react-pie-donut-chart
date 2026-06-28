@@ -8,8 +8,9 @@
 - [ ] Confirm `pnpm audit` is clean.
 - [ ] Confirm README examples match the public API.
 - [ ] Decide version bump: patch / minor / major.
-- [ ] Update `package.json` version field.
+- [ ] Update `package.json` version field using `pnpm version X.Y.Z --no-git-tag-version` (no git tag from PR branch).
 - [ ] Update release notes / changelog draft.
+- [ ] Verify chosen version is not yet published: `node scripts/verify-npm-version-not-published.js`.
 - [ ] Run `pnpm run build` to regenerate `dist/` (version in `dist/package.json` is updated by `postbuild`).
 - [ ] Run `pnpm run pack:smoke` to verify the tarball locally.
 - [ ] Check package contents with `npm pack --dry-run` or the publish workflow dry-run.
@@ -24,6 +25,7 @@
 
 ## Publish
 
+- [ ] **Only publish after the release PR is merged to `master`.** Do not run with `dry_run=false` from a feature branch.
 - [ ] Run the GitHub Actions **Publish** workflow with `dry_run=false`.
 - [ ] Use `npm_tag=latest` for a stable release or `npm_tag=next` for a prerelease.
 - [ ] Confirm the npm package page shows the new version.
