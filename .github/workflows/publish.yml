@@ -1,19 +1,107 @@
-# Temporarily disabled during maintenance.
-# Automatic publish was wired to run after successful CI on master.
-# This workflow is now a no-op and will not publish the npm package under any trigger.
-# npm publish automation will be redesigned in a later maintenance PR after
-# tooling modernization (ESLint, Rollup, Node version, test stack) is complete.
-# See: docs/maintenance/01-pnpm-ci-pause.md
-name: Publish Disabled
+# Manual publish workflow for @garvae/react-pie-donut-chart.
+#
+# Trigger:        workflow_dispatch only (never on push or pull_request).
+# Default mode:   dry_run=true — safe by default, no actual publish.
+# Branch guard:   only runs when dispatched from master.
+# Quality gates:  install → check:all → audit → pack:smoke → version preflight.
+# Real publish:   dry_run=false, requires explicit manual dispatch by the owner.
+# NPM token:      secrets.NPM_TOKEN only (never hardcoded).
+# Provenance:     enabled on real publish (--provenance flag).
+#
+# To run a dry-run:
+#   GitHub Actions → Publish → Run workflow → dry_run=true (default)
+#
+# To publish for real:
+#   1. Ensure version is bumped in package.json and dist/package.json.
+#   2. Ensure CI is green on master.
+#   3. GitHub Actions → Publish → Run workflow → dry_run=false.
+
+name: Publish
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run publish checks without publishing (true = safe default)"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      npm_tag:
+        description: "npm dist-tag to publish under"
+        required: true
+        default: "latest"
+        type: choice
+        options:
+          - "latest"
+          - "next"
 
 permissions:
   contents: read
+  # id-token: write is required for npm provenance attestation.
+  # It is only needed on real publish (dry_run=false), but GitHub Actions
+  # does not support conditional permissions, so we declare it globally.
+  # The token is never used during dry-run because the publish step is skipped.
+  id-token: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  # Do NOT cancel in-progress publish runs — a mid-flight npm publish is dangerous.
+  cancel-in-progress: false
 
 jobs:
-  publish-disabled:
+  publish:
+    name: Publish package (${{ inputs.dry_run == 'true' && 'dry-run' || 'REAL PUBLISH' }})
     runs-on: ubuntu-latest
+
+    # Safety guard: only allow dispatch from master.
+    if: github.ref == 'refs/heads/master'
+
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
-      - run: echo "npm publish is temporarily disabled during maintenance. See docs/maintenance/01-pnpm-ci-pause.md"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          # registry-url is required for NODE_AUTH_TOKEN to be picked up by npm publish.
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run full quality gate
+        run: pnpm run check:all
+
+      - name: Audit dependencies
+        run: pnpm audit
+
+      - name: Pack smoke test
+        run: pnpm run pack:smoke
+
+      - name: Verify package version is not already published
+        run: node scripts/verify-npm-version-not-published.js
+
+      # ---------------------------------------------------------------------------
+      # Dry-run: inspect what would be published without touching npm registry.
+      # ---------------------------------------------------------------------------
+      - name: Dry-run publish (inspect tarball contents)
+        if: inputs.dry_run == 'true'
+        run: npm publish ./dist --dry-run --access public --tag ${{ inputs.npm_tag }}
+
+      # ---------------------------------------------------------------------------
+      # Real publish: only when dry_run is explicitly set to false by the owner.
+      # ---------------------------------------------------------------------------
+      - name: Publish to npm
+        if: inputs.dry_run == 'false'
+        run: npm publish ./dist --provenance --access public --tag ${{ inputs.npm_tag }}

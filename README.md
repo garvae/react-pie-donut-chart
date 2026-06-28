@@ -18,8 +18,8 @@ performance refactor, and added ARIA roles and keyboard accessibility semantics.
 The public API is intentionally kept backward-compatible. New functionality is added
 through optional props only.
 
-> **CI is currently disabled during maintenance. Publish automation is currently no-op.
-> Local quality gates run on every change.**
+> **CI runs on every PR and push to `master`. Publish automation is manual-only —
+> see [`docs/release-checklist.md`](docs/release-checklist.md).**
 
 ---
 
@@ -320,9 +320,13 @@ The local quality gate (`pnpm run check:all`) covers:
 
 ## Release / publishing
 
-Publish automation is intentionally disabled during this maintenance period. Releases are
-prepared and published manually after all local quality gates pass. Each maintenance stage
-is documented in `docs/maintenance/`.
+Publishing is always manual. The publish workflow is triggered via GitHub Actions
+(`workflow_dispatch`) and runs in dry-run mode by default — no publish happens until
+the owner explicitly sets `dry_run=false`.
+
+See [`docs/release-checklist.md`](docs/release-checklist.md) for the full step-by-step
+release guide and [`docs/maintenance/13-publish-workflow-redesign.md`](docs/maintenance/13-publish-workflow-redesign.md)
+for workflow design details.
 
 ---
 
