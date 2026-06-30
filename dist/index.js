@@ -899,12 +899,24 @@ var init_debounce = __esm({
   "src/utils/debounce.ts"() {
     debounce = (cb, wait) => {
       let timer;
-      return (...args) => {
-        clearTimeout(timer);
+      const debounced = ((...args) => {
+        if (timer) {
+          clearTimeout(timer);
+        }
         return new Promise((resolve) => {
-          timer = setTimeout(() => resolve(cb(...args)), wait);
+          timer = setTimeout(() => {
+            timer = void 0;
+            resolve(cb(...args));
+          }, wait);
         });
+      });
+      debounced.cancel = () => {
+        if (timer) {
+          clearTimeout(timer);
+          timer = void 0;
+        }
       };
+      return debounced;
     };
   }
 });
@@ -931,32 +943,39 @@ var init_useHandleResize = __esm({
       const isMounted = useIsMounted();
       const [size, setSize] = React6.useState(0);
       const [parentRefCurrent, setParentRefCurrent] = React6.useState(null);
+      const sizeRef = React6.useRef(0);
       const processUpdate = React6.useCallback(
         (newSize) => {
           if (isMounted()) {
             if (animationDuration !== 0) {
               setAnimationDuration(0);
             }
+            sizeRef.current = newSize;
             setSize(newSize);
           }
         },
         [animationDuration, isMounted, setAnimationDuration]
       );
-      const updateSizeDebounced = debounce((newSize) => {
-        if (newSize !== size && isMounted()) {
+      const updateSizeDebounced = React6.useMemo(
+        () => debounce((newSize) => {
           processUpdate(newSize);
-        }
-      }, resizeReRenderDebounceTime);
+        }, resizeReRenderDebounceTime),
+        [processUpdate, resizeReRenderDebounceTime]
+      );
+      React6.useEffect(() => () => updateSizeDebounced.cancel(), [updateSizeDebounced]);
       const updateSize = React6.useCallback(
         (newSize) => {
-          const n = sanitizeNumber(newSize, size);
+          const n = sanitizeNumber(newSize, sizeRef.current);
+          if (n === sizeRef.current) {
+            return;
+          }
           if (resizeReRenderDebounceTime === 0) {
-            processUpdate(newSize);
+            processUpdate(n);
           } else {
             updateSizeDebounced(n);
           }
         },
-        [processUpdate, resizeReRenderDebounceTime, size, updateSizeDebounced]
+        [processUpdate, resizeReRenderDebounceTime, updateSizeDebounced]
       );
       const handleResize = React6.useCallback(
         () => resizeHandler({
@@ -1062,10 +1081,20 @@ var init_useChartDataRemap = __esm({
         if (!dataValid.length) {
           return [];
         }
+        const idsCounter = /* @__PURE__ */ new Map();
+        const ordersCounter = /* @__PURE__ */ new Map();
+        dataValid.forEach((item) => {
+          if (item.id) {
+            idsCounter.set(item.id, (idsCounter.get(item.id) || 0) + 1);
+          }
+          if (typeof item.order === "number") {
+            ordersCounter.set(item.order, (ordersCounter.get(item.order) || 0) + 1);
+          }
+        });
         return dataValid.map((item, i) => {
           var _a;
           let id = item.id;
-          if (id && dataValid.filter((dataItem) => dataItem.id === id).length > 1) {
+          if (id && (idsCounter.get(id) || 0) > 1) {
             const newId = generateUniqueID();
             consoleWarn(`
           Data item #${i} param "id" error: Must be unique.
@@ -1077,7 +1106,7 @@ var init_useChartDataRemap = __esm({
             id = newId;
           }
           let order = item.order;
-          if (typeof order === "number" && dataValid.filter((dataItem) => dataItem.order === order).length > 1) {
+          if (typeof order === "number" && (ordersCounter.get(order) || 0) > 1) {
             consoleWarn(`
           Data item #${i} param "order" error: Should be unique.
           

@@ -2,8 +2,8 @@
 
 ## Before release
 
-- [ ] Merge all intended PRs into `master`.
-- [ ] Confirm CI is green on `master`.
+- [ ] Merge all intended PRs into `main`.
+- [ ] Confirm CI is green on `main`.
 - [ ] Confirm `pnpm run check:all` passes locally.
 - [ ] Confirm `pnpm audit` is clean.
 - [ ] Confirm README examples match the public API.
@@ -25,7 +25,7 @@
 
 ## Publish
 
-- [ ] **Only publish after the release PR is merged to `master`.** Do not run with `dry_run=false` from a feature branch.
+- [ ] **Only publish after the release PR is merged to `main`.** Do not run with `dry_run=false` from a feature branch.
 - [ ] Run the GitHub Actions **Publish** workflow with `dry_run=false`.
 - [ ] Use `npm_tag=latest` for a stable release or `npm_tag=next` for a prerelease.
 - [ ] Confirm the npm package page shows the new version.

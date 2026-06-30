@@ -49,7 +49,7 @@ Added a single-line note pointing to the release notes file.
 Added:
 - Explicit `--no-git-tag-version` instruction for version bump.
 - Step to verify version is not yet published.
-- Explicit rule: only publish after the release PR is merged to `master`.
+- Explicit rule: only publish after the release PR is merged to `main`.
 
 ## Local checks performed
 
@@ -67,7 +67,7 @@ Added:
 
 ## Next steps after merge
 
-1. Confirm validation CI passes on the merged `master`.
+1. Confirm validation CI passes on the merged `main`.
 2. Run GitHub Actions → **Publish** → `dry_run=true`, `npm_tag=latest`.
 3. Verify dry-run output shows the correct 6-file tarball with version `1.1.0`.
 4. If dry-run passes: run with `dry_run=false` to publish.

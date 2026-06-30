@@ -3,14 +3,14 @@
 ## Summary
 
 - Restored validation-only GitHub Actions CI.
-- CI runs on pull requests and pushes to `master`.
+- CI runs on pull requests and pushes to `main`.
 - CI uses pnpm and the canonical local `check:all` gate.
 - CI runs dependency audit.
 - Publish remains disabled/no-op.
 
 ## CI behavior
 
-- Events: `pull_request` and `push` to `master` only (not all branches).
+- Events: `pull_request` and `push` to `main` only (not all branches).
 - Node versions: 22 (LTS) and 24 (current development baseline), matrix strategy.
 - Package manager: pnpm via Corepack.
 - Commands: `pnpm install --frozen-lockfile`, `pnpm run check:all`, `pnpm audit`.
