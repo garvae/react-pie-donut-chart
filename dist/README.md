@@ -3,7 +3,7 @@
 A lightweight, accessible, TypeScript-ready React component for pie and donut SVG charts.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/garvae/react-pie-donut-chart/master/doc/assets/img/cover.svg" alt="react-pie-donut-chart cover" width="100%" height="auto" />
+  <img src="https://raw.githubusercontent.com/garvae/react-pie-donut-chart/main/doc/assets/img/cover.svg" alt="react-pie-donut-chart cover" width="100%" height="auto" />
 </p>
 
 ---
@@ -18,8 +18,10 @@ performance refactor, and added ARIA roles and keyboard accessibility semantics.
 The public API is intentionally kept backward-compatible. New functionality is added
 through optional props only.
 
-> **CI is currently disabled during maintenance. Publish automation is currently no-op.
-> Local quality gates run on every change.**
+> **CI runs on every PR and push to `main`. Publish automation is manual-only —
+> see [`docs/release-checklist.md`](docs/release-checklist.md).**
+
+Release notes for the next maintained version are drafted in [`docs/releases/1.1.0.md`](docs/releases/1.1.0.md).
 
 ---
 
@@ -320,9 +322,13 @@ The local quality gate (`pnpm run check:all`) covers:
 
 ## Release / publishing
 
-Publish automation is intentionally disabled during this maintenance period. Releases are
-prepared and published manually after all local quality gates pass. Each maintenance stage
-is documented in `docs/maintenance/`.
+Publishing is always manual. The publish workflow is triggered via GitHub Actions
+(`workflow_dispatch`) and runs in dry-run mode by default — no publish happens until
+the owner explicitly sets `dry_run=false`.
+
+See [`docs/release-checklist.md`](docs/release-checklist.md) for the full step-by-step
+release guide and [`docs/maintenance/13-publish-workflow-redesign.md`](docs/maintenance/13-publish-workflow-redesign.md)
+for workflow design details.
 
 ---
 
@@ -341,10 +347,10 @@ Give a ⭐ if this project helped you!
 
 Contributions, issues, and feature requests are welcome!
 Feel free to check the [issues page](https://github.com/garvae/react-pie-donut-chart/issues).
-You can also look at the [contributing guide](https://github.com/garvae/react-pie-donut-chart/blob/master/CONTRIBUTING.md).
+You can also open an issue if you want to discuss a contribution before sending a PR.
 
 ---
 
 ## 📄 License
 
-[MIT](https://github.com/garvae/react-pie-donut-chart/blob/master/LICENSE)
+[MIT](https://github.com/garvae/react-pie-donut-chart/blob/main/LICENSE)

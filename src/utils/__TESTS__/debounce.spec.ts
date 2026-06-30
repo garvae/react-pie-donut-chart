@@ -22,4 +22,18 @@ describe('function "debounce"', () => {
       expect(stub).toHaveBeenCalledTimes(1);
     });
   });
+
+  it('cancels a pending callback', () => {
+    expect.assertions(1);
+
+    const stub = jest.fn();
+    const debounced = debounce(stub, TEST_PROPS.resizeReRenderDebounceTime);
+
+    debounced();
+    debounced.cancel();
+
+    jest.advanceTimersByTime(TEST_PROPS.resizeReRenderDebounceTime);
+
+    expect(stub).not.toHaveBeenCalled();
+  });
 });

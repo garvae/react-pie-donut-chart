@@ -2,7 +2,7 @@
 #
 # Trigger:        workflow_dispatch only (never on push or pull_request).
 # Default mode:   dry_run=true — safe by default, no actual publish.
-# Branch guard:   only runs when dispatched from master.
+# Branch guard:   only runs when dispatched from main.
 # Quality gates:  install → check:all → audit → pack:smoke → version preflight.
 # Real publish:   dry_run=false, requires explicit manual dispatch by the owner.
 # NPM token:      secrets.NPM_TOKEN only (never hardcoded).
@@ -13,7 +13,7 @@
 #
 # To publish for real:
 #   1. Ensure version is bumped in package.json and dist/package.json.
-#   2. Ensure CI is green on master.
+#   2. Ensure CI is green on main.
 #   3. GitHub Actions → Publish → Run workflow → dry_run=false.
 
 name: Publish
@@ -56,8 +56,8 @@ jobs:
     name: Publish package (${{ inputs.dry_run == 'true' && 'dry-run' || 'REAL PUBLISH' }})
     runs-on: ubuntu-latest
 
-    # Safety guard: only allow dispatch from master.
-    if: github.ref == 'refs/heads/master'
+    # Safety guard: only allow dispatch from main.
+    if: github.ref == 'refs/heads/main'
 
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

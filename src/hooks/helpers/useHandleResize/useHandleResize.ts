@@ -2,7 +2,7 @@ import { resizeHandler } from 'hooks/helpers/useHandleResize/resizeHandler';
 import { startResizeListener } from 'hooks/helpers/useHandleResize/startResizeListener/startResizeListener';
 import { useIsMounted } from 'hooks/helpers/useIsMounted';
 import { useIsomorphicLayoutEffect } from 'hooks/helpers/useIsomorphicLayoutEffect';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TPieDonutChartPropsInternal } from 'types/PieDonutChart.types.internal';
 import { debounce } from 'utils/debounce';
 import { isClient } from 'utils/env';
@@ -49,6 +49,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
   const isMounted = useIsMounted();
   const [size, setSize] = useState<number>(0);
   const [parentRefCurrent, setParentRefCurrent] = useState<HTMLElement | null>(null);
+  const sizeRef = useRef(0);
 
   const processUpdate = useCallback(
     (newSize: number) => {
@@ -61,6 +62,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
           setAnimationDuration(0);
         }
 
+        sizeRef.current = newSize;
         setSize(newSize);
       }
     },
@@ -70,26 +72,34 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
   /**
    * debounced size updater
    */
-  const updateSizeDebounced = debounce((newSize: number) => {
-    if (newSize !== size && isMounted()) {
-      processUpdate(newSize);
-    }
-  }, resizeReRenderDebounceTime);
+  const updateSizeDebounced = useMemo(
+    () =>
+      debounce((newSize: number) => {
+        processUpdate(newSize);
+      }, resizeReRenderDebounceTime),
+    [processUpdate, resizeReRenderDebounceTime]
+  );
+
+  useEffect(() => () => updateSizeDebounced.cancel(), [updateSizeDebounced]);
 
   /**
    * updates size
    */
   const updateSize = useCallback(
     (newSize: number) => {
-      const n = sanitizeNumber(newSize, size);
+      const n = sanitizeNumber(newSize, sizeRef.current);
+
+      if (n === sizeRef.current) {
+        return;
+      }
 
       if (resizeReRenderDebounceTime === 0) {
-        processUpdate(newSize);
+        processUpdate(n);
       } else {
         updateSizeDebounced(n);
       }
     },
-    [processUpdate, resizeReRenderDebounceTime, size, updateSizeDebounced]
+    [processUpdate, resizeReRenderDebounceTime, updateSizeDebounced]
   );
 
   /**

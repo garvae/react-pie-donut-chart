@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Lightweight library allows you to create \"pie\" and \"donut\" charts easily",
   "keywords": [
     "arc",
@@ -38,8 +38,8 @@
   "module": "react-pie-donut-chart.esm.js",
   "typings": "index.d.ts",
   "files": [
-    "*.d.ts",
-    "dist"
+    "*.js",
+    "*.d.ts"
   ],
   "engines": {
     "node": ">=10"

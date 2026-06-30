@@ -60,10 +60,23 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
       return [];
     }
 
+    const idsCounter = new Map<string, number>();
+    const ordersCounter = new Map<number, number>();
+
+    dataValid.forEach((item) => {
+      if (item.id) {
+        idsCounter.set(item.id, (idsCounter.get(item.id) || 0) + 1);
+      }
+
+      if (typeof item.order === 'number') {
+        ordersCounter.set(item.order, (ordersCounter.get(item.order) || 0) + 1);
+      }
+    });
+
     return dataValid
       .map((item, i) => {
         let id = item.id;
-        if (id && dataValid.filter((dataItem) => dataItem.id === id).length > 1) {
+        if (id && (idsCounter.get(id) || 0) > 1) {
           const newId = generateUniqueID();
 
           consoleWarn(`
@@ -79,7 +92,7 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
 
         let order = item.order;
 
-        if (typeof order === 'number' && dataValid.filter((dataItem) => dataItem.order === order).length > 1) {
+        if (typeof order === 'number' && (ordersCounter.get(order) || 0) > 1) {
           consoleWarn(`
           Data item #${i} param "order" error: Should be unique.
           

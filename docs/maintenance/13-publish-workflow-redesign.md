@@ -18,7 +18,7 @@
 | File | `.github/workflows/publish.yml` |
 | Trigger | `workflow_dispatch` only |
 | Default mode | `dry_run=true` (safe — no publish) |
-| Required branch | `refs/heads/master` (enforced via `if:` guard) |
+| Required branch | `refs/heads/main` (enforced via `if:` guard) |
 | Node version | 24 |
 | Commands | `pnpm install --frozen-lockfile` → `pnpm run check:all` → `pnpm audit` → `pnpm run pack:smoke` → version preflight → publish |
 | NPM token source | `secrets.NPM_TOKEN` (GitHub secret, never hardcoded) |
@@ -33,8 +33,8 @@
 | Guard | Status |
 |---|---|
 | No publish on `pull_request` | ✅ `workflow_dispatch` only |
-| No publish on `push` to `master` | ✅ `workflow_dispatch` only |
-| Branch guard | ✅ `if: github.ref == 'refs/heads/master'` |
+| No publish on `push` to `main` | ✅ `workflow_dispatch` only |
+| Branch guard | ✅ `if: github.ref == 'refs/heads/main'` |
 | Version already published check | ✅ `scripts/verify-npm-version-not-published.js` exits 1 if duplicate |
 | `dry_run=true` default | ✅ Safe by default — runs all gates but skips actual publish |
 | `dry_run=false` manual only | ✅ Requires explicit owner action in GitHub Actions UI |
