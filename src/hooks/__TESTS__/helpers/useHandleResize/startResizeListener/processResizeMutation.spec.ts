@@ -31,13 +31,11 @@ describe('function "processResizeMutation"', () => {
     processResizeMutation(1234);
     processResizeMutation([]);
 
-    Array(assertions)
-      .fill(null)
-      .forEach((_, i) =>
-        expect(multilineToSingleLineLowerCased(consoleErrorMocked.mock.calls[i][0])).toContain(
-          multilineToSingleLineLowerCased(processResizeMutationNoMutationsErrText)
-        )
+    new Array(assertions).fill(null).forEach((_, i) => {
+      expect(multilineToSingleLineLowerCased(consoleErrorMocked.mock.calls[i][0])).toContain(
+        multilineToSingleLineLowerCased(processResizeMutationNoMutationsErrText)
       );
+    });
   });
 
   it('shows an error: "Node element not found in received mutation"', () => {

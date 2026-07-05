@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DEFAULT_CHART_ARIA_LABEL, PieDonutChart, TEST_DATA_ID_CHART_SVG_MAIN } from 'components/PieDonutChart';
 import React from 'react';
@@ -79,7 +79,7 @@ describe('PieDonutChart — accessibility', () => {
       });
     });
 
-    it('interactive segments have aria-pressed reflecting selection state', () => {
+    it('interactive segments expose selection state in aria-label', () => {
       expect.assertions(1);
 
       const firstId = TEST_CHART_PROPS_COMMON.data[0].id as string;
@@ -87,14 +87,14 @@ describe('PieDonutChart — accessibility', () => {
       const { getAllByRole } = render(<PieDonutChart {...TEST_CHART_PROPS_COMMON} gap={0} selected={firstId} />);
 
       const buttons = getAllByRole('button');
-      const pressedButtons = buttons.filter((b) => b.getAttribute('aria-pressed') === 'true');
+      const selectedButtons = buttons.filter((button) => button.getAttribute('aria-label')?.includes('selected'));
 
-      expect(pressedButtons.length).toBe(1);
+      expect(selectedButtons.length).toBe(1);
     });
   });
 
   describe('keyboard interaction', () => {
-    it('Space key activates a segment (calls onSegmentKeyEnterDown)', () => {
+    it('Space key activates a segment (calls onSegmentKeyEnterDown)', async () => {
       expect.assertions(1);
 
       const onSegmentKeyEnterDown = jest.fn();
@@ -105,13 +105,17 @@ describe('PieDonutChart — accessibility', () => {
 
       const [firstButton] = getAllByRole('button');
 
-      firstButton.focus();
-      userEvent.keyboard(' ');
+      act(() => {
+        firstButton.focus();
+      });
+      await act(async () => {
+        userEvent.keyboard(' ');
+      });
 
       expect(onSegmentKeyEnterDown).toHaveBeenCalledTimes(1);
     });
 
-    it('Enter key activates a segment (calls onSegmentKeyEnterDown)', () => {
+    it('Enter key activates a segment (calls onSegmentKeyEnterDown)', async () => {
       expect.assertions(1);
 
       const onSegmentKeyEnterDown = jest.fn();
@@ -122,13 +126,17 @@ describe('PieDonutChart — accessibility', () => {
 
       const [firstButton] = getAllByRole('button');
 
-      firstButton.focus();
-      userEvent.keyboard('{Enter}');
+      act(() => {
+        firstButton.focus();
+      });
+      await act(async () => {
+        userEvent.keyboard('{Enter}');
+      });
 
       expect(onSegmentKeyEnterDown).toHaveBeenCalledTimes(1);
     });
 
-    it('Tab key moves focus between segments', () => {
+    it('Tab key moves focus between segments', async () => {
       expect.assertions(2);
 
       const data = TEST_CHART_PROPS_COMMON.data.slice(0, 2);
@@ -137,10 +145,14 @@ describe('PieDonutChart — accessibility', () => {
 
       const [first, second] = getAllByRole('button');
 
-      first.focus();
+      act(() => {
+        first.focus();
+      });
       expect(document.activeElement).toBe(first);
 
-      userEvent.tab();
+      await act(async () => {
+        userEvent.tab();
+      });
       expect(document.activeElement).toBe(second);
     });
   });

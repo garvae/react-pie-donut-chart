@@ -20,6 +20,22 @@ import { TEST_CHART_PROPS_COMMON } from 'tests/mocks/variables';
  * module-load time.
  */
 describe('SSR safety', () => {
+  let consoleErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation((message?: unknown) => {
+      if (typeof message === 'string' && message.includes('useLayoutEffect does nothing on the server')) {
+        return;
+      }
+
+      process.stderr.write(`${String(message)}\n`);
+    });
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it('importing the component does not throw and yields a function', () => {
     expect.assertions(1);
 

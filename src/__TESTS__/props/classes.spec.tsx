@@ -37,9 +37,9 @@ describe('props [class~]', () => {
 
     const { chartSegment, ...restClassNames } = TEST_CLASSNAMES;
 
-    Object.values(restClassNames).forEach((classNameValue) =>
-      expect(container.getElementsByClassName(classNameValue)).toHaveLength(1)
-    );
+    Object.values(restClassNames).forEach((classNameValue) => {
+      expect(container.getElementsByClassName(classNameValue)).toHaveLength(1);
+    });
 
     expect(container.getElementsByClassName(chartSegment)).toHaveLength(TEST_PROPS.data.length);
   });

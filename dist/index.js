@@ -126,10 +126,15 @@ var init_env = __esm({
 });
 
 // src/utils/console.ts
-var alignConsoleTextLeftDefaultErr, alignConsoleTextLeft, defaultReportLinkMessage, createErrorWithDescription, defaultConsolePs, consoleError, consoleWarn;
+var getConsoleMethod, alignConsoleTextLeftDefaultErr, alignConsoleTextLeft, defaultReportLinkMessage, createErrorWithDescription, defaultConsolePs, consoleError, consoleWarn;
 var init_console = __esm({
   "src/utils/console.ts"() {
     init_env();
+    getConsoleMethod = (method) => {
+      const consoleApi = Reflect.get(globalThis, "console");
+      const consoleMethod = consoleApi == null ? void 0 : consoleApi[method];
+      return typeof consoleMethod === "function" ? consoleMethod.bind(consoleApi) : void 0;
+    };
     alignConsoleTextLeftDefaultErr = `
 Something went wrong while working with strings...
 And seems like it's an INTERNAL LIBRARY error.
@@ -137,9 +142,10 @@ And seems like it's an INTERNAL LIBRARY error.
 Error in: "lowerCaseFirstLetter" function
 `;
     alignConsoleTextLeft = (text) => {
+      var _a;
       if (!text || typeof text !== "string") {
         if (!isProduction()) {
-          console.error([alignConsoleTextLeftDefaultErr, `Received text: ${text}`].join("\n\n"));
+          (_a = getConsoleMethod("error")) == null ? void 0 : _a([alignConsoleTextLeftDefaultErr, `Received text: ${text}`].join("\n\n"));
         }
         return "";
       }
@@ -180,8 +186,9 @@ ${reportProp}
 P.S. This message will not be shown in the 'production' mode.
 `;
     consoleError = (err) => {
+      var _a;
       if (!isProduction()) {
-        console.error(
+        (_a = getConsoleMethod("error")) == null ? void 0 : _a(
           alignConsoleTextLeft(`
     ${err}
     
@@ -191,8 +198,9 @@ P.S. This message will not be shown in the 'production' mode.
       }
     };
     consoleWarn = (warn) => {
+      var _a;
       if (!isProduction()) {
-        console.warn(
+        (_a = getConsoleMethod("warn")) == null ? void 0 : _a(
           alignConsoleTextLeft(`
     ${warn}
     
@@ -485,6 +493,7 @@ var init_Chart = __esm({
             valueSegmentsTotal: totalDataValue
           });
           const segmentAriaLabel = isGapSegment ? void 0 : getSegmentAriaLabel ? getSegmentAriaLabel(item, i) : `Segment ${id != null ? id : i}: value ${value}`;
+          const segmentAriaLabelWithState = segmentAriaLabel && isSelected ? `${segmentAriaLabel}, selected` : segmentAriaLabel;
           const testsAttributesGap = { [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_GAP]: gap };
           const testsAttributes = __spreadValues({
             [TEST_DATA_ATTR_CHART_GROUP_SEGMENT_ID]: id,
@@ -494,8 +503,7 @@ var init_Chart = __esm({
           return /* @__PURE__ */ React6__default.default.createElement(
             "path",
             __spreadProps(__spreadValues({}, testsAttributes), {
-              "aria-label": segmentAriaLabel,
-              "aria-pressed": isGapSegment ? void 0 : isSelected,
+              "aria-label": segmentAriaLabelWithState,
               className: classNameSegment,
               d: segmentPath,
               "data-testid": TEST_DATA_ID_CHART_GROUP_SEGMENT,
@@ -881,7 +889,7 @@ var init_useIsMounted = __esm({
           return true;
         }
         return ref.current;
-      }, [ref]);
+      }, []);
     };
   }
 });
@@ -1007,7 +1015,7 @@ var init_useHandleResize = __esm({
           handleResize();
         }
         return void 0;
-      }, [handleResize, parentRef, size, sizeProp]);
+      }, [handleResize, size, sizeProp]);
       React6.useEffect(() => {
         if ((parentRef == null ? void 0 : parentRef.current) && parentRefCurrent !== parentRef.current) {
           setParentRefCurrent(parentRef.current);
@@ -1018,7 +1026,7 @@ var init_useHandleResize = __esm({
         if (sizeProp && size !== sizeProp) {
           handleResize();
         }
-      }, [handleResize, parentRef, parentRefCurrent, size, sizeProp]);
+      }, [handleResize, size, sizeProp]);
       return { size };
     };
   }
@@ -1043,7 +1051,7 @@ var init_id = __esm({
     generateUniqueID = (complexity = 8) => {
       const cmplxt = typeof complexity === "number" && complexity > 0 ? complexity : 8;
       const chr4 = () => Math.random().toString(16).slice(-4);
-      const newIdArr = Array(cmplxt).fill(null).map(chr4);
+      const newIdArr = new Array(cmplxt).fill(null).map(chr4);
       if (newIdArr.length === 1) {
         return newIdArr[0];
       }
@@ -1141,7 +1149,7 @@ var init_useChartDataRemap = __esm({
         const segments = [];
         if (gap) {
           const arrLength = incomingData.length > 1 ? incomingData.length * 2 : 1;
-          Array(arrLength).fill(null).forEach((_, i) => {
+          new Array(arrLength).fill(null).forEach((_, i) => {
             if (i === 0) {
               segments.push(__spreadProps(__spreadValues({}, incomingData[0]), {
                 order: 0
@@ -1397,7 +1405,7 @@ var init_useChartStates = __esm({
         if (selectedState) {
           setSelected(null);
         }
-      }, [focusedSegment, selectedState, setFocusedSegment, setSelected]);
+      }, [focusedSegment, selectedState]);
       const updateStateValue = React6.useCallback(
         (p) => {
           const { setter, value } = p;

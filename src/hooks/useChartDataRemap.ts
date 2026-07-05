@@ -142,33 +142,31 @@ export const useChartDataRemap = (props: TUseChartDataRemap): TDataItemRequired[
     if (gap) {
       const arrLength = incomingData.length > 1 ? incomingData.length * 2 : 1;
 
-      Array(arrLength)
-        .fill(null)
-        .forEach((_, i) => {
-          if (i === 0) {
-            segments.push({
-              ...incomingData[0],
-              order: 0
-            });
-            return;
-          }
-
-          if (i % 2 !== 0) {
-            segments.push({
-              color: 'transparent',
-              id: generateUniqueID(),
-              order: i,
-              value: gap
-            });
-
-            return;
-          }
-
+      new Array(arrLength).fill(null).forEach((_, i) => {
+        if (i === 0) {
           segments.push({
-            ...incomingData[i / 2],
-            order: i
+            ...incomingData[0],
+            order: 0
           });
+          return;
+        }
+
+        if (i % 2 !== 0) {
+          segments.push({
+            color: 'transparent',
+            id: generateUniqueID(),
+            order: i,
+            value: gap
+          });
+
+          return;
+        }
+
+        segments.push({
+          ...incomingData[i / 2],
+          order: i
         });
+      });
     }
 
     return segments;

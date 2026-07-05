@@ -1,5 +1,12 @@
 import { isProduction } from 'utils/env';
 
+const getConsoleMethod = (method: 'error' | 'warn') => {
+  const consoleApi = Reflect.get(globalThis, 'console') as Console | undefined;
+  const consoleMethod = consoleApi?.[method];
+
+  return typeof consoleMethod === 'function' ? consoleMethod.bind(consoleApi) : undefined;
+};
+
 const alignConsoleTextLeftDefaultErr = `
 Something went wrong while working with strings...
 And seems like it's an INTERNAL LIBRARY error.
@@ -10,8 +17,7 @@ Error in: "lowerCaseFirstLetter" function
 export const alignConsoleTextLeft = (text: string) => {
   if (!text || typeof text !== 'string') {
     if (!isProduction()) {
-      // eslint-disable-next-line no-console
-      console.error([alignConsoleTextLeftDefaultErr, `Received text: ${text}`].join('\n\n'));
+      getConsoleMethod('error')?.([alignConsoleTextLeftDefaultErr, `Received text: ${text}`].join('\n\n'));
     }
 
     return '';
@@ -76,8 +82,7 @@ P.S. This message will not be shown in the 'production' mode.
  */
 export const consoleError = (err: string) => {
   if (!isProduction()) {
-    // eslint-disable-next-line no-console
-    console.error(
+    getConsoleMethod('error')?.(
       alignConsoleTextLeft(`
     ${err}
     
@@ -94,8 +99,7 @@ export const consoleError = (err: string) => {
  */
 export const consoleWarn = (warn: string) => {
   if (!isProduction()) {
-    // eslint-disable-next-line no-console
-    console.warn(
+    getConsoleMethod('warn')?.(
       alignConsoleTextLeft(`
     ${warn}
     

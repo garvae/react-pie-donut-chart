@@ -28,6 +28,9 @@ pnpm run demo:install
 pnpm run demo:dev
 ```
 
+`demo/` is part of the pnpm workspace, so a root `pnpm install` also materializes
+the demo toolchain used by GitHub Actions and Pages builds.
+
 Recommended two-terminal loop when iterating on the library:
 
 ```sh

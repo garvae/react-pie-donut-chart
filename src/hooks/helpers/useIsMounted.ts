@@ -32,5 +32,5 @@ export const useIsMounted = (): TUseIsMountedReturn => {
     }
 
     return ref.current;
-  }, [ref]);
+  }, []);
 };

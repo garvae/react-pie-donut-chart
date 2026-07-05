@@ -21,6 +21,9 @@ through optional props only.
 > **CI runs on every PR and push to `main`. Release automation starts from a
 > manual GitHub Actions dispatch and then handles the release PR, tag, npm
 > publish, GitHub Release, and demo-site sync automatically.**
+>
+> **`main` is branch-protected:** direct pushes/merges are blocked. Changes must
+> go through a pull request with the required checks green.
 
 ---
 
@@ -149,7 +152,7 @@ export function ControlledChart() {
 - Each interactive segment has `role="button"` and an `aria-label`.
 - Use `getSegmentAriaLabel` to return human-readable labels per segment. The factory
   receives the segment's `DataItem` and its zero-based rendered index.
-- The selected state is exposed via `aria-pressed` on each segment.
+- The selected state is exposed in each segment's accessible label.
 - **Keyboard navigation:** `Tab` moves focus between segments; `Enter` or `Space`
   activates the focused segment (calls `onSegmentKeyEnterDown` and toggles selection
   when `isSelectOnKeyEnterDown` is `true`).

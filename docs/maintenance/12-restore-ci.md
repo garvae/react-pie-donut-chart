@@ -11,7 +11,7 @@
 ## CI behavior
 
 - Events: `pull_request` and `push` to `main` only (not all branches).
-- Node versions: 22 (LTS) and 24 (current development baseline), matrix strategy.
+- Node versions: 24 only (current development baseline and release baseline).
 - Package manager: pnpm via Corepack.
 - Commands: `pnpm install --frozen-lockfile`, `pnpm run check:all`, `pnpm audit`.
 - Permissions: `contents: read` only.
@@ -27,7 +27,7 @@
 ## Why this CI shape
 
 - Ubuntu only: Windows/macOS matrix skipped to preserve Actions minutes; Windows coverage already provided by local agent runs throughout the audit.
-- Node 22/24 matrix: Node 24 is the active dev baseline; Node 22 provides LTS compatibility signal.
+- Single-node CI on Node 24: keeps the required check surface minimal and aligned with the active development/release baseline.
 - `check:all` alignment with local development: CI runs exactly what the developer runs locally — no divergence between local and remote gate.
 - No release/publish in this PR: publish workflow redesign is deferred to a separate stage.
 

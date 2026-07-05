@@ -23,7 +23,7 @@
 | **Install** | Added `pnpm add` command. Kept `npm` and `yarn`. |
 | **Quick start** | Minimal working example with typed `DataItem[]`. |
 | **Examples** | Added: donut, gaps, custom children, responsive, controlled selected, accessible. |
-| **Accessibility** | New section: `ariaLabel`, `getSegmentAriaLabel`, `aria-pressed`, keyboard (Enter + Space). |
+| **Accessibility** | New section: `ariaLabel`, `getSegmentAriaLabel`, selected-state labels, keyboard (Enter + Space). |
 | **TypeScript** | New section: typed usage, `DataItem`, `PieDonutChartProps` import. |
 | **SSR** | New section: describes SSR-safe render behavior and `useIsomorphicLayoutEffect`. |
 | **Props — DataItem** | Fixed `segmentId` → `id`. Documented `order: 0` is valid. |

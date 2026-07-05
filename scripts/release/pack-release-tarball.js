@@ -22,7 +22,6 @@ const EXPECTED_FILES = [
   'README.md',
   'LICENSE'
 ];
-
 /**
  * Run a command and return stdout as text.
  * @param {string} command
@@ -30,10 +29,17 @@ const EXPECTED_FILES = [
  * @returns {string}
  */
 function run(command, args) {
+  if (process.platform === 'win32') {
+    return execFileSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', command, ...args], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'inherit']
+    });
+  }
+
   return execFileSync(command, args, {
     cwd: ROOT,
     encoding: 'utf8',
-    shell: process.platform === 'win32',
     stdio: ['ignore', 'pipe', 'inherit']
   });
 }

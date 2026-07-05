@@ -56,7 +56,7 @@ export const useChartStates = (props: TUseChartStates): TUseChartStatesReturn =>
     if (selectedState) {
       setSelected(null);
     }
-  }, [focusedSegment, selectedState, setFocusedSegment, setSelected]);
+  }, [focusedSegment, selectedState]);
 
   /**
    * Safety states update

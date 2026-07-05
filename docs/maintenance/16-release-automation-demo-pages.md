@@ -9,6 +9,15 @@
 
 ## Release automation
 
+### Main branch protection
+
+- GitHub branch protection is enabled on `main`.
+- Direct pushes and direct merges are blocked for everyone, including admins.
+- Merges must happen through a pull request with:
+  - resolved conversations
+  - required check `Quality / Node 24`
+  - up-to-date branch state before merge (`strict: true`)
+
 ### Trusted Publishing
 
 - `.npmrc` was removed from the repository.
@@ -31,6 +40,8 @@ This keeps the operator step intentionally small while removing manual tag/relea
 
 - `demo/` is a standalone Vite + React app.
 - The demo depends on `@garvae/react-pie-donut-chart` via `link:../dist`, so it consumes the same build output that will be published.
+- `demo/` is included in the pnpm workspace so the root install also materializes the demo's TypeScript/Vite toolchain for CI and GitHub Pages builds.
+- The demo build runs through its own local toolchain (`pnpm exec tsc` / `pnpm exec vite`) so CI does not accidentally pick up the library's older root TypeScript binary.
 - The UI uses Mantine with `defaultColorScheme="auto"` for automatic light/dark support.
 - The page includes:
   - multiple chart usage variants

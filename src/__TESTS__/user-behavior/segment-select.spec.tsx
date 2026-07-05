@@ -20,7 +20,9 @@ describe('user behaviour [segment interaction]', () => {
     const segment = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT)[0];
 
     expect(segment).toHaveAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_SELECTED, 'false');
-    userEvent.click(segment, { bubbles: true });
+    await act(async () => {
+      userEvent.click(segment, { bubbles: true });
+    });
 
     act(() => {
       jest.runAllTimers();
@@ -28,12 +30,14 @@ describe('user behaviour [segment interaction]', () => {
 
     expect(segment).toHaveAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_SELECTED, 'true');
 
-    userEvent.click(container, { bubbles: true });
+    await act(async () => {
+      userEvent.click(container, { bubbles: true });
+    });
 
     expect(segment).toHaveAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_SELECTED, 'false');
   });
 
-  it('focus and blur a segment by pressing the "TAB" button', () => {
+  it('focus and blur a segment by pressing the "TAB" button', async () => {
     expect.hasAssertions();
     const assertions = TEST_CHART_PROPS_COMMON.data.length * 2;
     expect.assertions(assertions);
@@ -44,18 +48,26 @@ describe('user behaviour [segment interaction]', () => {
     const segment1 = segments[0];
     const segment2 = segments[1];
 
-    userEvent.tab();
+    await act(async () => {
+      userEvent.tab();
+    });
 
     expect(segment1).toHaveFocus();
-    segments.slice(1).forEach((item) => expect(item).not.toHaveFocus());
+    segments.slice(1).forEach((item) => {
+      expect(item).not.toHaveFocus();
+    });
 
-    userEvent.tab();
+    await act(async () => {
+      userEvent.tab();
+    });
 
     expect(segment2).toHaveFocus();
-    [segment1, ...segments.slice(2)].forEach((item) => expect(item).not.toHaveFocus());
+    [segment1, ...segments.slice(2)].forEach((item) => {
+      expect(item).not.toHaveFocus();
+    });
   });
 
-  it('blurs a segment by clicking outside of it', () => {
+  it('blurs a segment by clicking outside of it', async () => {
     expect.hasAssertions();
     const assertions = TEST_CHART_PROPS_COMMON.data.length * 2;
     expect.assertions(assertions);
@@ -71,17 +83,25 @@ describe('user behaviour [segment interaction]', () => {
     const segments = getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT);
     const segment1 = segments[0];
 
-    userEvent.tab();
+    await act(async () => {
+      userEvent.tab();
+    });
 
     expect(segment1).toHaveFocus();
-    segments.slice(1).forEach((item) => expect(item).not.toHaveFocus());
+    segments.slice(1).forEach((item) => {
+      expect(item).not.toHaveFocus();
+    });
 
-    userEvent.click(container, { bubbles: true });
+    await act(async () => {
+      userEvent.click(container, { bubbles: true });
+    });
 
     act(() => {
       jest.runAllTimers();
     });
 
-    segments.forEach((item) => expect(item).not.toHaveFocus());
+    segments.forEach((item) => {
+      expect(item).not.toHaveFocus();
+    });
   });
 });
