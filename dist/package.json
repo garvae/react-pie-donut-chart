@@ -36,28 +36,24 @@
   "main": "index.js",
   "umd:main": "index.js",
   "module": "react-pie-donut-chart.esm.js",
+  "types": "index.d.ts",
   "typings": "index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./index.js",
+      "import": "./react-pie-donut-chart.esm.js",
+      "require": "./index.js",
+      "types": "./index.d.ts"
+    }
+  },
   "files": [
     "*.js",
     "*.d.ts"
   ],
+  "sideEffects": false,
   "engines": {
     "node": ">=10"
   },
-  "pnpm": {
-    "overrides": {
-      "braces": ">=3.0.3",
-      "esbuild": ">=0.28.1",
-      "js-yaml": "4.2.0",
-      "micromatch": ">=4.0.8"
-    },
-    "onlyBuiltDependencies": [
-      "core-js",
-      "esbuild",
-      "spawn-sync"
-    ]
-  },
-  "packageManager": "pnpm@10.32.1",
   "peerDependencies": {
     "react": ">=16"
   },
@@ -65,15 +61,5 @@
   "author": "Garvae",
   "publishConfig": {
     "access": "public"
-  },
-  "size-limit": [
-    {
-      "path": "dist/index.js",
-      "limit": "15 KB"
-    },
-    {
-      "path": "dist/react-pie-donut-chart.esm.js",
-      "limit": "15 KB"
-    }
-  ]
+  }
 }

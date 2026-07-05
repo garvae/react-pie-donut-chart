@@ -8,16 +8,29 @@ try {
   delete parsed['lint-staged'];
   delete parsed.resolutions;
   delete parsed.scripts;
-  delete parsed['husky'];
+  delete parsed.husky;
+  delete parsed.pnpm;
+  delete parsed.packageManager;
   delete parsed.prettier;
   delete parsed.devDependencies;
+  delete parsed['size-limit'];
 
   const distPackageJsonPath = resolve(__dirname, '../', 'dist/package.json');
 
   const newJson = {
     ...parsed,
+    exports: {
+      '.': {
+        default: './index.js',
+        import: './react-pie-donut-chart.esm.js',
+        require: './index.js',
+        types: './index.d.ts'
+      }
+    },
     main: 'index.js',
     module: 'react-pie-donut-chart.esm.js',
+    sideEffects: false,
+    types: 'index.d.ts',
     typings: 'index.d.ts',
     'umd:main': 'index.js',
     // Override the root `files` field: when publishing from `./dist`, the package
@@ -34,7 +47,7 @@ try {
   } else {
     fs.writeFileSync(distPackageJsonPath, newJsonData);
   }
-} catch (err) {
-  // eslint-disable-next-line no-console
-  console.log('package.json generating error');
+} catch (error) {
+  process.stderr.write(`package.json generating error: ${error.message}\n`);
+  process.exitCode = 1;
 }

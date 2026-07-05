@@ -18,10 +18,9 @@ performance refactor, and added ARIA roles and keyboard accessibility semantics.
 The public API is intentionally kept backward-compatible. New functionality is added
 through optional props only.
 
-> **CI runs on every PR and push to `main`. Publish automation is manual-only —
-> see [`docs/release-checklist.md`](docs/release-checklist.md).**
-
-Release notes for the next maintained version are drafted in [`docs/releases/1.1.0.md`](docs/releases/1.1.0.md).
+> **CI runs on every PR and push to `main`. Release automation starts from a
+> manual GitHub Actions dispatch and then handles the release PR, tag, npm
+> publish, GitHub Release, and demo-site sync automatically.**
 
 ---
 
@@ -303,6 +302,19 @@ pnpm run size          # check bundle size
 pnpm run check:all     # run all checks in sequence
 ```
 
+### Local demo
+
+```sh
+pnpm run demo:install  # build the library and install demo dependencies
+pnpm run demo:dev      # serve the demo app against the local dist package
+pnpm run build:watch   # optional: rebuild dist/ on library changes
+pnpm run demo:build    # build the demo for production / Pages
+pnpm run demo:preview  # preview the built demo locally
+```
+
+The demo app lives in [`demo/`](demo) and consumes the local package from `dist/`.
+This is the fastest way to validate real-world usage before publishing.
+
 ---
 
 ## Quality gates
@@ -322,13 +334,18 @@ The local quality gate (`pnpm run check:all`) covers:
 
 ## Release / publishing
 
-Publishing is always manual. The publish workflow is triggered via GitHub Actions
-(`workflow_dispatch`) and runs in dry-run mode by default — no publish happens until
-the owner explicitly sets `dry_run=false`.
+Releases start from the manual GitHub Actions **Release** workflow. The workflow:
 
-See [`docs/release-checklist.md`](docs/release-checklist.md) for the full step-by-step
-release guide and [`docs/maintenance/13-publish-workflow-redesign.md`](docs/maintenance/13-publish-workflow-redesign.md)
-for workflow design details.
+- calculates the next version from the dispatch inputs
+- runs the full quality gate and a public-registry version preflight
+- creates and uploads the exact npm tarball artifact
+- on `dry_run=false`: opens and merges the release PR, creates the git tag,
+  publishes to npm through Trusted Publishing, creates the GitHub Release, and
+  lets the demo site update from `main`
+
+Dry-run remains the default, so nothing is published until you explicitly opt in.
+
+See [`docs/release-checklist.md`](docs/release-checklist.md) for the operator guide.
 
 ---
 

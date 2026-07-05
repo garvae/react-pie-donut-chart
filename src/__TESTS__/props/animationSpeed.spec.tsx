@@ -15,9 +15,9 @@ describe('prop "animationSpeed"', () => {
 
     await waitFor(
       () => {
-        getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT).forEach((item) =>
-          expect(item).toHaveStyle(`transition-duration: ${animationSpeed}ms`)
-        );
+        getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT).forEach((item) => {
+          expect(item).toHaveStyle(`transition-duration: ${animationSpeed}ms`);
+        });
       },
       { timeout: SAFETY_ANIMATION_DURATION_UPDATE_TIME * 2 /* At the moment I don't understand how this magic works */ }
     );

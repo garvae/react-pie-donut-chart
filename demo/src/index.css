@@ -1,0 +1,224 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap");
+
+:root {
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(34, 211, 238, 0.24), transparent 28%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.18), transparent 24%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 42%, #f8fafc 100%);
+  color: #0f172a;
+}
+
+body[data-mantine-color-scheme="dark"] {
+  background:
+    radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.12), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #0f172a 42%, #020617 100%);
+  color: #e2e8f0;
+}
+
+code,
+pre,
+.mantine-Code-root {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  position: relative;
+  overflow: clip;
+}
+
+.orb {
+  position: fixed;
+  inset: auto;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.orb-left {
+  top: -8rem;
+  left: -7rem;
+  background: rgba(34, 211, 238, 0.7);
+}
+
+.orb-right {
+  top: 9rem;
+  right: -6rem;
+  background: rgba(249, 115, 22, 0.46);
+}
+
+.hero-panel,
+.demo-card,
+.footer-panel,
+.chart-spotlight,
+.metric-card {
+  backdrop-filter: blur(18px);
+}
+
+.hero-panel,
+.demo-card,
+.footer-panel {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.76);
+}
+
+body[data-mantine-color-scheme="dark"] .hero-panel,
+body[data-mantine-color-scheme="dark"] .demo-card,
+body[data-mantine-color-scheme="dark"] .footer-panel {
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.hero-title {
+  max-width: 14ch;
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.hero-copy {
+  max-width: 58ch;
+  font-size: 1.05rem;
+}
+
+.eyebrow {
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0891b2;
+}
+
+body[data-mantine-color-scheme="dark"] .eyebrow {
+  color: #67e8f9;
+}
+
+.metric-card {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.52);
+}
+
+body[data-mantine-color-scheme="dark"] .metric-card {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.metric-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.chart-spotlight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(226, 232, 240, 0.72));
+}
+
+body[data-mantine-color-scheme="dark"] .chart-spotlight {
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.74));
+}
+
+.chart-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.chart-center strong {
+  font-size: 1.75rem;
+}
+
+.chart-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+.responsive-frame {
+  width: 100%;
+  height: 280px;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(14, 165, 233, 0.05));
+}
+
+body[data-mantine-color-scheme="dark"] .responsive-frame {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(15, 23, 42, 0.32));
+}
+
+.docs-chart {
+  border-radius: 999px;
+}
+
+.command-block {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.footer-panel {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 62rem) {
+  .hero-title {
+    max-width: none;
+  }
+}
+
+@media (max-width: 48rem) {
+  body {
+    background:
+      radial-gradient(circle at top, rgba(34, 211, 238, 0.2), transparent 26%),
+      linear-gradient(180deg, #f8fafc 0%, #eef2ff 42%, #f8fafc 100%);
+  }
+
+  body[data-mantine-color-scheme="dark"] {
+    background:
+      radial-gradient(circle at top, rgba(34, 211, 238, 0.12), transparent 26%),
+      linear-gradient(180deg, #020617 0%, #0f172a 42%, #020617 100%);
+  }
+
+  .orb {
+    width: 18rem;
+    height: 18rem;
+  }
+
+  .responsive-frame {
+    height: 240px;
+  }
+}

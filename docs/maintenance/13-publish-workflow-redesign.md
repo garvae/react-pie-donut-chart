@@ -2,12 +2,12 @@
 
 ## Summary
 
-- Replaced the disabled no-op publish workflow with a manual `workflow_dispatch` publish workflow.
+- Replaced the disabled no-op publish workflow with a manual `workflow_dispatch` release workflow.
 - Added `dry_run=true` as the safe default — no publish happens unless explicitly changed.
 - Added `scripts/verify-npm-version-not-published.js` to block duplicate publishes.
-- Added `docs/release-checklist.md` with a practical step-by-step release guide.
-- Kept actual publishing fully manual and guarded behind explicit owner dispatch.
-- Did **not** publish the package in this PR.
+- Added `docs/release-checklist.md` with a practical operator guide.
+- Switched npm publishing to Trusted Publishing through GitHub OIDC.
+- Kept the dispatch manual while automating the release PR, tag, npm publish, GitHub Release, and follow-up sync after dispatch.
 
 ---
 
@@ -20,11 +20,12 @@
 | Default mode | `dry_run=true` (safe — no publish) |
 | Required branch | `refs/heads/main` (enforced via `if:` guard) |
 | Node version | 24 |
-| Commands | `pnpm install --frozen-lockfile` → `pnpm run check:all` → `pnpm audit` → `pnpm run pack:smoke` → version preflight → publish |
-| NPM token source | `secrets.NPM_TOKEN` (GitHub secret, never hardcoded) |
-| Provenance | `--provenance` on real publish (`dry_run=false`) |
+| Commands | `pnpm install --frozen-lockfile` → version prepare → `pnpm run check:all` → `pnpm audit` → version preflight → tarball pack → optional real publish |
+| npm auth | Trusted Publishing via GitHub OIDC (`id-token: write`) |
+| Provenance | `npm publish --provenance` on real publish (`dry_run=false`) |
 | Dist-tag support | `latest` (default) or `next` |
-| Publish directory | `./dist` (mirrors `publish:dist` script: `cd dist && npm publish`) |
+| Publish payload | Exact tarball built from `./dist` and uploaded as a workflow artifact |
+| Release sync | Real runs create the release PR, merge it after checks, tag the merge commit, publish to npm, and create the GitHub Release |
 
 ---
 
@@ -38,16 +39,17 @@
 | Version already published check | ✅ `scripts/verify-npm-version-not-published.js` exits 1 if duplicate |
 | `dry_run=true` default | ✅ Safe by default — runs all gates but skips actual publish |
 | `dry_run=false` manual only | ✅ Requires explicit owner action in GitHub Actions UI |
-| Package smoke test before publish | ✅ `pnpm run pack:smoke` runs in both dry-run and real publish |
-| No hardcoded npm token | ✅ `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}` only |
+| Package smoke test before publish | ✅ included in `pnpm run check:all` |
+| No stored npm registry secret | ✅ Trusted Publishing via GitHub OIDC |
 | Concurrency | ✅ `cancel-in-progress: false` — a mid-flight publish is never cancelled |
+| GitHub Release asset | ✅ same tarball is attached to the release |
 
 ---
 
 ## Release checklist
 
 - File: `docs/release-checklist.md`
-- Main steps: pre-release checks → local build → dry-run workflow → real publish → post-release verification
+- Main steps: pre-release checks → dry-run workflow → real release dispatch → post-release verification
 
 ---
 
@@ -58,13 +60,14 @@
 | `pnpm install` | ✅ pass |
 | `pnpm run check:all` | ✅ pass (197 tests, 0 failures; 37 biome warnings are pre-existing) |
 | `pnpm audit` | ✅ no known vulnerabilities |
-| `pnpm run pack:smoke` | ✅ pass |
 | `node scripts/verify-npm-version-not-published.js` | ✅ exits 0 — `1.0.3` is not yet published on the public npm registry. Safe to publish when ready. |
 
 ---
 
-## Known issues left for later PRs
+## Workflow behavior on real runs
 
-- Actual version bump is a separate release PR decision for the owner.
-- GitHub Release automation (tagging, release notes) is optional future work.
-- The 37 biome warnings are pre-existing and tracked separately from this PR.
+1. The owner manually dispatches **Release** from `main`.
+2. The workflow calculates the next version from dispatch inputs and updates `package.json`.
+3. Full validation runs against that version and the exact release tarball is built.
+4. The workflow opens `release/vX.Y.Z`, waits for CI, merges the PR, tags the merge commit, publishes to npm, and creates the GitHub Release.
+5. The push to `main` also keeps downstream automation such as the demo Pages workflow in sync.

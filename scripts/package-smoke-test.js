@@ -37,10 +37,10 @@ const SAMPLE_DATA = [
 let step = 0;
 const log = (msg) => {
   step += 1;
-  console.log(`\n[pack:smoke] ${step}. ${msg}`);
+  process.stdout.write(`\n[pack:smoke] ${step}. ${msg}\n`);
 };
 const fail = (msg) => {
-  console.error(`\n[pack:smoke] FAILED: ${msg}`);
+  process.stderr.write(`\n[pack:smoke] FAILED: ${msg}\n`);
   process.exit(1);
 };
 const run = (cmd, args, cwd) => {
@@ -110,7 +110,7 @@ const missingFromTarball = expectedInTarball.filter((f) => !packedFiles.includes
 if (missingFromTarball.length > 0) {
   fail(`tarball is missing expected files: ${missingFromTarball.join(', ')}`);
 }
-console.log(`   tarball contains ${packedFiles.length} files, including all expected dist/ entries`);
+process.stdout.write(`   tarball contains ${packedFiles.length} files, including all expected dist/ entries\n`);
 
 // ---------------------------------------------------------------------------
 // 10. React must be a peer dependency, never bundled
@@ -126,7 +126,7 @@ const cjsBundleSource = fs.readFileSync(distIndexJs, 'utf8');
 if (!cjsBundleSource.includes("require('react')") && !cjsBundleSource.includes('require("react")')) {
   fail('dist/index.js does not externalize react via require("react") — it may have been bundled in');
 }
-console.log('   react is declared as a peerDependency and externalized (require("react")) in the CJS build');
+process.stdout.write('   react is declared as a peerDependency and externalized (require("react")) in the CJS build\n');
 
 // ---------------------------------------------------------------------------
 // Shared helper: scaffold a minimal consumer project that depends on the
@@ -176,7 +176,7 @@ const cjsOutput = run('node', ['consumer.js'], CJS_DIR);
 if (!cjsOutput.includes('CJS_OK')) {
   fail('CJS consumer did not render an <svg> as expected');
 }
-console.log('   CJS consumer rendered a real <svg> via require()');
+process.stdout.write('   CJS consumer rendered a real <svg> via require()\n');
 
 // ---------------------------------------------------------------------------
 // 7. ESM consumer
@@ -200,7 +200,7 @@ const esmOutput = run('node', ['consumer.mjs'], ESM_DIR);
 if (!esmOutput.includes('ESM_OK')) {
   fail('ESM consumer did not render an <svg> as expected');
 }
-console.log('   ESM consumer rendered a real <svg> via native import');
+process.stdout.write('   ESM consumer rendered a real <svg> via native import\n');
 
 // ---------------------------------------------------------------------------
 // 8. TypeScript consumer
@@ -244,7 +244,9 @@ fs.writeFileSync(
   )
 );
 run('npx', ['tsc', '--noEmit'], TS_DIR);
-console.log('   TypeScript consumer compiled cleanly against the published types (strict, skipLibCheck: false)');
+process.stdout.write(
+  '   TypeScript consumer compiled cleanly against the published types (strict, skipLibCheck: false)\n'
+);
 
 // ---------------------------------------------------------------------------
 // Clean up
@@ -252,4 +254,4 @@ console.log('   TypeScript consumer compiled cleanly against the published types
 log('Cleaning up temp directories and tarball');
 fs.rmSync(TMP_DIR, { recursive: true, force: true });
 
-console.log('\n[pack:smoke] All package smoke tests passed.\n');
+process.stdout.write('\n[pack:smoke] All package smoke tests passed.\n\n');

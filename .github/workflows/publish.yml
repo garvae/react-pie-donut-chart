@@ -1,36 +1,53 @@
-# Manual publish workflow for @garvae/react-pie-donut-chart.
+# One-click release workflow for @garvae/react-pie-donut-chart.
 #
-# Trigger:        workflow_dispatch only (never on push or pull_request).
-# Default mode:   dry_run=true — safe by default, no actual publish.
-# Branch guard:   only runs when dispatched from main.
-# Quality gates:  install → check:all → audit → pack:smoke → version preflight.
-# Real publish:   dry_run=false, requires explicit manual dispatch by the owner.
-# NPM token:      secrets.NPM_TOKEN only (never hardcoded).
-# Provenance:     enabled on real publish (--provenance flag).
+# Trigger: workflow_dispatch only.
+# Flow:
+#   1. Compute the next version from manual inputs.
+#   2. Run the full quality gate against that version.
+#   3. Pack the exact tarball that would be published.
+#   4. Dry-run publish by default, or on real runs:
+#      create a release PR -> wait for CI -> merge -> tag -> publish -> GitHub Release.
 #
-# To run a dry-run:
-#   GitHub Actions → Publish → Run workflow → dry_run=true (default)
-#
-# To publish for real:
-#   1. Ensure version is bumped in package.json and dist/package.json.
-#   2. Ensure CI is green on main.
-#   3. GitHub Actions → Publish → Run workflow → dry_run=false.
+# npm trusted publishing is used instead of long-lived registry tokens.
 
-name: Publish
+name: Release
 
 on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: "Run publish checks without publishing (true = safe default)"
+        description: "Run the whole release pipeline without pushing/publishing"
         required: true
         default: "true"
         type: choice
         options:
           - "true"
           - "false"
+      release_type:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - "patch"
+          - "minor"
+          - "major"
+          - "prepatch"
+          - "preminor"
+          - "premajor"
+          - "prerelease"
+          - "custom"
+      custom_version:
+        description: "Exact version when release_type=custom (example: 1.2.3)"
+        required: false
+        type: string
+      prerelease_id:
+        description: "Prerelease identifier for pre* / prerelease bumps"
+        required: false
+        default: "next"
+        type: string
       npm_tag:
-        description: "npm dist-tag to publish under"
+        description: "npm dist-tag"
         required: true
         default: "latest"
         type: choice
@@ -39,32 +56,26 @@ on:
           - "next"
 
 permissions:
-  contents: read
-  # id-token: write is required for npm provenance attestation.
-  # It is only needed on real publish (dry_run=false), but GitHub Actions
-  # does not support conditional permissions, so we declare it globally.
-  # The token is never used during dry-run because the publish step is skipped.
+  contents: write
   id-token: write
+  pull-requests: write
 
 concurrency:
-  group: publish-${{ github.ref }}
-  # Do NOT cancel in-progress publish runs — a mid-flight npm publish is dangerous.
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Publish package (${{ inputs.dry_run == 'true' && 'dry-run' || 'REAL PUBLISH' }})
+  release:
+    name: Release ${{ inputs.dry_run == 'true' && '(dry-run)' || '(publish)' }}
     runs-on: ubuntu-latest
 
-    # Safety guard: only allow dispatch from main.
     if: github.ref == 'refs/heads/main'
-
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Enable Corepack
         run: corepack enable
@@ -74,11 +85,23 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          # registry-url is required for NODE_AUTH_TOKEN to be picked up by npm publish.
           registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Prepare release version
+        id: prepare
+        run: >
+          pnpm run release:prepare --
+          --release-type "${{ inputs.release_type }}"
+          --custom-version "${{ inputs.custom_version }}"
+          --prerelease-id "${{ inputs.prerelease_id }}"
 
       - name: Run full quality gate
         run: pnpm run check:all
@@ -86,22 +109,109 @@ jobs:
       - name: Audit dependencies
         run: pnpm audit
 
-      - name: Pack smoke test
-        run: pnpm run pack:smoke
-
       - name: Verify package version is not already published
-        run: node scripts/verify-npm-version-not-published.js
+        run: pnpm run release:verify-version
 
-      # ---------------------------------------------------------------------------
-      # Dry-run: inspect what would be published without touching npm registry.
-      # ---------------------------------------------------------------------------
-      - name: Dry-run publish (inspect tarball contents)
+      - name: Pack release tarball
+        id: pack
+        run: pnpm run release:pack
+
+      - name: Upload release tarball artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-tarball-${{ steps.prepare.outputs.release_version }}
+          path: ${{ steps.pack.outputs.tarball_path }}
+          if-no-files-found: error
+
+      - name: Dry-run publish
         if: inputs.dry_run == 'true'
-        run: npm publish ./dist --dry-run --access public --tag ${{ inputs.npm_tag }}
+        run: npm publish "${{ steps.pack.outputs.tarball_path }}" --dry-run --access public --tag "${{ inputs.npm_tag }}"
 
-      # ---------------------------------------------------------------------------
-      # Real publish: only when dry_run is explicitly set to false by the owner.
-      # ---------------------------------------------------------------------------
-      - name: Publish to npm
+      - name: Create release branch and commit
         if: inputs.dry_run == 'false'
-        run: npm publish ./dist --provenance --access public --tag ${{ inputs.npm_tag }}
+        env:
+          RELEASE_VERSION: ${{ steps.prepare.outputs.release_version }}
+        run: |
+          git checkout -b "release/v${RELEASE_VERSION}"
+          git add package.json dist
+          git commit -m "chore(release): v${RELEASE_VERSION}"
+          git push --set-upstream origin "release/v${RELEASE_VERSION}"
+
+      - name: Create release PR
+        if: inputs.dry_run == 'false'
+        id: create_pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.prepare.outputs.release_version }}
+        run: |
+          PR_URL=$(gh pr create \
+            --base main \
+            --head "release/v${RELEASE_VERSION}" \
+            --title "chore(release): v${RELEASE_VERSION}" \
+            --body "Automated release PR for v${RELEASE_VERSION}. This PR was created by the manual release workflow.")
+          echo "pr_url=${PR_URL}" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$(gh pr view "${PR_URL}" --json number --jq '.number')" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for release PR checks
+        if: inputs.dry_run == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr checks "${{ steps.create_pr.outputs.pr_number }}" --watch
+
+      - name: Merge release PR
+        if: inputs.dry_run == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr merge "${{ steps.create_pr.outputs.pr_number }}" --merge --delete-branch
+
+      - name: Resolve merged release commit
+        if: inputs.dry_run == 'false'
+        id: merged
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr view "${{ steps.create_pr.outputs.pr_number }}" --json mergeCommit --jq '.mergeCommit.oid' > merge_sha.txt
+          echo "merge_sha=$(cat merge_sha.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push git tag
+        if: inputs.dry_run == 'false'
+        env:
+          RELEASE_VERSION: ${{ steps.prepare.outputs.release_version }}
+          MERGE_SHA: ${{ steps.merged.outputs.merge_sha }}
+        run: |
+          git fetch origin main --tags
+          git tag "v${RELEASE_VERSION}" "${MERGE_SHA}"
+          git push origin "v${RELEASE_VERSION}"
+
+      - name: Publish tarball to npm
+        if: inputs.dry_run == 'false'
+        run: npm publish "${{ steps.pack.outputs.tarball_path }}" --access public --tag "${{ inputs.npm_tag }}" --provenance
+
+      - name: Create GitHub Release
+        if: inputs.dry_run == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.prepare.outputs.release_version }}
+          IS_PRERELEASE: ${{ steps.prepare.outputs.is_prerelease }}
+        run: |
+          PRERELEASE_FLAG=""
+          if [ "${IS_PRERELEASE}" = "true" ]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+
+          if [ -f "docs/releases/${RELEASE_VERSION}.md" ]; then
+            gh release create "v${RELEASE_VERSION}" \
+              "${{ steps.pack.outputs.tarball_path }}" \
+              --target "${{ steps.merged.outputs.merge_sha }}" \
+              --title "v${RELEASE_VERSION}" \
+              ${PRERELEASE_FLAG} \
+              --generate-notes \
+              --notes-file "docs/releases/${RELEASE_VERSION}.md"
+          else
+            gh release create "v${RELEASE_VERSION}" \
+              "${{ steps.pack.outputs.tarball_path }}" \
+              --target "${{ steps.merged.outputs.merge_sha }}" \
+              --title "v${RELEASE_VERSION}" \
+              ${PRERELEASE_FLAG} \
+              --generate-notes
+          fi

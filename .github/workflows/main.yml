@@ -20,10 +20,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # Prevent npm 10 (Node 22) from printing a warning about the unset
-      # ${NODE_AUTH_TOKEN} in .npmrc into `npm pack --json` stdout, which
-      # would break the JSON.parse call in scripts/package-smoke-test.js.
-      NODE_AUTH_TOKEN: ""
       # Prevent Husky from printing to stdout when the prepare script runs
       # during `npm pack --json` lifecycle hooks. Without this, Husky's
       # skip-message pollutes stdout and breaks JSON.parse in package-smoke-test.js.

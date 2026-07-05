@@ -13,8 +13,8 @@
 
 - Automatic publish workflow found: **yes**
 - File: `.github/workflows/publish.yml`
-- Previous behavior: triggered by `workflow_run` on successful CI on `master`; ran `yarn publish:dist` (`cd dist && npm publish`) with `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}`
-- Current behavior: **disabled / no-op** — workflow_dispatch only, no publish job, no npm token access
+- Previous behavior: triggered by `workflow_run` on successful CI on `master`; ran `yarn publish:dist` (`cd dist && npm publish`) with repository-scoped registry credentials
+- Current behavior: **disabled / no-op** — workflow_dispatch only, no publish job, no registry credential access
 - Merge to default branch can publish automatically: **no**
 - Package published during this PR: **no**
 

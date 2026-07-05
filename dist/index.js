@@ -1028,7 +1028,6 @@ var init_useHandleResize = __esm({
 var ChanelRand, rgbRand, rgbToHex, colorRand, randomColorHEX;
 var init_color = __esm({
   "src/utils/color.ts"() {
-    init_console();
     ChanelRand = () => Math.floor(Math.random() * 256);
     rgbRand = () => [ChanelRand(), ChanelRand(), ChanelRand()];
     rgbToHex = (rgb) => ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);

@@ -23,9 +23,11 @@ const jsonContent = JSON.stringify(newJsonObj);
 
 fs.writeFile(`${root}/tsconfig.json`, jsonContent, 'utf8', (err) => {
   if (err) {
-    console.error('An error occurred while generating tsconfig.json');
-    return console.error(err);
+    process.stderr.write('An error occurred while generating tsconfig.json\n');
+    process.stderr.write(`${err.message}\n`);
+    process.exitCode = 1;
+    return;
   }
 
-  console.log('tsconfig.json has been generated');
+  process.stdout.write('tsconfig.json has been generated\n');
 });
