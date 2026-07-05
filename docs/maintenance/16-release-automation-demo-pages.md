@@ -16,7 +16,7 @@
 - Merges must happen through a pull request with:
   - at least 1 approval
   - resolved conversations
-  - required checks `Quality / Node 22` and `Quality / Node 24`
+  - required check `Quality / Node 24`
   - up-to-date branch state before merge (`strict: true`)
 
 ### Trusted Publishing
@@ -41,6 +41,7 @@ This keeps the operator step intentionally small while removing manual tag/relea
 
 - `demo/` is a standalone Vite + React app.
 - The demo depends on `@garvae/react-pie-donut-chart` via `link:../dist`, so it consumes the same build output that will be published.
+- The demo build runs through its own local toolchain (`pnpm exec tsc` / `pnpm exec vite`) so CI does not accidentally pick up the library's older root TypeScript binary.
 - The UI uses Mantine with `defaultColorScheme="auto"` for automatic light/dark support.
 - The page includes:
   - multiple chart usage variants
