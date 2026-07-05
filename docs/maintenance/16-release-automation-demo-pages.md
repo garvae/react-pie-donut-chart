@@ -14,7 +14,6 @@
 - GitHub branch protection is enabled on `main`.
 - Direct pushes and direct merges are blocked for everyone, including admins.
 - Merges must happen through a pull request with:
-  - at least 1 approval
   - resolved conversations
   - required check `Quality / Node 24`
   - up-to-date branch state before merge (`strict: true`)
