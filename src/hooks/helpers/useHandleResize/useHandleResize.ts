@@ -156,7 +156,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
     }
 
     return undefined;
-  }, [handleResize, parentRef, size, sizeProp]);
+  }, [handleResize, size, sizeProp]);
 
   /**
    * Listen for "parentRef" prop changes
@@ -175,7 +175,7 @@ export const useHandleResize = (props: TUseHandleResize): TUseHandleResizeReturn
     if (sizeProp && size !== sizeProp) {
       handleResize();
     }
-  }, [handleResize, parentRef, parentRefCurrent, size, sizeProp]);
+  }, [handleResize, size, sizeProp]);
 
   return { size };
 };

@@ -44,18 +44,18 @@ const fail = (msg) => {
   process.exit(1);
 };
 const run = (cmd, args, cwd) => {
-  // On Windows, npm/npx are .cmd shims (batch files), which execFileSync can
-  // only invoke through a shell — neither a bare command name nor an explicit
-  // ".cmd" suffix works without shell:true there (ENOENT / EINVAL). All args
-  // passed through this helper are internally-constructed (never raw external
-  // input), so the shell:true + array-args combination is safe here despite
-  // Node's general-purpose DEP0190 deprecation warning about it.
-  const useShell = process.platform === 'win32';
+  if (process.platform === 'win32') {
+    return execFileSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', cmd, ...args], {
+      cwd,
+      stdio: ['ignore', 'pipe', 'inherit'],
+      encoding: 'utf8'
+    });
+  }
+
   return execFileSync(cmd, args, {
     cwd,
     stdio: ['ignore', 'pipe', 'inherit'],
-    encoding: 'utf8',
-    shell: useShell
+    encoding: 'utf8'
   });
 };
 

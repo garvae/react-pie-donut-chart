@@ -4,7 +4,7 @@
 
 - Added optional chart and segment accessible labels via `ariaLabel` and `getSegmentAriaLabel` props.
 - Added `role="img"` and `aria-label` to the root `<svg>` element.
-- Added `role="button"`, `aria-label`, and `aria-pressed` to interactive segment `<path>` elements.
+- Added `role="button"` and `aria-label` to interactive segment `<path>` elements.
 - Added Space key activation alongside the existing Enter key, preventing default page-scroll behavior.
 - Preserved all existing public API, callback signatures, and `tabIndex` behavior.
 - Kept CI disabled.
@@ -25,9 +25,9 @@
 
 - **Interactive segment role:** `role="button"` on non-gap `<path>` elements.
 - **Accessible label:** `aria-label` populated by `getSegmentAriaLabel(segment, index)` or the built-in default `"Segment <id>: value <value>"`. Gap segments receive no `aria-label` and no `role`.
-- **Selected state:** `aria-pressed={isSelected}` on non-gap segments (matches WAI-ARIA pattern for toggle buttons).
-- **Non-interactive behavior:** Gap segments (`isGapSegment === true`) receive `role={undefined}`, `aria-label={undefined}`, and `aria-pressed={undefined}`, preserving the existing `tabIndex={-1}` behavior.
-- **Tests:** segment role, default/custom labels, `aria-pressed` state, non-interactive paths not exposed as buttons.
+- **Selected state:** non-gap segments append `, selected` to the accessible label when active.
+- **Non-interactive behavior:** Gap segments (`isGapSegment === true`) receive `role={undefined}` and `aria-label={undefined}`, preserving the existing `tabIndex={-1}` behavior.
+- **Tests:** segment role, default/custom labels, selected-state label, non-interactive paths not exposed as buttons.
 
 ## Keyboard behavior
 

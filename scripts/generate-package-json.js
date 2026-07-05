@@ -21,10 +21,10 @@ try {
     ...parsed,
     exports: {
       '.': {
-        default: './index.js',
+        types: './index.d.ts',
         import: './react-pie-donut-chart.esm.js',
         require: './index.js',
-        types: './index.d.ts'
+        default: './index.js'
       }
     },
     main: 'index.js',

@@ -27,7 +27,11 @@ describe('function "isKeyDownEnter"', () => {
     const assertions = checksTruthy.length + checksFalsy.length;
     expect.assertions(assertions);
 
-    checksTruthy.forEach((check) => expect(check).toBeTruthy());
-    checksFalsy.forEach((check) => expect(check).not.toBeTruthy());
+    checksTruthy.forEach((check) => {
+      expect(check).toBeTruthy();
+    });
+    checksFalsy.forEach((check) => {
+      expect(check).not.toBeTruthy();
+    });
   });
 });

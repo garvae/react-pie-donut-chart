@@ -230,6 +230,9 @@ export const Chart = (props: TChartProps) => {
             ? getSegmentAriaLabel(item, i)
             : `Segment ${id ?? i}: value ${value}`;
 
+        const segmentAriaLabelWithState =
+          segmentAriaLabel && isSelected ? `${segmentAriaLabel}, selected` : segmentAriaLabel;
+
         /**
          * Tests attributes (gap segments)
          */
@@ -248,8 +251,7 @@ export const Chart = (props: TChartProps) => {
         return (
           <path
             {...testsAttributes}
-            aria-label={segmentAriaLabel}
-            aria-pressed={isGapSegment ? undefined : isSelected}
+            aria-label={segmentAriaLabelWithState}
             className={classNameSegment}
             d={segmentPath}
             data-testid={TEST_DATA_ID_CHART_GROUP_SEGMENT}

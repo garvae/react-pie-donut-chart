@@ -14,8 +14,8 @@ describe('prop "donutThickness"', () => {
 
     const { getAllByTestId } = render(<PieDonutChart {...TEST_CHART_PROPS_COMMON} donutThickness={donutThickness} />);
 
-    getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT).forEach((item) =>
-      expect(item).toHaveAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_THICKNESS, String(donutThickness))
-    );
+    getAllByTestId(TEST_DATA_ID_CHART_GROUP_SEGMENT).forEach((item) => {
+      expect(item).toHaveAttribute(TEST_DATA_ATTR_CHART_GROUP_SEGMENT_THICKNESS, String(donutThickness));
+    });
   });
 });

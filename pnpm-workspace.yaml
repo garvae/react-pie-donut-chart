@@ -1,0 +1,12 @@
+allowBuilds:
+  core-js: true
+  esbuild: true
+onlyBuiltDependencies:
+  - core-js
+  - esbuild
+  - spawn-sync
+overrides:
+  braces: ">=3.0.3"
+  esbuild: ">=0.28.1"
+  js-yaml: "4.2.0"
+  micromatch: ">=4.0.8"
