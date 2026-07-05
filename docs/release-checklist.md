@@ -2,6 +2,7 @@
 
 ## Before release
 
+- [ ] Merge rights to `main` are enforced through GitHub branch protection: use a PR, not a direct push.
 - [ ] Merge all intended PRs into `main`.
 - [ ] Confirm CI is green on `main`.
 - [ ] Confirm `pnpm run check:all` passes locally.

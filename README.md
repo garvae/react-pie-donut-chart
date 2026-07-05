@@ -21,6 +21,9 @@ through optional props only.
 > **CI runs on every PR and push to `main`. Release automation starts from a
 > manual GitHub Actions dispatch and then handles the release PR, tag, npm
 > publish, GitHub Release, and demo-site sync automatically.**
+>
+> **`main` is branch-protected:** direct pushes/merges are blocked. Changes must
+> go through a pull request with the required checks green.
 
 ---
 
