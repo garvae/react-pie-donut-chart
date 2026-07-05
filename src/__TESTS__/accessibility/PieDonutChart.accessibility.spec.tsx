@@ -105,7 +105,9 @@ describe('PieDonutChart — accessibility', () => {
 
       const [firstButton] = getAllByRole('button');
 
-      firstButton.focus();
+      act(() => {
+        firstButton.focus();
+      });
       await act(async () => {
         userEvent.keyboard(' ');
       });
@@ -124,7 +126,9 @@ describe('PieDonutChart — accessibility', () => {
 
       const [firstButton] = getAllByRole('button');
 
-      firstButton.focus();
+      act(() => {
+        firstButton.focus();
+      });
       await act(async () => {
         userEvent.keyboard('{Enter}');
       });
@@ -141,7 +145,9 @@ describe('PieDonutChart — accessibility', () => {
 
       const [first, second] = getAllByRole('button');
 
-      first.focus();
+      act(() => {
+        first.focus();
+      });
       expect(document.activeElement).toBe(first);
 
       await act(async () => {
